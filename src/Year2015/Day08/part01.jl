@@ -1,4 +1,3 @@
-function 
 """
     part1(input)
 
@@ -8,7 +7,7 @@ version.
 
 The `Meta.parse` function from the `Meta` module essentially evaluates the raw
 string from the input file into a parsed string, such that `\"abc\\x27\"`
-becomes `abc\x27`.
+becomes `"abc\x27"`.
 """
 function part1(input)
     nrawchars    = mapreduce(length, +, input)
