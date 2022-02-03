@@ -1,13 +1,13 @@
-module Day10
+module Day11
 
 include("solve.jl")
 
 export run
 function run()
-    answer1 = solve(input, 40)
-    answer2 = solve(input, 50)
+    answer1 = solve(input)
+    answer2 = solve(answer1)
 
-    println("\n    Day 10")
+    println("\n    Day 11")
     println("    ├─ Part 01: $(answer1)")
     println("    └─ Part 02: $(answer2)")
 end
