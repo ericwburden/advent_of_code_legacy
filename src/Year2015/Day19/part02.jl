@@ -35,7 +35,7 @@ function contract(molecule, replacement_pairs)
     for (regex, insert) in replacement_pairs
         regex_match = match(regex, molecule)
         while !isnothing(regex_match)
-            molecule    = replace_element(molecule, regex_match, insert)
+            molecule    = replace_match(molecule, regex_match, insert)
             insertions += 1
             regex_match = match(regex, molecule)
         end
