@@ -1,4 +1,5 @@
 using ArgParse
+using HTTP
 
 #=------------------------------------------------------------------------------ 
 | ArgParse Settings 
@@ -111,6 +112,22 @@ open(part2path; create = true, write = true) do f
     end
     """
     write(f, contents)
+end
+
+# Fetch the input, if possible
+println("Downloading input...")
+cookie     = read("$(@__DIR__)/.cookie", String)
+input_path = joinpath(@__DIR__, "..", "inputs", "$year", lpad(day, 2, "0"), "input.txt")
+input_url  = "https://adventofcode.com/$year/day/$day/input"
+headers    = Dict("cookie" => "session=$cookie")
+
+try
+    r = HTTP.request("GET", input_url, headers)
+    touch(input_path)
+    write(input_path, String(r.body))
+catch e
+    @warn "Could not download input, you'll have to do it manually."
+    @warn e
 end
 
 println("All done. The template has been created at $puzzlepath")
