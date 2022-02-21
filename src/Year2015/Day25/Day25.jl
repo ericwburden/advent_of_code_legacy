@@ -3,7 +3,6 @@ using AdventOfCode: getinput
 
 include("ingest.jl")
 include("part01.jl")
-include("part02.jl")
 
 export run
 function run()
