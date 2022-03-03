@@ -1,8 +1,7 @@
 module Day11
 using AdventOfCode: getinput
 
-include("ingest.jl")
-include("solve.jl")
+include("refactor.jl")
 
 export run
 function run()
