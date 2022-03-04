@@ -1,2 +1,1 @@
-"Constant input today"
-const SALT = "ihaygndm"
+ingest(path) = readchomp(path)
