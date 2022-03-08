@@ -47,7 +47,7 @@ end
 """
     heuristic(current::CartesianIndex, goal::CartesianIndex)
 
-A* heuristic, just the Manhattand distance from `current` to `goal`.
+A* heuristic, just the Manhattan distance from `current` to `goal`.
 """
 function heuristic(current::CartesianIndex, goal::CartesianIndex)
     return mapreduce(abs, +, Tuple(current - goal))
