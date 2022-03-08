@@ -94,15 +94,21 @@ end
 Replace the execute! function for the `Tgl` instruction, to optimize away 
 addition and multiplication loops every time an instruction is toggled.
 """
-function execute!(program::Program, (; offset)::Tgl) 
-    idx = program.pointer + eval(program.registers, offset)
-    if checkbounds(Bool, program.code, idx)
-        program.code[idx] = toggle(program.code[idx])
-        optimize_add!(program.code)
-        optimize_mul!(program.code)
-    end
-    program.pointer += 1
-end
+# This works, but it breaks incremental compilation in Julia. Uncomment to 
+# make the solution run MUCH faster! I could most likely fix this by
+# specializing `Tgl` and replacing the `Tgl` instructions in part 2 with the
+# optimizing version, but I've finished Day 25 by now and I don't feel like
+# coming back to this one :D.
+
+# function execute!(program::Program, (; offset)::Tgl) 
+#     idx = program.pointer + eval(program.registers, offset)
+#     if checkbounds(Bool, program.code, idx)
+#         program.code[idx] = toggle(program.code[idx])
+#         optimize_add!(program.code)
+#         optimize_mul!(program.code)
+#     end
+#     program.pointer += 1
+# end
 
 
 function part2(input)
