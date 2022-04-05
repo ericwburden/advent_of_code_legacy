@@ -1,0 +1,36 @@
+set a 1                    # IMPLIED by instructions (not in actual input file)
+set b 79                   # This is the only change between input sets
+set c b
+jnz a 2                    # IF a is not 0 (Part 2) skip this next jump and execute the block thereafter
+jnz 1 5                    # ELSE if a is 0 (Part 1), jump over this next block
+    mul b 100              
+    sub b -100000          # b = (b * 100) + 100,000
+    set c b         
+    sub c -17000           # c = b + 17000
+                           # NOTE: At this point b is 17,000 less than c.
+set f 1                    # START Main outer loop, Set f = 1
+    set d 2                # START Middle loop, Set d = 2
+        set e 2            # START Inner loop, Set e = 2
+            set g d        
+            mul g e        
+            sub g b        # g = (d * e) - b
+            jnz g 2        # IF g == 0
+                set f 0    # THEN f = 0
+            sub e -1       # e = e - 1
+            set g e        
+            sub g b        # g = e - b 
+            jnz g -8       # Start inner loop over
+        sub d -1           # d = d + 1
+        set g d            
+        sub g b            # g = d - b
+    jnz g -13              # If g != 0, Start middle loop over 
+    jnz f 2                # IF f == 0 
+        sub h -1           # THEN Increment our h counter by 1
+    set g b                
+    sub g c                # g = b - c
+    jnz g 2                # IF g != 0, keep going  
+                           # (Meaning: If we've increased b by 17 enough 
+                           #           times so that it == c...)
+    jnz 1 3                # ELSE, end the program by jumping beyond instructions
+    sub b -17              # b = b + 17
+jnz 1 -23                  # Start outer loop over
