@@ -14,6 +14,18 @@ open_port((; p1, p2)::Component{UsedPort, UsedPort}) = nothing
 use_port((; pins)::OpenPort) = UsedPort(pins)
 
 """
+Represents a `Bridge` spanning to the CPU, keeping track of the last available
+component to connect to, a set of connected component ID's, and the strength
+of the bridge.
+"""
+struct Bridge
+    terminus::Union{Nothing,Component}
+    component_ids::Set{Int}
+    strength::Int
+end
+Bridge() = Bridge(nothing, Set{Int}(), 0)
+
+"""
     try_attach(c1::Component, c2::Component)
     try_attach(::Nothing, (; id, p1, p2)::Component)
     try_attach((; terminus, component_ids, strength)::Bridge, c::Component)
@@ -48,18 +60,6 @@ end
 "Returns the strength of a component or bridge"
 strength_of((; p1, p2)::Component) = p1.pins + p2.pins
 strength_of(bridge::Bridge)        = bridge.strength
-
-"""
-Represents a `Bridge` spanning to the CPU, keeping track of the last available
-component to connect to, a set of connected component ID's, and the strength
-of the bridge.
-"""
-struct Bridge
-    terminus::Union{Nothing,Component}
-    component_ids::Set{Int}
-    strength::Int
-end
-Bridge() = Bridge(nothing, Set{Int}(), 0)
 
 """
     possible_bridges(bridge::Bridge, components::Vector{Component})

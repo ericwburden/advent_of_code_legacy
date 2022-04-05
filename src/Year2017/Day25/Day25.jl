@@ -9,8 +9,7 @@ function run()
     answer1 = part1()
 
     println("\n    Day 25")
-    println("    ├─ Part 01: $(answer1)")
-    println("    └─ Part 02: $(answer2)")
+    println("    └─ Part 01: $(answer1)")
 end
 
 end # module
