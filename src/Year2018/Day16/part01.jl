@@ -245,8 +245,13 @@ function possible_instruction_kinds((; before, after, instruction)::SampleOperat
 end
 
 
+"""
+    part1(input)
 
-
+Given the input as a tuple of sample operations and list of unidentified
+instructions, identify and return the number of sample operations where 
+at least three kinds of instructions could produce the observed result.
+"""
 function part1(input)
     sample_operations, _ = input
     three_or_more(op) = (length ∘ possible_instruction_kinds)(op) >= 3
