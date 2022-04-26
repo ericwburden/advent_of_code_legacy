@@ -102,19 +102,21 @@ flowing through the ground, count the number of water and wet sand
 positions at the end, and return the count.
 """
 function part1(input)
+    # Start at the highest y-value present in the scan
     highest_level, lowest_level = extrema(p -> p[2], keys(input))
     flowing_squares = Position[(500, highest_level)]
-    lowest_level = maximum(p -> p[2], keys(input))
 
     while !isempty(flowing_squares)
         water = pop!(flowing_squares)
         next = flow!(input, water)
         for position in next
+            # Don't simulate water below the lowest y-value present
             position[2] > lowest_level && continue
             push!(flowing_squares, position)
         end
     end
 
+    # Count the total number of 'wet' positions and return the count
     total_wet = 0
     for square in values(input)
         square isa Wet && (total_wet += 1)
