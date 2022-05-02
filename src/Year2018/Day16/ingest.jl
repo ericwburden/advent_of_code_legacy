@@ -2,6 +2,7 @@
 const Registers   = NTuple{4,Int}
 const Instruction = NTuple{4,Int}
 
+
 """
 A `SampleOperation` represents the entries in the top part of the input
 file, containing the before and after registers and the included
@@ -22,19 +23,19 @@ end
 Parsing functions to convert a line (or chunk of lines) from the 
 input into the relevant data types.
 """
-function Base.parse(::Type{Instruction}, s::AbstractString)
-    return NTuple{4}([parse(Int, n) for n in split(s)])
+function to_instruction(s::AbstractString)
+    return NTuple{4}(parse(Int, n) for n in split(s))
 end
 
-function Base.parse(::Type{Registers}, s::AbstractString)
-    return NTuple{4}([parse(Int, m.match) for m in eachmatch(r"\d+", s)])
+function to_registers(s::AbstractString)
+    return NTuple{4}(parse(Int, m.match) for m in eachmatch(r"\d+", s))
 end
 
 function Base.parse(::Type{SampleOperation}, s::AbstractString)
     strings     = split(s, "\n")
-    before      = parse(Registers,   strings[1])
-    instruction = parse(Instruction, strings[2])
-    after       = parse(Registers,   strings[3])
+    before      = to_registers(strings[1])
+    instruction = to_instruction(strings[2])
+    after       = to_registers(strings[3])
     return SampleOperation(before, after, instruction)
 end
 
@@ -53,7 +54,7 @@ function ingest(path)
             chunk == "" && break
             push!(sample_operations, parse(SampleOperation, chunk))
         end
-        sample_program = parse.(Instruction, readlines(f))
+        sample_program = to_instruction.(readlines(f))
         return (sample_operations, sample_program)
     end
 end

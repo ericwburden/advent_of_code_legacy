@@ -10,11 +10,9 @@ function run()
     inpath  = getinput(2018, 25, "input")
     input   = ingest(inpath)
     answer1 = part1(input)
-    answer2 = part2(input)
 
     println("\n    Day 25")
-    println("    ├─ Part 01: $(answer1)")
-    println("    └─ Part 02: $(answer2)")
+    println("    └─ Part 01: $(answer1)")
 end
 
 end # module
