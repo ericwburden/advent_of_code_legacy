@@ -16,8 +16,8 @@ struct SampleOperation
 end
 
 """
-    parse(::Type{Instruction}, s::AbstractString)
-    parse(::Type{Registers}, s::AbstractString)
+    to_instruction(s::AbstractString)
+    to_registers(s::AbstractString)
     parse(::Type{SampleOperation}, s::AbstractString)
 
 Parsing functions to convert a line (or chunk of lines) from the 
