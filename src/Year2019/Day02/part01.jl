@@ -1,5 +1,5 @@
 # From src/Year2019/IntCode.jl
-using .IntCode: Program, run!
+using .IntCode: Computer, run!
 
 """
     part1(input)
@@ -10,7 +10,7 @@ puzzle description and run the program, returning the value in memory address
 """
 function part1(input)
     values = [input...]
-    program    = Program(values)
+    program    = Computer(values)
     program[1] = 12
     program[2] = 2
     run!(program)

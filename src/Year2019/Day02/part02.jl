@@ -10,7 +10,7 @@ Returns a number indicating which values yielded this result.
 function part2(input)
     for noun in 0:99, verb in 0:99
         values     = deepcopy(input)
-        program    = Program(values)
+        program    = Computer(values)
         program[1] = noun
         program[2] = verb
         run!(program)
