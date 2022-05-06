@@ -1,4 +1,4 @@
-using .IntCode: Halted, execute!
+using .IntCode: Running, Halted, execute!
 using DataStructures: Queue, enqueue!, dequeue!
 
 """
@@ -25,7 +25,8 @@ function run_with_feedback(code::Vector{Int}, phases::Vector{Int})
     (idx, computer) = dequeue!(computers)
     add_input!(computer, input)
 
-    # Run the computer until it produces output (or halts)
+    # Run the computer until it produces output (or halts), and 
+    # immediately pass the output to the next computer in sequence
     while isempty(computer.output)
         # Whenever a computer halts, return the last `max_value`
         computer isa Computer{Halted} && return max_value

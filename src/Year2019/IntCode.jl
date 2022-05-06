@@ -11,6 +11,7 @@ running or halted. Used to sub-type `Computer`.
 abstract type     AbstractState end
 struct Running <: AbstractState end
 struct Halted  <: AbstractState end
+struct Waiting <: AbstractState end
 
 """
 A `Tape` is a layer of abstraction over an integer vector to make the
@@ -63,6 +64,7 @@ function get_output!((; output)::Computer)
     return dequeue!(output)
 end
 
+current_address((; pointer, tape)::Computer) = tape[pointer]
 Base.setindex!((; tape)::Computer, v::Int, idx::Int) = setindex!(tape, v, idx)
 Base.getindex((; tape)::Computer, idx::Int) = tape[idx]
 
@@ -138,12 +140,13 @@ Carry out an `add` instruction, based on the current pointer and list of
 values in the computer. Returns the position of the pointer after the
 instruction has been completed.
 """
-function add!((; pointer, tape)::Computer, modes::Modes)
-    input1 = Parameter(modes[1], tape[pointer+1])
-    input2 = Parameter(modes[2], tape[pointer+2])
-    output = tape[pointer+3]
-    tape[output] = tape[input1] + tape[input2]
-    return pointer + 4
+function add!(computer::Computer, modes::Modes)
+    (; pointer, tape, input, output) = computer
+    param1 = Parameter(modes[1], tape[pointer+1])
+    param2 = Parameter(modes[2], tape[pointer+2])
+    param3 = tape[pointer+3]
+    tape[param3] = tape[param1] + tape[param2]
+    return Computer(Running, pointer + 4, tape, input, output)
 end
 
 """
@@ -153,12 +156,13 @@ Carry out a `mul` instruction, based on the current pointer and list of
 values in the computer. Returns the position of the pointer after the
 instruction has been completed.
 """
-function mul!((; pointer, tape)::Computer, modes::Modes)
-    input1 = Parameter(modes[1], tape[pointer+1])
-    input2 = Parameter(modes[2], tape[pointer+2])
-    output = tape[pointer+3]
-    tape[output] = tape[input1] * tape[input2]
-    return pointer + 4
+function mul!(computer::Computer, modes::Modes)
+    (; pointer, tape, input, output) = computer
+    param1 = Parameter(modes[1], tape[pointer+1])
+    param2 = Parameter(modes[2], tape[pointer+2])
+    param3 = tape[pointer+3]
+    tape[param3] = tape[param1] * tape[param2]
+    return Computer(Running, pointer + 4, tape, input, output)
 end
 
 """
@@ -168,11 +172,13 @@ Carry out an `input` instruction, reading input from the `Computer`'s current
 input and storing it in the indicated memory position. Returns the position
 of the pointer after the instruction has been completed.
 """
-function input!((; pointer, tape, input)::Computer)
-    input  = dequeue!(input)
-    output = tape[pointer+1]
-    tape[output] = input
-    return pointer + 2
+function input!(computer::Computer)
+    (; pointer, tape, input, output) = computer
+    isempty(input) && return Computer(Waiting, pointer, tape, input, output)
+    param1  = dequeue!(input)
+    param2 = tape[pointer+1]
+    tape[param2] = param1
+    return Computer(Running, pointer + 2, tape, input, output)
 end
 
 """
@@ -182,10 +188,11 @@ Carry out an `output` instruction, writing the indicated value to the
 `Computer`'s current output. Returns the position of the pointer after
 the instruction has been completed.
 """
-function output!((; pointer, tape, output)::Computer, modes::Modes)
-    input = Parameter(modes[1], tape[pointer+1])
-    enqueue!(output, tape[input])
-    return pointer + 2
+function output!(computer::Computer, modes::Modes)
+    (; pointer, tape, input, output) = computer
+    param = Parameter(modes[1], tape[pointer+1])
+    enqueue!(output, tape[param])
+    return Computer(Running, pointer + 2, tape, input, output)
 end
 
 """
@@ -195,11 +202,12 @@ Carry out a `jump-if-true` instruction. If the first parameter is non-zero,
 it return a pointer position according to the second parameter, otherwise
 returns the position of the next instruction.
 """
-function jit!((; pointer, tape)::Computer, modes::Modes)
-    input1 = Parameter(modes[1], tape[pointer+1])
-    input2 = Parameter(modes[2], tape[pointer+2])
-    tape[input1] == 0 || return tape[input2]
-    return pointer + 3
+function jit!(computer::Computer, modes::Modes)
+    (; pointer, tape, input, output) = computer
+    param1 = Parameter(modes[1], tape[pointer+1])
+    param2 = Parameter(modes[2], tape[pointer+2])
+    pointer = tape[param1] == 0 ? pointer + 3 : tape[param2]
+    return Computer(Running, pointer, tape, input, output)
 end
 
 """
@@ -209,11 +217,12 @@ Carry out a `jump-if-false` instruction. If the first parameter is zero,
 it return a pointer position according to the second parameter, otherwise
 returns the position of the next instruction.
 """
-function jif!((; pointer, tape)::Computer, modes::Modes)
-    input1 = Parameter(modes[1], tape[pointer+1])
-    input2 = Parameter(modes[2], tape[pointer+2])
-    tape[input1] == 0 && return tape[input2]
-    return pointer + 3
+function jif!(computer::Computer, modes::Modes)
+    (; pointer, tape, input, output) = computer
+    param1 = Parameter(modes[1], tape[pointer+1])
+    param2 = Parameter(modes[2], tape[pointer+2])
+    pointer = tape[param1] == 0 ? tape[param2] : pointer + 3
+    return Computer(Running, pointer, tape, input, output)
 end
 
 """
@@ -223,12 +232,13 @@ Carry out a `less-than` instruction. If the first parameter is less than the
 second parameter, set the memory address referenced by the third parameter
 to `1`, otherwise set it to `0`. Returns the position of the next instruction.
 """
-function lt!((; pointer, tape)::Computer, modes::Modes)
-    input1 = Parameter(modes[1], tape[pointer+1])
-    input2 = Parameter(modes[2], tape[pointer+2])
-    output = tape[pointer+3]
-    tape[output] = tape[input1] < tape[input2] ? 1 : 0
-    return pointer + 4
+function lt!(computer::Computer, modes::Modes)
+    (; pointer, tape, input, output) = computer
+    param1 = Parameter(modes[1], tape[pointer+1])
+    param2 = Parameter(modes[2], tape[pointer+2])
+    param3 = tape[pointer+3]
+    tape[param3] = tape[param1] < tape[param2] ? 1 : 0
+    return Computer(Running, pointer + 4, tape, input, output)
 end
 
 """
@@ -238,12 +248,13 @@ Carry out an `equal-to` instruction. If the first parameter is equal to the
 second parameter, set the memory address referenced by the third parameter
 to `1`, otherwise set it to `0`. Returns the position of the next instruction.
 """
-function eq!((; pointer, tape)::Computer, modes::Modes)
-    input1 = Parameter(modes[1], tape[pointer+1])
-    input2 = Parameter(modes[2], tape[pointer+2])
-    output = tape[pointer+3]
-    tape[output] = tape[input1] == tape[input2] ? 1 : 0
-    return pointer + 4
+function eq!(computer::Computer, modes::Modes)
+    (; pointer, tape, input, output) = computer
+    param1 = Parameter(modes[1], tape[pointer+1])
+    param2 = Parameter(modes[2], tape[pointer+2])
+    param3 = tape[pointer+3]
+    tape[param3] = tape[param1] == tape[param2] ? 1 : 0
+    return Computer(Running, pointer + 4, tape, input, output)
 end
 
 """
@@ -251,7 +262,8 @@ end
 
 Halts the computer.
 """
-function exit!((; pointer, tape, input, output)::Computer)
+function exit!(computer::Computer)
+    (; pointer, tape, input, output) = computer
     return Computer(Halted, pointer, tape, input, output)
 end
 
@@ -261,25 +273,20 @@ end
 Get the instruction at the current pointer location and run it, returning
 a computer that represents the state after running the next instruction.
 """
-function execute!(computer::Computer{Running})
-    (; state, pointer, tape, input, output) = computer
-    modes, opcode = divrem(tape[pointer], 100)
+function execute!(computer::Computer)
+    modes, opcode = divrem(current_address(computer), 100)
 
     # Dispatch based on opcode
-    opcode == 1  && (pointer =    add!(computer, Modes(modes)))
-    opcode == 2  && (pointer =    mul!(computer, Modes(modes)))
-    opcode == 3  && (pointer =  input!(computer))
-    opcode == 4  && (pointer = output!(computer, Modes(modes)))
-    opcode == 5  && (pointer =    jit!(computer, Modes(modes)))
-    opcode == 6  && (pointer =    jif!(computer, Modes(modes)))
-    opcode == 7  && (pointer =     lt!(computer, Modes(modes)))
-    opcode == 8  && (pointer =     eq!(computer, Modes(modes)))
-    opcode == 99 && return exit!(computer)
-
-    # Halt the computer if the pointer is aimed outside the 
-    # available memory space. Otherwise, keep running.
-    0 < pointer <= length(tape) || (state = Halted)
-    return Computer(state, pointer, tape, input, output)
+    opcode == 1  && return    add!(computer, Modes(modes))
+    opcode == 2  && return    mul!(computer, Modes(modes))
+    opcode == 3  && return  input!(computer)
+    opcode == 4  && return output!(computer, Modes(modes))
+    opcode == 5  && return    jit!(computer, Modes(modes))
+    opcode == 6  && return    jif!(computer, Modes(modes))
+    opcode == 7  && return     lt!(computer, Modes(modes))
+    opcode == 8  && return     eq!(computer, Modes(modes))
+    opcode == 99 && return   exit!(computer)
+    error("'$opcode' is not a valid opcode!")
 end
 
 "Halted computers don't do anything..."
@@ -291,6 +298,7 @@ execute!(computer::Computer{Halted}) = computer
 Execute instructions until the computer halts
 """
 function run!(computer::Computer)
+    computer = execute!(computer)
     while computer isa Computer{Running}
         computer = execute!(computer)
     end
