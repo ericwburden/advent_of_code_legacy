@@ -14,47 +14,59 @@ struct Halted  <: AbstractState end
 struct Waiting <: AbstractState end
 
 """
-A `Tape` is a layer of abstraction over an integer vector to make the
+A `Memory` is a layer of abstraction over an integer vector to make the
 list of values stored in the `Computer` 0-indexed as opposed to the normal
 Julia 1-indexing, useful to prevent confusion when referring to puzzle
 instructions.
 """
-struct Tape
-    inner::Vector{Int}
+struct Memory
+    inner::Dict{BigInt,BigInt}
 end
 
-Base.getindex((; inner)::Tape, idx::Int)            = inner[idx + 1]
-Base.getindex((; inner)::Tape, idx::UnitRange{Int}) = inner[idx .+ 1]
-Base.setindex!((; inner)::Tape, v::Int, idx::Int)   = setindex!(inner, v, idx + 1)
-Base.length((; inner)::Tape) = length(inner)
-Base.view((; inner)::Tape, idx::UnitRange{Int}) = view(inner, idx .+ 1)
+Base.getindex((; inner)::Memory, idx::Int)                = get(inner, idx + 1, 0)
+Base.getindex((; inner)::Memory, idx::BigInt)             = get(inner, idx + 1, 0)
+Base.setindex!((; inner)::Memory, v::Int,    idx::Int)    = setindex!(inner, v, idx + 1)
+Base.setindex!((; inner)::Memory, v::Int,    idx::BigInt) = setindex!(inner, v, idx + 1)
+Base.setindex!((; inner)::Memory, v::BigInt, idx::Int)    = setindex!(inner, v, idx + 1)
+Base.setindex!((; inner)::Memory, v::BigInt, idx::BigInt) = setindex!(inner, v, idx + 1)
+Base.length((; inner)::Memory) = length(inner)
+Base.view((; inner)::Memory, idx::UnitRange{Int}) = view(inner, idx .+ 1)
 
 """
 A `Computer` encapsulates the full state of the computer, the current pointer
-value, and the 'tape' of integer values.
+value, and the 'memory' of integer values.
 """
 mutable struct Computer{S <: AbstractState}
     state::Type{S}
     pointer::Int
-    tape::Tape
-    input::Queue{Int}
-    output::Queue{Int}
+    relative_base::Int
+    memory::Memory
+    input::Queue{BigInt}
+    output::Queue{BigInt}
 end
 
-Computer(values::Vector{Int}) = Computer(Running, 0, Tape(values), Queue{Int}(), Queue{Int}())
+Computer(values::Vector{Int}) = Computer([BigInt(i) for i in values])
+
+function Computer(values::Vector{BigInt})
+    values = Dict(BigInt(i) => v for (i, v) in enumerate(values))
+    Computer(Running, 0, 0, Memory(values), Queue{BigInt}(), Queue{BigInt}())
+end
 
 """
-    add_input!(computer::Computer, value::Int)
+    add_input!(computer::Computer, value::BigInt)
 
 Add an input value to the `Computer`'s input. Currently only supports writing
 to a Queue for input, can be extended to support other inputs later if needed.
 """
-function add_input!((; input)::Computer, value::Int)
+function add_input!((; input)::Computer, value::BigInt)
     enqueue!(input, value)
+end
+function add_input!((; input)::Computer, value::Int)
+    enqueue!(input, BigInt(value))
 end
 
 """
-    get_output!((; output)::Computer)
+    get_output!((; output)::Computer) -> BigInt
 
 Retrieve an output value from the `Computer`'s output. Currently only supports
 reading from a `Queue` for output, can be extended to support other outputs
@@ -64,9 +76,13 @@ function get_output!((; output)::Computer)
     return dequeue!(output)
 end
 
-current_address((; pointer, tape)::Computer) = tape[pointer]
-Base.setindex!((; tape)::Computer, v::Int, idx::Int) = setindex!(tape, v, idx)
-Base.getindex((; tape)::Computer, idx::Int) = tape[idx]
+current_address((; pointer, memory)::Computer) = memory[pointer]
+Base.setindex!((; memory)::Computer, v::Int,    idx::Int)    = setindex!(memory, v, idx)
+Base.setindex!((; memory)::Computer, v::Int,    idx::BigInt) = setindex!(memory, v, idx)
+Base.setindex!((; memory)::Computer, v::BigInt, idx::Int)    = setindex!(memory, v, idx)
+Base.setindex!((; memory)::Computer, v::BigInt, idx::BigInt) = setindex!(memory, v, idx)
+Base.getindex((; memory)::Computer, idx::Int)    = memory[idx]
+Base.getindex((; memory)::Computer, idx::BigInt) = memory[idx]
 
 """
 An `AbstractMode` represents the mode with which a parameter should be
@@ -75,11 +91,13 @@ handled.
 abstract type       AbstractMode end
 struct Position  <: AbstractMode end
 struct Immediate <: AbstractMode end
+struct Relative  <: AbstractMode end
 
 "Dispatch for different subtypes of `AbstractMode`"
 function AbstractMode(int::Int)
     int == 0 && return Position()
     int == 1 && return Immediate()
+    int == 2 && return Relative()
     error("'$int' is not a valid mode value!")
 end
 
@@ -98,7 +116,7 @@ Modes() = Modes(())
 
 # This constructor takes the parameter-specifying integer and returns a
 # `Modes` specifying the modes from the parameter integer.
-function Modes(value::Int)
+function Modes(value::BigInt)
     modes = Tuple(AbstractMode(d) for d in digits(value))
     return Modes(modes)
 end
@@ -119,18 +137,32 @@ A `Parameter` wraps a given parameter (integer) from the IntCode, specifying
 the mode to be used to access the value of the parameter.
 
 A `Position` mode indicates that the value should be taken from the corresponding
-index in the `Computer` tape. An `Immediate` mode indicates that the value is the
+index in the `Computer` memory. An `Immediate` mode indicates that the value is the
 parameter itself.
 """
 struct Parameter{M <: AbstractMode}
     mode::M
-    value::Int
+    value::BigInt
 end
 
-Base.getindex((; inner)::Tape, (; value)::Parameter{Position})     = inner[value + 1]
-Base.getindex((; tape)::Computer, (; value)::Parameter{Position})  = tape[value]
-Base.getindex((; inner)::Tape, (; value)::Parameter{Immediate})    = value
-Base.getindex((; tape)::Computer, (; value)::Parameter{Immediate}) = value
+Base.getindex((; memory)::Computer, (; value)::Parameter{Position})  = memory[value]
+Base.getindex((; memory)::Computer, (; value)::Parameter{Immediate}) = value
+
+Base.getindex(
+    (; memory, relative_base)::Computer, 
+    (; value)::Parameter{Relative}
+) = memory[value + relative_base]
+
+Base.setindex!(
+    (; memory, relative_base)::Computer, 
+    v,
+    (; value)::Parameter{Relative}
+) = setindex!(memory, v, value + relative_base)
+Base.setindex!(
+    (; memory)::Computer, 
+    v,
+    (; value)::Parameter{Position}
+) = setindex!(memory, v, value)
 
 
 """
@@ -141,12 +173,13 @@ values in the computer. Returns the position of the pointer after the
 instruction has been completed.
 """
 function add!(computer::Computer, modes::Modes)
-    (; pointer, tape, input, output) = computer
-    param1 = Parameter(modes[1], tape[pointer+1])
-    param2 = Parameter(modes[2], tape[pointer+2])
-    param3 = tape[pointer+3]
-    tape[param3] = tape[param1] + tape[param2]
-    return Computer(Running, pointer + 4, tape, input, output)
+    (; pointer) = computer
+    param1 = Parameter(modes[1], computer[pointer+1])
+    param2 = Parameter(modes[2], computer[pointer+2])
+    param3 = Parameter(modes[3], computer[pointer+3])
+    computer[param3] = computer[param1] + computer[param2]
+    computer.pointer += 4
+    return computer
 end
 
 """
@@ -157,12 +190,13 @@ values in the computer. Returns the position of the pointer after the
 instruction has been completed.
 """
 function mul!(computer::Computer, modes::Modes)
-    (; pointer, tape, input, output) = computer
-    param1 = Parameter(modes[1], tape[pointer+1])
-    param2 = Parameter(modes[2], tape[pointer+2])
-    param3 = tape[pointer+3]
-    tape[param3] = tape[param1] * tape[param2]
-    return Computer(Running, pointer + 4, tape, input, output)
+    (; pointer) = computer
+    param1 = Parameter(modes[1], computer[pointer+1])
+    param2 = Parameter(modes[2], computer[pointer+2])
+    param3 = Parameter(modes[3], computer[pointer+3])
+    computer[param3] = computer[param1] * computer[param2]
+    computer.pointer += 4
+    return computer
 end
 
 """
@@ -172,13 +206,13 @@ Carry out an `input` instruction, reading input from the `Computer`'s current
 input and storing it in the indicated memory position. Returns the position
 of the pointer after the instruction has been completed.
 """
-function input!(computer::Computer)
-    (; pointer, tape, input, output) = computer
-    isempty(input) && return Computer(Waiting, pointer, tape, input, output)
-    param1  = dequeue!(input)
-    param2 = tape[pointer+1]
-    tape[param2] = param1
-    return Computer(Running, pointer + 2, tape, input, output)
+function input!(computer::Computer, modes::Modes)
+    (; pointer, relative_base, memory, input, output) = computer
+    isempty(input) && return Computer(Waiting, pointer, relative_base, memory, input, output)
+    value  = dequeue!(input)
+    param = Parameter(modes[1], computer[pointer+1])
+    computer[param] = value
+    return Computer(Running, pointer + 2, relative_base, memory, input, output)
 end
 
 """
@@ -189,10 +223,11 @@ Carry out an `output` instruction, writing the indicated value to the
 the instruction has been completed.
 """
 function output!(computer::Computer, modes::Modes)
-    (; pointer, tape, input, output) = computer
-    param = Parameter(modes[1], tape[pointer+1])
-    enqueue!(output, tape[param])
-    return Computer(Running, pointer + 2, tape, input, output)
+    (; pointer, output) = computer
+    param = Parameter(modes[1], computer[pointer+1])
+    enqueue!(output, computer[param])
+    computer.pointer += 2
+    return computer
 end
 
 """
@@ -203,11 +238,11 @@ it return a pointer position according to the second parameter, otherwise
 returns the position of the next instruction.
 """
 function jit!(computer::Computer, modes::Modes)
-    (; pointer, tape, input, output) = computer
-    param1 = Parameter(modes[1], tape[pointer+1])
-    param2 = Parameter(modes[2], tape[pointer+2])
-    pointer = tape[param1] == 0 ? pointer + 3 : tape[param2]
-    return Computer(Running, pointer, tape, input, output)
+    (; pointer) = computer
+    param1 = Parameter(modes[1], computer[pointer+1])
+    param2 = Parameter(modes[2], computer[pointer+2])
+    computer.pointer = computer[param1] == 0 ? pointer + 3 : computer[param2]
+    return computer
 end
 
 """
@@ -218,11 +253,11 @@ it return a pointer position according to the second parameter, otherwise
 returns the position of the next instruction.
 """
 function jif!(computer::Computer, modes::Modes)
-    (; pointer, tape, input, output) = computer
-    param1 = Parameter(modes[1], tape[pointer+1])
-    param2 = Parameter(modes[2], tape[pointer+2])
-    pointer = tape[param1] == 0 ? tape[param2] : pointer + 3
-    return Computer(Running, pointer, tape, input, output)
+    (; pointer) = computer
+    param1 = Parameter(modes[1], computer[pointer+1])
+    param2 = Parameter(modes[2], computer[pointer+2])
+    computer.pointer = computer[param1] == 0 ? computer[param2] : pointer + 3
+    return computer
 end
 
 """
@@ -233,12 +268,13 @@ second parameter, set the memory address referenced by the third parameter
 to `1`, otherwise set it to `0`. Returns the position of the next instruction.
 """
 function lt!(computer::Computer, modes::Modes)
-    (; pointer, tape, input, output) = computer
-    param1 = Parameter(modes[1], tape[pointer+1])
-    param2 = Parameter(modes[2], tape[pointer+2])
-    param3 = tape[pointer+3]
-    tape[param3] = tape[param1] < tape[param2] ? 1 : 0
-    return Computer(Running, pointer + 4, tape, input, output)
+    (; pointer) = computer
+    param1 = Parameter(modes[1], computer[pointer+1])
+    param2 = Parameter(modes[2], computer[pointer+2])
+    param3 = Parameter(modes[3], computer[pointer+3])
+    computer[param3] = computer[param1] < computer[param2] ? 1 : 0
+    computer.pointer += 4
+    return computer
 end
 
 """
@@ -249,22 +285,31 @@ second parameter, set the memory address referenced by the third parameter
 to `1`, otherwise set it to `0`. Returns the position of the next instruction.
 """
 function eq!(computer::Computer, modes::Modes)
-    (; pointer, tape, input, output) = computer
-    param1 = Parameter(modes[1], tape[pointer+1])
-    param2 = Parameter(modes[2], tape[pointer+2])
-    param3 = tape[pointer+3]
-    tape[param3] = tape[param1] == tape[param2] ? 1 : 0
-    return Computer(Running, pointer + 4, tape, input, output)
+    (; pointer) = computer
+    param1 = Parameter(modes[1], computer[pointer+1])
+    param2 = Parameter(modes[2], computer[pointer+2])
+    param3 = Parameter(modes[3], computer[pointer+3])
+    computer[param3] = computer[param1] == computer[param2] ? 1 : 0
+    computer.pointer += 4
+    return computer
+end
+
+function rebase!(computer::Computer, modes::Modes)
+    (; pointer) = computer
+    param1 = Parameter(modes[1], computer[pointer+1])
+    computer.relative_base += computer[param1]
+    computer.pointer += 2
+    return computer
 end
 
 """
-    exit!(computer::Computer) -> Computer
+    halt!(computer::Computer) -> Computer
 
 Halts the computer.
 """
-function exit!(computer::Computer)
-    (; pointer, tape, input, output) = computer
-    return Computer(Halted, pointer, tape, input, output)
+function halt!(computer::Computer)
+    (; pointer, relative_base, memory, input, output) = computer
+    return Computer(Halted, pointer, relative_base, memory, input, output)
 end
 
 """
@@ -279,13 +324,14 @@ function execute!(computer::Computer)
     # Dispatch based on opcode
     opcode == 1  && return    add!(computer, Modes(modes))
     opcode == 2  && return    mul!(computer, Modes(modes))
-    opcode == 3  && return  input!(computer)
+    opcode == 3  && return  input!(computer, Modes(modes))
     opcode == 4  && return output!(computer, Modes(modes))
     opcode == 5  && return    jit!(computer, Modes(modes))
     opcode == 6  && return    jif!(computer, Modes(modes))
     opcode == 7  && return     lt!(computer, Modes(modes))
     opcode == 8  && return     eq!(computer, Modes(modes))
-    opcode == 99 && return   exit!(computer)
+    opcode == 9  && return rebase!(computer, Modes(modes))
+    opcode == 99 && return   halt!(computer)
     error("'$opcode' is not a valid opcode!")
 end
 
