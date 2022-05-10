@@ -5,8 +5,10 @@ using DataStructures: Queue, enqueue!, dequeue!
 export run!, execute!, add_input!, get_output!, Computer
 
 """
-An `AbstractState` indicates the state of the `Computer`, whether it is 
-running or halted. Used to sub-type `Computer`.
+An `AbstractState` indicates the state of the `Computer`, which may be:
+    - `Running`: The computer is running
+    - `Halted`: The computer has halted and will not resume
+    - `Waiting`: The computer has asked for input and is waiting for it
 """
 abstract type     AbstractState end
 struct Running <: AbstractState end
@@ -14,10 +16,8 @@ struct Halted  <: AbstractState end
 struct Waiting <: AbstractState end
 
 """
-A `Memory` is a layer of abstraction over an integer vector to make the
-list of values stored in the `Computer` 0-indexed as opposed to the normal
-Julia 1-indexing, useful to prevent confusion when referring to puzzle
-instructions.
+A `Memory` is a layer of abstraction over the positions/values stored. Positions
+are 0-indexed to be as similar to puzzle instructions as possible.
 """
 struct Memory
     inner::Dict{BigInt,BigInt}
@@ -34,7 +34,7 @@ Base.view((; inner)::Memory, idx::UnitRange{Int}) = view(inner, idx .+ 1)
 
 """
 A `Computer` encapsulates the full state of the computer, the current pointer
-value, and the 'memory' of integer values.
+value, relative pointer base, input/output, and the 'memory' of integer values.
 """
 mutable struct Computer{S <: AbstractState}
     state::Type{S}
@@ -136,9 +136,11 @@ end
 A `Parameter` wraps a given parameter (integer) from the IntCode, specifying
 the mode to be used to access the value of the parameter.
 
-A `Position` mode indicates that the value should be taken from the corresponding
-index in the `Computer` memory. An `Immediate` mode indicates that the value is the
-parameter itself.
+- A `Position` mode indicates that the value should be taken from the corresponding
+  index in the `Computer` memory. 
+- An `Immediate` mode indicates that the value is the parameter itself.
+- A `Relative` mode indicates that the value should be take from the corresponding
+  index, starting from the relative base.
 """
 struct Parameter{M <: AbstractMode}
     mode::M
@@ -166,11 +168,10 @@ Base.setindex!(
 
 
 """
-    add!(computer::Computer) -> Int
+    add!(computer::Computer) -> Computer
 
 Carry out an `add` instruction, based on the current pointer and list of
-values in the computer. Returns the position of the pointer after the
-instruction has been completed.
+values in the computer. Returns the modified computer.
 """
 function add!(computer::Computer, modes::Modes)
     (; pointer) = computer
@@ -183,11 +184,10 @@ function add!(computer::Computer, modes::Modes)
 end
 
 """
-    mul!(computer::Computer) -> Int
+    mul!(computer::Computer) -> Computer
 
 Carry out a `mul` instruction, based on the current pointer and list of
-values in the computer. Returns the position of the pointer after the
-instruction has been completed.
+values in the computer. Returns the modified computer.
 """
 function mul!(computer::Computer, modes::Modes)
     (; pointer) = computer
@@ -200,11 +200,10 @@ function mul!(computer::Computer, modes::Modes)
 end
 
 """
-    input!(computer::Computer) -> Int
+    input!(computer::Computer) -> Computer
 
 Carry out an `input` instruction, reading input from the `Computer`'s current
-input and storing it in the indicated memory position. Returns the position
-of the pointer after the instruction has been completed.
+input and storing it in the indicated memory position. Returns the modified computer.
 """
 function input!(computer::Computer, modes::Modes)
     (; pointer, relative_base, memory, input, output) = computer
@@ -216,11 +215,10 @@ function input!(computer::Computer, modes::Modes)
 end
 
 """
-    output!(computer::Computer) -> Int
+    output!(computer::Computer) -> Computer
 
 Carry out an `output` instruction, writing the indicated value to the 
-`Computer`'s current output. Returns the position of the pointer after
-the instruction has been completed.
+`Computer`'s current output. Returns the modified computer.
 """
 function output!(computer::Computer, modes::Modes)
     (; pointer, output) = computer
@@ -231,11 +229,11 @@ function output!(computer::Computer, modes::Modes)
 end
 
 """
-    jit!(computer::Computer, modes::Modes) -> Int
+    jit!(computer::Computer, modes::Modes) -> Computer
 
 Carry out a `jump-if-true` instruction. If the first parameter is non-zero,
-it return a pointer position according to the second parameter, otherwise
-returns the position of the next instruction.
+set the pointer position according to the second parameter, otherwise
+set it to the position of the next instruction. Returns the modified computer.
 """
 function jit!(computer::Computer, modes::Modes)
     (; pointer) = computer
@@ -246,11 +244,11 @@ function jit!(computer::Computer, modes::Modes)
 end
 
 """
-    jif!(computer::Computer, modes::Modes) -> Int
+    jif!(computer::Computer, modes::Modes) -> Computer
 
 Carry out a `jump-if-false` instruction. If the first parameter is zero,
-it return a pointer position according to the second parameter, otherwise
-returns the position of the next instruction.
+set the pointer position according to the second parameter, otherwise
+set it to the position of the next instruction. Returns the modified computer.
 """
 function jif!(computer::Computer, modes::Modes)
     (; pointer) = computer
@@ -261,11 +259,11 @@ function jif!(computer::Computer, modes::Modes)
 end
 
 """
-    lt!(computer::Computer, modes::Modes) -> Int
+    lt!(computer::Computer, modes::Modes) -> Computer
 
 Carry out a `less-than` instruction. If the first parameter is less than the
 second parameter, set the memory address referenced by the third parameter
-to `1`, otherwise set it to `0`. Returns the position of the next instruction.
+to `1`, otherwise set it to `0`. Returns the modified computer.
 """
 function lt!(computer::Computer, modes::Modes)
     (; pointer) = computer
@@ -278,11 +276,11 @@ function lt!(computer::Computer, modes::Modes)
 end
 
 """
-    eq!(computer::Computer, modes::Modes) -> Int
+    eq!(computer::Computer, modes::Modes) -> Computer
 
 Carry out an `equal-to` instruction. If the first parameter is equal to the
 second parameter, set the memory address referenced by the third parameter
-to `1`, otherwise set it to `0`. Returns the position of the next instruction.
+to `1`, otherwise set it to `0`. Returns the modified computer.
 """
 function eq!(computer::Computer, modes::Modes)
     (; pointer) = computer
@@ -294,6 +292,13 @@ function eq!(computer::Computer, modes::Modes)
     return computer
 end
 
+"""
+    rebase!(computer::Computer, modes::Modes) -> Computer
+
+Carry out an `relative base offset` instruction, updating the computer's
+`relative_base`, used for any parameter in `Relative` mode. Returns the
+modified computer.
+"""
 function rebase!(computer::Computer, modes::Modes)
     (; pointer) = computer
     param1 = Parameter(modes[1], computer[pointer+1])
