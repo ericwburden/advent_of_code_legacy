@@ -116,7 +116,7 @@ end
 
 # Fetch the input, if possible
 println("Downloading input...")
-cookie     = read("$(@__DIR__)/.cookie", String)
+cookie     = readline("$(@__DIR__)/.cookie")
 input_path = joinpath(@__DIR__, "..", "inputs", "$year", lpad(day, 2, "0"), "input.txt")
 input_url  = "https://adventofcode.com/$year/day/$day/input"
 headers    = Dict("cookie" => "session=$cookie")
