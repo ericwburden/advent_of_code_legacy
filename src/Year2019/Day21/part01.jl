@@ -33,4 +33,5 @@ function hull_damage(input, script)
     return output
 end
 
+"Check for hull damage using the `WALKSCRIPT` script"
 part1(input) = hull_damage(input, WALKSCRIPT)
