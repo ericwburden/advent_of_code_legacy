@@ -1,5 +1,11 @@
 const Position = NTuple{2,Int}
 
+"""
+    is_intersection(m::Matrix{Char}, p::CartesianIndex) -> Bool
+    
+Indicates whether a given coordinate represents an intersection, that is,
+there is a scaffolding tile in all four cardinal directions.
+"""
 function is_intersection(m::Matrix{Char}, p::CartesianIndex)
     offsets = map(CartesianIndex, [(-1, 0), (1, 0), (0, -1), (0, 1)])
     for offset in offsets
@@ -10,6 +16,12 @@ function is_intersection(m::Matrix{Char}, p::CartesianIndex)
     return true
 end
 
+"""
+    find_intersections(scaffold::Matrix{Char}) -> Int
+
+Given a character matrix representation of the scaffolding, count and
+return the number of intersections.
+"""
 function find_intersections(scaffold::Matrix{Char})
     intersections = Position[]
     for p in CartesianIndices(scaffold)
@@ -20,6 +32,12 @@ function find_intersections(scaffold::Matrix{Char})
     return intersections
 end
 
+"""
+    part1(input) -> Int
+
+Given the input program, run it through the ASCII program to generate a
+map of the scaffolding, then count and return the number of intersections.
+"""
 function part1(input)
     scaffold      = scaffolds(input)
     intersections = find_intersections(scaffold)

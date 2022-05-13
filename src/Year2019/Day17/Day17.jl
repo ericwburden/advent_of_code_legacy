@@ -1,6 +1,7 @@
 module Day17
 using AdventOfCode: getinput
 
+include("../IntCode.jl")
 include("ingest.jl")
 include("part01.jl")
 include("part02.jl")
