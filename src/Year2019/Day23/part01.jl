@@ -23,6 +23,13 @@ function NetworkComputer(address::Int, program::Vector{Int})
     return NetworkComputer(Packet[], computer)
 end
 
+"""
+    produce_packets!((; incoming, computer)::NetworkComputer) -> (NetworkComputer, Packet[])
+
+Have a `NetworkComputer` pass information from all incoming packets to input, in
+order, then run the computer until all the incoming packets are processed,
+collecting all the produced outgoing packets to be delivered to other computers.
+"""
 function produce_packets!((; incoming, computer)::NetworkComputer)
     isempty(incoming) && add_input!(computer, -1)
     for (; x, y) in incoming
@@ -42,6 +49,13 @@ function produce_packets!((; incoming, computer)::NetworkComputer)
     return (NetworkComputer(Packet[], computer), packets)
 end
 
+"""
+    part1(input) -> BigInt
+
+Spin up 50 network computers and run the network, passing packets round robin
+style until one of the computers tries to send a packet to address 255. Return
+the `y` value from that packet.
+"""
 function part1(input)
     computers = map(addr -> NetworkComputer(addr, input), 0:49)
 
