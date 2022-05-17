@@ -7,8 +7,8 @@ priority(w::AbstractVector{Int}) = (length(w), prod(w))
 Given a `total` and an iterable collection of `weights`, return a vector 
 containing the groups that `weights` can be split into that will sum to `total`
 """
-function find_groups(total::Int, weights::AbstractVector{Int}, groups=Int[])
-    total == 0       && return [groups]
+function find_groups(total::Int, weights::AbstractVector{Int}, groups = Int[])
+    total == 0 && return [groups]
     isempty(weights) && return Int[]
 
     output = Vector{Int}[]
@@ -32,15 +32,15 @@ In the context of this puzzle, this checks a given grouping of weights against
 all the other groups of weights that can be produced to determine if a
 number of evenly weighted groups can be produced given `group` is one of them.
 """
-function check_overlap(group::Set{Int}, others::AbstractVector{Set{Int}}, remaining=2)
-    remaining == 0  && return true
+function check_overlap(group::Set{Int}, others::AbstractVector{Set{Int}}, remaining = 2)
+    remaining == 0 && return true
     isempty(others) && return false
 
     for (idx, other) in enumerate(others)
-        if isdisjoint(group, other) 
+        if isdisjoint(group, other)
             already_seen = group ∪ other
             left_to_check = @view others[idx+1:end]
-            return check_overlap(already_seen, left_to_check, remaining-1)
+            return check_overlap(already_seen, left_to_check, remaining - 1)
         end
     end
 
@@ -56,11 +56,11 @@ packages and 'quantum entanglement') that can be made while evenly dividing
 the packages.
 """
 function solve(weights::AbstractVector{Int}, compartments::Int)
-    target_weight   = sum(weights) ÷ compartments
+    target_weight = sum(weights) ÷ compartments
     possible_groups = Set.(find_groups(target_weight, weights))
     for (idx, group) in enumerate(possible_groups)
         other_groups = @view possible_groups[idx+1:end]
-        check_overlap(group, other_groups, compartments-1) && return prod(group)
+        check_overlap(group, other_groups, compartments - 1) && return prod(group)
     end
 end
 

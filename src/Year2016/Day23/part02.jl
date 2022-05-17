@@ -10,7 +10,7 @@ struct Add <: Instruction
     dec::Register
 end
 
-function execute!(program::Program, (; inc, dec)::Add) 
+function execute!(program::Program, (; inc, dec)::Add)
     program.registers[inc] += eval(program.registers, dec)
     program.registers[dec] = Literal(0)
     program.pointer += 3
@@ -20,7 +20,7 @@ function optimize_add!(instructions::Vector{Instruction})
     idx = 1
     while idx < length(instructions) - 2
         add_instr = try_add_instruction(instructions[idx:idx+2]...)
-        if isnothing(add_instr) 
+        if isnothing(add_instr)
             idx += 1
         else
             instructions[idx] = add_instr
@@ -78,10 +78,12 @@ function optimize_mul!(instructions::Vector{Instruction})
 end
 
 try_mul_instruction(::Any, ::Any, ::Any, ::Any, ::Any, ::Any) = nothing
-try_mul_instruction(cpy::Cpy, add::Add, ::Dec, ::Jnz, dec::Dec, jnz::Jnz) = try_mul_instruction(cpy, add, dec, jnz)
-try_mul_instruction(cpy::Cpy, add::Add, ::Inc, ::Jnz, dec::Dec, jnz::Jnz) = try_mul_instruction(cpy, add, dec, jnz)
+try_mul_instruction(cpy::Cpy, add::Add, ::Dec, ::Jnz, dec::Dec, jnz::Jnz) =
+    try_mul_instruction(cpy, add, dec, jnz)
+try_mul_instruction(cpy::Cpy, add::Add, ::Inc, ::Jnz, dec::Dec, jnz::Jnz) =
+    try_mul_instruction(cpy, add, dec, jnz)
 function try_mul_instruction(cpy::Cpy, add::Add, dec::Dec, jnz::Jnz)
-    cpy.to == add.dec         || return nothing
+    cpy.to == add.dec || return nothing
     dec.register == jnz.check || return nothing
     jnz.offset == Literal(-5) || return nothing
     return Mul(add.inc, (cpy.from, dec.register), (add.dec, dec.register))
@@ -117,7 +119,7 @@ function part2(input)
     optimize_mul!(instructions)
 
     registers = Registers('a' => 12, 'b' => 0, 'c' => 0, 'd' => 0)
-    program   = Program(1, registers, instructions)
+    program = Program(1, registers, instructions)
 
     while checkbounds(Bool, program.code, program.pointer)
         execute!(program)

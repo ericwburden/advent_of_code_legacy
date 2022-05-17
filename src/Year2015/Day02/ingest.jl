@@ -9,8 +9,8 @@ struct Box
     w::Int
     h::Int
 
-    function Box(l, w, h) 
-        l >= w >= h || error("Arguments do not satisfy $l >= $w >= $h") 
+    function Box(l, w, h)
+        l >= w >= h || error("Arguments do not satisfy $l >= $w >= $h")
         return new(l, w, h)
     end
 end

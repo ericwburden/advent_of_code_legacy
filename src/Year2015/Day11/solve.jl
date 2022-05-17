@@ -9,10 +9,10 @@ const input = "hepxcrrq"
 ------------------------------------------------------------------------------=#
 
 "Check if `a` contains a restricted character"
-isrestricted(a)       = a in ['i', 'o', 'l']
+isrestricted(a) = a in ['i', 'o', 'l']
 
 "Check if `a`, `b`, and `c` constitute a straight run"
-isstraight((a, b, c)) = a <= 'x' && b == a+1 && c == b+1
+isstraight((a, b, c)) = a <= 'x' && b == a + 1 && c == b + 1
 
 """
     count_pairs(arr)
@@ -21,7 +21,7 @@ Given an iterable collection, count the number of non-overlapping pairs in the
 collection and return the count.
 """
 function count_pairs(arr)
-    idx   = 1
+    idx = 1
     pairs = 0
     while idx < length(arr)
         if arr[idx] == arr[idx+1]
@@ -38,12 +38,13 @@ end
 | Encapsulates the logic for criteria checking into functions for readability
 ------------------------------------------------------------------------------=#
 
-contains_straight(s)   = any(isstraight, zip(s, s[2:end], s[3:end]))
+contains_straight(s) = any(isstraight, zip(s, s[2:end], s[3:end]))
 contains_restricted(s) = any(isrestricted, s)
-contains_two_pairs(s)  = count_pairs(s) > 1
+contains_two_pairs(s) = count_pairs(s) > 1
 
 isvalid(s::String) = collect(s) |> isvalid
-isvalid(s::Vector{Char}) = contains_straight(s) && !contains_restricted(s) && contains_two_pairs(s)
+isvalid(s::Vector{Char}) =
+    contains_straight(s) && !contains_restricted(s) && contains_two_pairs(s)
 
 
 #=------------------------------------------------------------------------------
@@ -63,7 +64,7 @@ function nextpassword!(s)
         push!(s, 'a')
     else
         s[idx] = s[idx] == 'z' ? 'a' : s[idx] + 1
-        if idx < length(s) 
+        if idx < length(s)
             s[idx+1:end] .= 'a'
         end
     end
@@ -78,7 +79,7 @@ end
 function solve(input)
     password = collect(input)
     while true
-        nextpassword!(password) 
+        nextpassword!(password)
         isvalid(password) && return join(password)
     end
 end

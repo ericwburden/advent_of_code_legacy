@@ -36,7 +36,7 @@ generated.
 """
 function part1(input)
     score_tracker = ScoreTracker()
-    
+
     # Generate the first `input` + 10 scores
     foreach(_ -> create!(score_tracker), 1:(input+10))
 

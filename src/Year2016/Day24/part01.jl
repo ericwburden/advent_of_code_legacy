@@ -8,8 +8,12 @@ Given a BitMatrix representing movable spaces on the grid and an index into
 that matrix, return a list of all reachable neighboring spaces from that matrix.
 """
 function neighbors(grid::BitMatrix, idx::CartesianIndex)
-    offsets  = [CartesianIndex(-1, 0), CartesianIndex(1, 0),
-                CartesianIndex(0, -1), CartesianIndex(0, 1)]
+    offsets = [
+        CartesianIndex(-1, 0),
+        CartesianIndex(1, 0),
+        CartesianIndex(0, -1),
+        CartesianIndex(0, 1),
+    ]
     possibles = filter(x -> checkbounds(Bool, grid, x), [idx] .+ offsets)
     return filter(x -> grid[x], possibles)
 end
@@ -31,7 +35,7 @@ and path bookkeeping have been removed since they're not needed for this puzzle.
 """
 function shortest_path(grid::BitMatrix, start::CartesianIndex, goal::CartesianIndex)
     frontier = PriorityQueue{CartesianIndex,Int}(start => 0)
-    steps    = Dict{CartesianIndex,Int}(start => 0)
+    steps = Dict{CartesianIndex,Int}(start => 0)
 
     while !isempty(frontier)
         current = dequeue!(frontier)
@@ -41,8 +45,8 @@ function shortest_path(grid::BitMatrix, start::CartesianIndex, goal::CartesianIn
             next ∈ keys(steps) && continue
             new_steps = steps[current] + 1
             if get!(steps, next, typemax(Int)) > new_steps
-                priority       = new_steps + heuristic(next, goal)
-                steps[next]    = new_steps
+                priority = new_steps + heuristic(next, goal)
+                steps[next] = new_steps
                 frontier[next] = priority
             end
         end
@@ -76,15 +80,15 @@ Tests each permutation of a list of the points of interest (starting with `0`)
 to determine the total path length, then returns the smallest path length.
 """
 function part1(input)
-    grid, poi  = input
+    grid, poi = input
     poi_labels = keys(poi) |> collect |> sort
-    distances  = get_distances(grid, poi)
-    min_path   = typemax(Int)
+    distances = get_distances(grid, poi)
+    min_path = typemax(Int)
 
     for stops in permutations(poi_labels)
         stops[1] == 0 || continue
         path_length = mapreduce(x -> distances[x], +, zip(stops, stops[2:end]))
-        min_path    = min(min_path, path_length)
+        min_path = min(min_path, path_length)
     end
 
     return min_path

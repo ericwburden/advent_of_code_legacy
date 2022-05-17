@@ -16,7 +16,7 @@ disc, such at the capsure reaches the first disc at `t` + 1, the second disc
 at `t` + 2, and so on.
 """
 function can_pass_at(discs::Vector{Disc}, t::Int)
-    instants = [t + i for i in 1:length(discs)]
+    instants = [t + i for i = 1:length(discs)]
     return all(open_at.(discs, instants))
 end
 

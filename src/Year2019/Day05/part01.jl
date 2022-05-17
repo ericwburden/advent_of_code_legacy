@@ -11,7 +11,7 @@ non-zero value output.
 """
 function part1(input)
     values = [input...]
-    computer    = Computer(values)
+    computer = Computer(values)
     add_input!(computer, 1)
     run!(computer)
     output = get_output!(computer)

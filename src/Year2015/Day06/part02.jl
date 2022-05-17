@@ -3,18 +3,18 @@
 ------------------------------------------------------------------------------=#
 
 "Increase the value of the indicated lights by 1"
-function apply!(lights::Matrix{Int}, (; topleft, bottomright)::TurnOn) 
+function apply!(lights::Matrix{Int}, (; topleft, bottomright)::TurnOn)
     lights[topleft:bottomright] .+= 1
 end
 
 "Decrease the value of the indicated lights by 1, minimum 0"
-function apply!(lights::Matrix{Int}, (; topleft, bottomright)::TurnOff) 
+function apply!(lights::Matrix{Int}, (; topleft, bottomright)::TurnOff)
     lights[topleft:bottomright] .-= 1
-    lights[lights .< 0] .= 0
+    lights[lights.<0] .= 0
 end
 
 "Increase the value of the indicated lights by 2"
-function apply!(lights::Matrix{Int}, (; topleft, bottomright)::Toggle)  
+function apply!(lights::Matrix{Int}, (; topleft, bottomright)::Toggle)
     lights[topleft:bottomright] .+= 2
 end
 

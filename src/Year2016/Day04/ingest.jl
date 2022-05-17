@@ -1,5 +1,5 @@
 "Represents the data about a Room, from the input"
-struct RoomDesignation 
+struct RoomDesignation
     encrypted_name::String
     sector_id::Int
     checksum::String
@@ -13,7 +13,7 @@ a regular expression and identifies each part.
 """
 function Base.parse(::Type{RoomDesignation}, s::String)
     re = r"^(?<name>[a-z-]+)-(?<id>\d+)\[(?<cs>\w+)\]$"
-    m  = match(re, s)
+    m = match(re, s)
     id = parse(Int, m["id"])
     return RoomDesignation(m["name"], id, m["cs"])
 end

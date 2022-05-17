@@ -57,11 +57,7 @@ function advance((; reindeer, distance, timeleft)::RunningDeer)
     timeleft -= 1
     timeleft > 0 && return RunningDeer(reindeer, distance, timeleft)
 
-    return RestingDeer(
-        reindeer,
-        distance,
-        reindeer.resttime
-    )
+    return RestingDeer(reindeer, distance, reindeer.resttime)
 end
 
 """
@@ -74,11 +70,7 @@ function advance((; reindeer, distance, timeleft)::RestingDeer)
     timeleft -= 1
     timeleft > 0 && return RestingDeer(reindeer, distance, timeleft)
 
-    return RunningDeer(
-        reindeer,
-        distance,
-        reindeer.runtime
-    )
+    return RunningDeer(reindeer, distance, reindeer.runtime)
 end
 
 """
@@ -141,12 +133,12 @@ Given the input as a list of `Reindeer`, conduct the race! Each second, award
 one point to each reindeer in the lead and return the maximum score achieved
 at the end of the race.
 """
-function part2(input, time=2503)
+function part2(input, time = 2503)
     racestate = RaceState([RunningDeer(r) => 0 for r in input])
-    for _ in 1:time
+    for _ = 1:time
         racestate = advance(racestate)
     end
-    
+
     getscores(rs) = map(x -> x.second, rs)
     winning_score = (maximum ∘ getscores)(racestate)
 

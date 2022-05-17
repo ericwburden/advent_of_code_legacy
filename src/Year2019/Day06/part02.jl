@@ -24,15 +24,15 @@ adjacency list and perform a BFS to find the shortest path from "YOU" to
 "SAN" and return that value (minus two to adjust for orbital hops).
 """
 function part2(input)
-    queue  = Queue{String}()
+    queue = Queue{String}()
     enqueue!(queue, "YOU")
-    steps  = Dict("YOU" => 0)
+    steps = Dict("YOU" => 0)
     undirected!(input)
 
     while !isempty(queue)
         current = dequeue!(queue)
         current == "SAN" && break
-        
+
         for neighbor in get(input, current, [])
             neighbor ∈ keys(steps) && continue
             steps[neighbor] = steps[current] + 1

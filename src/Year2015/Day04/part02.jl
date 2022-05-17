@@ -9,7 +9,7 @@ function part2(input)
     # This time, we'll start with the number we found in part 1, since
     # we can be sure there's no result with six leading zeros prior to 
     # the result with five leading zeros
-    for i in 117946:typemax(Int)
+    for i = 117946:typemax(Int)
         check = input * string(i)
         hexdigest("md5", check)[1:6] == "000000" && return i
     end

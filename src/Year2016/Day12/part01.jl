@@ -16,17 +16,17 @@ Base.setindex!((; inner)::Registers, l::Literal, r::Register) = Base.setindex!(i
 Base.:+((; value)::Literal, b::Int) = Literal(value + b)
 Base.:-((; value)::Literal, b::Int) = Literal(value - b)
 
-function execute!(r::Registers, (; from, to)::Cpy{Register}) 
+function execute!(r::Registers, (; from, to)::Cpy{Register})
     r[to] = r[from]
     return 1
 end
 
-function execute!(r::Registers, (; from, to)::Cpy{Literal})  
+function execute!(r::Registers, (; from, to)::Cpy{Literal})
     r[to] = from
     return 1
 end
 
-function execute!(r::Registers, (; register)::Inc) 
+function execute!(r::Registers, (; register)::Inc)
     r[register] += 1
     return 1
 end
@@ -36,16 +36,16 @@ function execute!(r::Registers, (; register)::Dec)
     return 1
 end
 
-function execute!(r::Registers, (; check, offset)::Jnz{Register}) 
+function execute!(r::Registers, (; check, offset)::Jnz{Register})
     return r[check] == Literal(0) ? 1 : offset.value
 end
 
-function execute!(::Registers,  (; check, offset)::Jnz{Literal})  
+function execute!(::Registers, (; check, offset)::Jnz{Literal})
     return check == Literal(0) ? 1 : offset.value
 end
 
 function part1(input)
-    pointer   = 1
+    pointer = 1
     registers = Registers('a' => 0, 'b' => 0, 'c' => 0, 'd' => 0)
 
     while checkbounds(Bool, input, pointer)

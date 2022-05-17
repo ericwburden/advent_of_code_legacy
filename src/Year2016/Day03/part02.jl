@@ -15,9 +15,9 @@ position. Example as shown:
 function regroup(triangles::Triangles)
     regrouped = Sides[]
 
-    for first_row in 1:3:length(triangles)
-        for col in 1:3
-            new_sides = Tuple([triangles[r][col] for r in first_row:first_row+2])
+    for first_row = 1:3:length(triangles)
+        for col = 1:3
+            new_sides = Tuple([triangles[r][col] for r = first_row:first_row+2])
             push!(regrouped, new_sides)
         end
     end

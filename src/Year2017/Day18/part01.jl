@@ -23,8 +23,9 @@ SoundProgram() = SoundProgram(Dict(), 1, nothing, [])
 For any `AbstractProgram`, the underlying value of an `AbstractValue` can
 be obtained with the registers.
 """
-valueof(state::AbstractProgram, register::Register)::Int = get!(state.registers, register, 0)
-valueof(::AbstractProgram,      (; value)::Static)::Int  = value
+valueof(state::AbstractProgram, register::Register)::Int =
+    get!(state.registers, register, 0)
+valueof(::AbstractProgram, (; value)::Static)::Int = value
 
 """
     execute!(state::SoundProgram, (; freq)::Sound)

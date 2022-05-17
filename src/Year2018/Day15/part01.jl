@@ -24,7 +24,7 @@ end
 
 function is_inbounds((; terrain)::BattleState, position::Position)
     rows, cols = dims(terrain)
-    row,  col  = position
+    row, col = position
     0 < row <= rows || return false
     0 < col <= cols || return false
     return true
@@ -33,15 +33,17 @@ end
 function get_nearby_positions(state::BattleState, position::Position)
     add_offset_to_position(o) = o .+ position
     keep_inbounds(p) = is_inbounds(state, p)
-    (nearby_positions
-        =  [(-1, 0), (0, -1), (0, 1), (1, 0)]
-        |> (x -> Iterators.map(add_offset_to_position, x))
-        |> (x -> Iterators.filter(keep_inbounds, x)))
+    (
+        nearby_positions =
+            [(-1, 0), (0, -1), (0, 1), (1, 0)] |>
+            (x -> Iterators.map(add_offset_to_position, x)) |>
+            (x -> Iterators.filter(keep_inbounds, x))
+    )
     return nearby_positions
 end
 
 function get_nearby_opponent(state::BattleState, unit::Unit)
-    unit_position    = get_unit_position(state, unit)
+    unit_position = get_unit_position(state, unit)
     nearest_opponent = nothing
 
     for position in get_nearby_positions(state, unit_position)
@@ -60,12 +62,12 @@ const PositionQueue = Queue{Tuple{Position,Vector{Position}}}
 function step_to_opponent(state::BattleState, unit::Unit)
     start_position = getindex(state, unit)
     position_queue = PositionQueue()
-    found_path     = nothing
-    visited        = Set{Position}()
-    get_object(p)  = getindex(state, p)
-    is_enemy(o)    = o isa Unit && o.kind != unit.kind
-    is_ally(o)     = o isa Unit && o.kind == unit.kind
-    has_enemy(p)   = (is_enemy ∘ get_object)(p)
+    found_path = nothing
+    visited = Set{Position}()
+    get_object(p) = getindex(state, p)
+    is_enemy(o) = o isa Unit && o.kind != unit.kind
+    is_ally(o) = o isa Unit && o.kind == unit.kind
+    has_enemy(p) = (is_enemy ∘ get_object)(p)
     enqueue!(position_queue, (start_position, []))
 
     while !isempty(position_queue)
@@ -78,7 +80,7 @@ function step_to_opponent(state::BattleState, unit::Unit)
             length(path) > length(found_path) && return first(found_path)
             last(path) < last(found_path) && (found_path = path)
         end
-        
+
         for neighbor in get_nearby_positions(state, current)
             neighbor ∈ visited && continue
             neighbor_object = get_object(neighbor)
@@ -129,8 +131,12 @@ function attack!(state::BattleState, attacker::Unit, defender::Unit)
     defender.hp > 0 && return true # Return early if no one was defeated
 
     # Update the number of combatants if one is defeated
-    if (defender.kind == Elf)    state.elves -= 1 end
-    if (defender.kind == Goblin) state.goblins -= 1 end
+    if (defender.kind == Elf)
+        state.elves -= 1
+    end
+    if (defender.kind == Goblin)
+        state.goblins -= 1
+    end
 
     # Clean up defeated opponents
     position = getindex(state, defender)
@@ -156,10 +162,6 @@ function part1(input)
     while fight!(battle_state)
         rounds += 1
     end
-    (hp_remaining
-        = get_units(battle_state)
-        |> (x -> Iterators.map(c -> c.hp, x))
-        |> sum)
+    (hp_remaining = get_units(battle_state) |> (x -> Iterators.map(c -> c.hp, x)) |> sum)
     return hp_remaining * rounds
 end
-

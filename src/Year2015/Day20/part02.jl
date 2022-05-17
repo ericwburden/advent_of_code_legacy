@@ -10,7 +10,7 @@ function part2(input)
     presents = zeros(Int, MAX_HOUSES)
     presents[1:50] .= 1
 
-    for elf in 2:MAX_HOUSES
+    for elf = 2:MAX_HOUSES
         for (delivered, house) in enumerate(elf:elf:MAX_HOUSES)
             delivered > 50 && break
             presents[house] += elf * 11

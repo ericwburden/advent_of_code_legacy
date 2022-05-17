@@ -18,10 +18,10 @@ function try_combat!(battle_state::BattleState)
     end
 
     if battle_state.elves == starting_elves
-        (hp_remaining
-            = get_units(battle_state)
-            |> (x -> Iterators.map(c -> c.hp, x))
-            |> sum)
+        (
+            hp_remaining =
+                get_units(battle_state) |> (x -> Iterators.map(c -> c.hp, x)) |> sum
+        )
         return hp_remaining * rounds
     end
     return nothing
@@ -40,4 +40,3 @@ function part2(input)
 
     return outcome
 end
-

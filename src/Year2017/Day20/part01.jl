@@ -14,10 +14,10 @@ how many 'rounds' it would take for the particle to be moving in the direction
 of its acceleration in all three dimensions.
 """
 function accelerate_away_rounds(p::Particle)
-    vel_accel_pairs   = collect(zip(p.velocity, p.acceleration))
-    accel_gt_zero     = filter(x -> x[2] != 0, vel_accel_pairs)
-    diff_signs        = filter(x -> (x[1] ⊻ x[2]) < 0, accel_gt_zero)
-    rounds_to_correct = map(x -> abs(ceil(Int, x[1]/x[2])), diff_signs)
+    vel_accel_pairs = collect(zip(p.velocity, p.acceleration))
+    accel_gt_zero = filter(x -> x[2] != 0, vel_accel_pairs)
+    diff_signs = filter(x -> (x[1] ⊻ x[2]) < 0, accel_gt_zero)
+    rounds_to_correct = map(x -> abs(ceil(Int, x[1] / x[2])), diff_signs)
     return maximum(rounds_to_correct, init = 0)
 end
 
@@ -45,13 +45,13 @@ velocity signs, then the particle closest to the origin after that many rounds
 would be the right answer.
 """
 function part1(input)
-    min_acceleration        = minimum(p -> magnitude(p.acceleration), input)
+    min_acceleration = minimum(p -> magnitude(p.acceleration), input)
     has_min_acceleration(p) = magnitude(p.acceleration) == min_acceleration
-    min_accel_points        = filter(has_min_acceleration, input)
+    min_accel_points = filter(has_min_acceleration, input)
 
-    rounds_to_match_accel  = map(accelerate_away_rounds, min_accel_points)
-    max_rounds_to_cross    = maximum(rounds_to_match_accel)
-    last_to_cross          = min_accel_points[rounds_to_cross_origin .== max_rounds_to_cross]
+    rounds_to_match_accel = map(accelerate_away_rounds, min_accel_points)
+    max_rounds_to_cross = maximum(rounds_to_match_accel)
+    last_to_cross = min_accel_points[rounds_to_cross_origin.==max_rounds_to_cross]
 
     # For my input, stopping here works.
 

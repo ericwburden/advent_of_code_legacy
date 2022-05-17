@@ -29,7 +29,7 @@ uncompressed text or a bit of compressed text with the compression marker.
 """
 abstract type Token end
 
-struct RegularText    <: Token
+struct RegularText <: Token
     text::String
 end
 
@@ -50,7 +50,7 @@ puzzle into `Token`s whose uncompressed length can be readily determined.
 function tokenize(str::AbstractString)
     buffer = ""
     tokens = Token[]
-    index  = 1
+    index = 1
 
     while index <= length(str)
         # If the buffer contains a marker, we've found a compressed bit of text
@@ -58,7 +58,7 @@ function tokenize(str::AbstractString)
         # and move on.
         if ismarker(buffer)
             marker = parse(Marker, buffer)
-            text   = str[index:(index+marker.chars-1)]
+            text = str[index:(index+marker.chars-1)]
             buffer = ""
             index += marker.chars
             push!(tokens, CompressedText(marker, text))
@@ -74,7 +74,7 @@ function tokenize(str::AbstractString)
         end
 
         buffer *= str[index]
-        index  += 1
+        index += 1
     end
 
     # Add any remaining text after the last compressed bit

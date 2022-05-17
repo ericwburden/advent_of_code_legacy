@@ -5,7 +5,7 @@ one of the valued chips.
 abstract type AbstractRepository end
 
 function Base.parse(::Type{AbstractRepository}, s::AbstractString)
-    startswith(s, "bot")    && return parse(EmptyBot, s)
+    startswith(s, "bot") && return parse(EmptyBot, s)
     startswith(s, "output") && return parse(EmptyOutput, s)
     error("Don't know how to parse $s into an AbstractRepository")
 end
@@ -17,13 +17,15 @@ receive chips but not transfer them further.
 """
 abstract type AbstractOutput <: AbstractRepository end
 
-struct EmptyOutput <: AbstractOutput id::Int end
+struct EmptyOutput <: AbstractOutput
+    id::Int
+end
 
 AbstractOutput(id::Int) = EmptyOutput(id)
 
 function Base.parse(::Type{EmptyOutput}, s::AbstractString)
     re = r"output (?<id>\d+)"
-    m  = match(re, s)
+    m = match(re, s)
     id = parse(Int, m["id"])
     return EmptyOutput(id)
 end
@@ -36,13 +38,15 @@ values.
 """
 abstract type AbstractBot <: AbstractRepository end
 
-struct EmptyBot <: AbstractBot id::Int end
+struct EmptyBot <: AbstractBot
+    id::Int
+end
 
 AbstractBot(id::Int) = EmptyBot(id)
 
 function Base.parse(::Type{EmptyBot}, s::AbstractString)
     re = r"bot (?<id>\d+)"
-    m  = match(re, s)
+    m = match(re, s)
     id = parse(Int, m["id"])
     return EmptyBot(id)
 end
@@ -59,7 +63,7 @@ abstract type AbstractTransfer end
 const RepositoryTransfer = Tuple{AbstractRepository,AbstractTransfer}
 
 function Base.parse(::Type{AbstractTransfer}, s::AbstractString)::RepositoryTransfer
-    startswith(s, "bot")  && return parse(Comparative, s)
+    startswith(s, "bot") && return parse(Comparative, s)
     startswith(s, "value") && return parse(Direct, s)
     error("Don't know how to parse $s into an AbstractTransfer.")
 end
@@ -76,10 +80,10 @@ struct Comparative <: AbstractTransfer
 end
 
 function Base.parse(::Type{Comparative}, s::AbstractString)::RepositoryTransfer
-    re   = r"bot (?<from>\d+) gives low to (?<low>\w+ \d+) and high to (?<high>\w+ \d+)"
-    m    = match(re, s)
+    re = r"bot (?<from>\d+) gives low to (?<low>\w+ \d+) and high to (?<high>\w+ \d+)"
+    m = match(re, s)
     from = parse(Int, m["from"])
-    low  = parse(AbstractRepository, m["low"])
+    low = parse(AbstractRepository, m["low"])
     high = parse(AbstractRepository, m["high"])
     return (EmptyBot(from), Comparative(low, high))
 end
@@ -94,10 +98,10 @@ struct Direct <: AbstractTransfer
 end
 
 function Base.parse(::Type{Direct}, s::AbstractString)::RepositoryTransfer
-    re    = r"value (?<value>\d+) goes to bot (?<bot>\d+)"
-    m     = match(re, s)
+    re = r"value (?<value>\d+) goes to bot (?<bot>\d+)"
+    m = match(re, s)
     value = parse(Int, m["value"])
-    bot   = parse(Int, m["bot"])
+    bot = parse(Int, m["bot"])
     return (EmptyBot(bot), Direct(value))
 end
 

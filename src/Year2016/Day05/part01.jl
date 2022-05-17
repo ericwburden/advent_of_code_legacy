@@ -9,8 +9,8 @@ consecutive zeros.
 """
 function valid_hashes(salt::String)
     Channel() do channel
-        for i in 1:typemax(Int)
-            check  = salt * string(i)
+        for i = 1:typemax(Int)
+            check = salt * string(i)
             digest = hexdigest("md5", check)
             startswith(digest, "00000") && put!(channel, digest)
         end
@@ -25,6 +25,6 @@ password from the 6th character of each hash.
 """
 function part1(input)
     password_hashes = Iterators.take(valid_hashes(input), 8)
-    password_chars  = map(s -> s[6], password_hashes)
+    password_chars = map(s -> s[6], password_hashes)
     return join(password_chars)
 end

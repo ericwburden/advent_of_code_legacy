@@ -7,12 +7,9 @@ removed. Return the lenght of that smallest polymer.
 """
 function part2(input)
     min_length = typemax(Int)
-    for char in 'A':'Z'
+    for char = 'A':'Z'
         pattern = Regex("$char|$(char+32)")
-        (reacted_length
-            =  replace(input, pattern => "")
-            |> react_polymer
-            |> length)
+        (reacted_length = replace(input, pattern => "") |> react_polymer |> length)
         min_length = min(min_length, reacted_length)
     end
     return min_length

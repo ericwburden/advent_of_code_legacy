@@ -4,9 +4,9 @@ using DataStructures: Deque
 struct MarbleCircle{T}
     deque::Deque{T}
 end
-MarbleCircle{T}() where T = MarbleCircle(Deque{T}())
+MarbleCircle{T}() where {T} = MarbleCircle(Deque{T}())
 
-function MarbleCircle{T}(itr::Vector{T}) where T
+function MarbleCircle{T}(itr::Vector{T}) where {T}
     deque = Deque{T}()
     foreach(v -> push!(deque, v), itr)
     return MarbleCircle{T}(deque)
@@ -16,7 +16,7 @@ function Base.pop!(circle::MarbleCircle)
     return pop!(circle.deque)
 end
 
-function Base.push!(circle::MarbleCircle{T}, value::T) where T
+function Base.push!(circle::MarbleCircle{T}, value::T) where {T}
     isempty(circle.deque) || push!(circle.deque, popfirst!(circle.deque))
     push!(circle.deque, value)
 end
@@ -46,7 +46,7 @@ mutable struct MarbleGame
 end
 
 "Create a new game with a set number of players"
-function MarbleGame(elves::Int) 
+function MarbleGame(elves::Int)
     circle = MarbleCircle{Int}([0])
     MarbleGame(0, elves, circle, zeros(elves))
 end

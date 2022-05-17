@@ -10,9 +10,9 @@ An `AbstractState` indicates the state of the `Computer`, which may be:
     - `Halted`: The computer has halted and will not resume
     - `Waiting`: The computer has asked for input and is waiting for it
 """
-abstract type     AbstractState end
+abstract type AbstractState end
 struct Running <: AbstractState end
-struct Halted  <: AbstractState end
+struct Halted <: AbstractState end
 struct Waiting <: AbstractState end
 
 """
@@ -23,11 +23,11 @@ struct Memory
     inner::Dict{BigInt,BigInt}
 end
 
-Base.getindex((; inner)::Memory, idx::Int)                = get(inner, idx + 1, 0)
-Base.getindex((; inner)::Memory, idx::BigInt)             = get(inner, idx + 1, 0)
-Base.setindex!((; inner)::Memory, v::Int,    idx::Int)    = setindex!(inner, v, idx + 1)
-Base.setindex!((; inner)::Memory, v::Int,    idx::BigInt) = setindex!(inner, v, idx + 1)
-Base.setindex!((; inner)::Memory, v::BigInt, idx::Int)    = setindex!(inner, v, idx + 1)
+Base.getindex((; inner)::Memory, idx::Int) = get(inner, idx + 1, 0)
+Base.getindex((; inner)::Memory, idx::BigInt) = get(inner, idx + 1, 0)
+Base.setindex!((; inner)::Memory, v::Int, idx::Int) = setindex!(inner, v, idx + 1)
+Base.setindex!((; inner)::Memory, v::Int, idx::BigInt) = setindex!(inner, v, idx + 1)
+Base.setindex!((; inner)::Memory, v::BigInt, idx::Int) = setindex!(inner, v, idx + 1)
 Base.setindex!((; inner)::Memory, v::BigInt, idx::BigInt) = setindex!(inner, v, idx + 1)
 Base.length((; inner)::Memory) = length(inner)
 Base.view((; inner)::Memory, idx::UnitRange{Int}) = view(inner, idx .+ 1)
@@ -36,7 +36,7 @@ Base.view((; inner)::Memory, idx::UnitRange{Int}) = view(inner, idx .+ 1)
 A `Computer` encapsulates the full state of the computer, the current pointer
 value, relative pointer base, input/output, and the 'memory' of integer values.
 """
-mutable struct Computer{S <: AbstractState}
+mutable struct Computer{S<:AbstractState}
     state::Type{S}
     pointer::Int
     relative_base::Int
@@ -77,21 +77,21 @@ function get_output!((; output)::Computer)
 end
 
 current_address((; pointer, memory)::Computer) = memory[pointer]
-Base.setindex!((; memory)::Computer, v::Int,    idx::Int)    = setindex!(memory, v, idx)
-Base.setindex!((; memory)::Computer, v::Int,    idx::BigInt) = setindex!(memory, v, idx)
-Base.setindex!((; memory)::Computer, v::BigInt, idx::Int)    = setindex!(memory, v, idx)
+Base.setindex!((; memory)::Computer, v::Int, idx::Int) = setindex!(memory, v, idx)
+Base.setindex!((; memory)::Computer, v::Int, idx::BigInt) = setindex!(memory, v, idx)
+Base.setindex!((; memory)::Computer, v::BigInt, idx::Int) = setindex!(memory, v, idx)
 Base.setindex!((; memory)::Computer, v::BigInt, idx::BigInt) = setindex!(memory, v, idx)
-Base.getindex((; memory)::Computer, idx::Int)    = memory[idx]
+Base.getindex((; memory)::Computer, idx::Int) = memory[idx]
 Base.getindex((; memory)::Computer, idx::BigInt) = memory[idx]
 
 """
 An `AbstractMode` represents the mode with which a parameter should be
 handled. 
 """
-abstract type       AbstractMode end
-struct Position  <: AbstractMode end
+abstract type AbstractMode end
+struct Position <: AbstractMode end
 struct Immediate <: AbstractMode end
-struct Relative  <: AbstractMode end
+struct Relative <: AbstractMode end
 
 "Dispatch for different subtypes of `AbstractMode`"
 function AbstractMode(int::Int)
@@ -142,29 +142,21 @@ the mode to be used to access the value of the parameter.
 - A `Relative` mode indicates that the value should be take from the corresponding
   index, starting from the relative base.
 """
-struct Parameter{M <: AbstractMode}
+struct Parameter{M<:AbstractMode}
     mode::M
     value::BigInt
 end
 
-Base.getindex((; memory)::Computer, (; value)::Parameter{Position})  = memory[value]
+Base.getindex((; memory)::Computer, (; value)::Parameter{Position}) = memory[value]
 Base.getindex((; memory)::Computer, (; value)::Parameter{Immediate}) = value
 
-Base.getindex(
-    (; memory, relative_base)::Computer, 
-    (; value)::Parameter{Relative}
-) = memory[value + relative_base]
+Base.getindex((; memory, relative_base)::Computer, (; value)::Parameter{Relative}) =
+    memory[value+relative_base]
 
-Base.setindex!(
-    (; memory, relative_base)::Computer, 
-    v,
-    (; value)::Parameter{Relative}
-) = setindex!(memory, v, value + relative_base)
-Base.setindex!(
-    (; memory)::Computer, 
-    v,
-    (; value)::Parameter{Position}
-) = setindex!(memory, v, value)
+Base.setindex!((; memory, relative_base)::Computer, v, (; value)::Parameter{Relative}) =
+    setindex!(memory, v, value + relative_base)
+Base.setindex!((; memory)::Computer, v, (; value)::Parameter{Position}) =
+    setindex!(memory, v, value)
 
 
 """
@@ -207,8 +199,9 @@ input and storing it in the indicated memory position. Returns the modified comp
 """
 function input!(computer::Computer, modes::Modes)
     (; pointer, relative_base, memory, input, output) = computer
-    isempty(input) && return Computer(Waiting, pointer, relative_base, memory, input, output)
-    value  = dequeue!(input)
+    isempty(input) &&
+        return Computer(Waiting, pointer, relative_base, memory, input, output)
+    value = dequeue!(input)
     param = Parameter(modes[1], computer[pointer+1])
     computer[param] = value
     return Computer(Running, pointer + 2, relative_base, memory, input, output)
@@ -327,16 +320,16 @@ function execute!(computer::Computer)
     modes, opcode = divrem(current_address(computer), 100)
 
     # Dispatch based on opcode
-    opcode == 1  && return    add!(computer, Modes(modes))
-    opcode == 2  && return    mul!(computer, Modes(modes))
-    opcode == 3  && return  input!(computer, Modes(modes))
-    opcode == 4  && return output!(computer, Modes(modes))
-    opcode == 5  && return    jit!(computer, Modes(modes))
-    opcode == 6  && return    jif!(computer, Modes(modes))
-    opcode == 7  && return     lt!(computer, Modes(modes))
-    opcode == 8  && return     eq!(computer, Modes(modes))
-    opcode == 9  && return rebase!(computer, Modes(modes))
-    opcode == 99 && return   halt!(computer)
+    opcode == 1 && return add!(computer, Modes(modes))
+    opcode == 2 && return mul!(computer, Modes(modes))
+    opcode == 3 && return input!(computer, Modes(modes))
+    opcode == 4 && return output!(computer, Modes(modes))
+    opcode == 5 && return jit!(computer, Modes(modes))
+    opcode == 6 && return jif!(computer, Modes(modes))
+    opcode == 7 && return lt!(computer, Modes(modes))
+    opcode == 8 && return eq!(computer, Modes(modes))
+    opcode == 9 && return rebase!(computer, Modes(modes))
+    opcode == 99 && return halt!(computer)
     error("'$opcode' is not a valid opcode!")
 end
 

@@ -8,8 +8,12 @@ static values.
 """
 abstract type AbstractValue end
 
-struct Static   <: AbstractValue value::Int end
-struct Register <: AbstractValue register::Char end
+struct Static <: AbstractValue
+    value::Int
+end
+struct Register <: AbstractValue
+    register::Char
+end
 
 Base.parse(::Type{AbstractValue}, s::Nothing) = nothing
 function Base.parse(::Type{AbstractValue}, s::AbstractString)
@@ -32,18 +36,37 @@ type for each instruction allows for dispatching execution based on type.
 """
 abstract type AbstractInstruction end
 
-struct Sound   <: AbstractInstruction  freq::AbstractValue  end
-struct Set     <: AbstractInstruction  left::AbstractValue; right::AbstractValue end
-struct Add     <: AbstractInstruction  left::AbstractValue; right::AbstractValue end
-struct Mul     <: AbstractInstruction  left::AbstractValue; right::AbstractValue end
-struct Mod     <: AbstractInstruction  left::AbstractValue; right::AbstractValue end
-struct Recover <: AbstractInstruction input::AbstractValue  end
-struct Jgz     <: AbstractInstruction input::AbstractValue;  jump::AbstractValue end
+struct Sound <: AbstractInstruction
+    freq::AbstractValue
+end
+struct Set <: AbstractInstruction
+    left::AbstractValue
+    right::AbstractValue
+end
+struct Add <: AbstractInstruction
+    left::AbstractValue
+    right::AbstractValue
+end
+struct Mul <: AbstractInstruction
+    left::AbstractValue
+    right::AbstractValue
+end
+struct Mod <: AbstractInstruction
+    left::AbstractValue
+    right::AbstractValue
+end
+struct Recover <: AbstractInstruction
+    input::AbstractValue
+end
+struct Jgz <: AbstractInstruction
+    input::AbstractValue
+    jump::AbstractValue
+end
 
 function Base.parse(::Type{AbstractInstruction}, s::AbstractString)
     m = match(r"(?<instr>\w{3}) (?<first>-?[\w\d]+) ?(?<second>-?[\w\d]+)?", s)
-    instr  = m["instr"]
-    first  = parse(AbstractValue, m["first"])
+    instr = m["instr"]
+    first = parse(AbstractValue, m["first"])
     second = parse(AbstractValue, m["second"])
 
     instr == "snd" && return Sound(first)

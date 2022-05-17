@@ -18,8 +18,8 @@ calculate the number of presents delivered to each house in the range.
 function part1(input)
     presents = ones(Int, MAX_HOUSES)
 
-    for elf in 2:MAX_HOUSES
-        for house in elf:elf:MAX_HOUSES
+    for elf = 2:MAX_HOUSES
+        for house = elf:elf:MAX_HOUSES
             presents[house] += elf * 10
         end
     end

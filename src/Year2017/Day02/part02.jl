@@ -6,7 +6,7 @@ among the items. If no even division can be found, throws an error.
 """
 function even_division(itr)
     sorted = sort(itr)
-    for i in 1:length(itr)-1, j in (i+1):length(itr)
+    for i = 1:length(itr)-1, j = (i+1):length(itr)
         quotient, remainder = divrem(sorted[j], sorted[i])
         remainder == 0 && return quotient
     end

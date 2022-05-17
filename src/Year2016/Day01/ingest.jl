@@ -2,8 +2,12 @@ using Match
 
 abstract type AbstractTurn end
 
-struct Right <: AbstractTurn distance::Int end
-struct Left  <: AbstractTurn distance::Int end
+struct Right <: AbstractTurn
+    distance::Int
+end
+struct Left <: AbstractTurn
+    distance::Int
+end
 
 function Base.parse(::Type{AbstractTurn}, s::AbstractString)
     m = match(r"^(R|L)(\d+)$", s)
@@ -15,7 +19,7 @@ function Base.parse(::Type{AbstractTurn}, s::AbstractString)
 end
 
 Right(s::AbstractString) = parse(Int, s) |> Right
-Left(s::AbstractString)  = parse(Int, s) |> Left
+Left(s::AbstractString) = parse(Int, s) |> Left
 
 
 function ingest(path)

@@ -42,8 +42,8 @@ function produce_packets!((; incoming, computer)::NetworkComputer)
     packets = Packet[]
     while !isempty(computer.output)
         dest = get_output!(computer)
-        x    = get_output!(computer)
-        y    = get_output!(computer)
+        x = get_output!(computer)
+        y = get_output!(computer)
         push!(packets, (dest = dest, x = x, y = y))
     end
     return (NetworkComputer(Packet[], computer), packets)
@@ -60,14 +60,14 @@ function part1(input)
     computers = map(addr -> NetworkComputer(addr, input), 0:49)
 
     @label cycle
-    
+
     for (address, computer) in zip(0:49, computers)
         computer, packets = produce_packets!(computer)
-        computers[address + 1] = computer
+        computers[address+1] = computer
 
         for packet in packets
             packet.dest == 255 && return packet.y
-            recipient = computers[packet.dest + 1]
+            recipient = computers[packet.dest+1]
             push!(recipient.incoming, packet)
         end
     end

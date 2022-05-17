@@ -42,7 +42,7 @@ function execute!((; offset)::Jump, state::ProgramState)
 end
 
 function execute!((; register, offset)::JumpIfEven, state::ProgramState)
-    if state.registers[register] |> iseven 
+    if state.registers[register] |> iseven
         state.pointer += offset
     else
         state.pointer += 1

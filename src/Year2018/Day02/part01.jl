@@ -11,8 +11,12 @@ function contains_2_or_3(counts::Accumulator{Char,Int})
     contains_2, contains_3 = (false, false)
     for value in values(counts)
         contains_2 && contains_3 && break
-        if (value == 2) contains_2 = true end
-        if (value == 3) contains_3 = true end
+        if (value == 2)
+            contains_2 = true
+        end
+        if (value == 3)
+            contains_3 = true
+        end
     end
     return (contains_2, contains_3)
 end
@@ -26,9 +30,11 @@ character, count each independently, and return the result of multiplying
 the two counts together.
 """
 function part1(input)
-    (input
-        |> (x -> map(counter, x))
-        |> (x -> map(contains_2_or_3, x))
-        |> (x -> reduce(.+, x))
-        |> prod)
+    (
+        input |>
+        (x -> map(counter, x)) |>
+        (x -> map(contains_2_or_3, x)) |>
+        (x -> reduce(.+, x)) |>
+        prod
+    )
 end

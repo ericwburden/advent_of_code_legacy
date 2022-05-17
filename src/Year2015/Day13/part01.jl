@@ -14,10 +14,10 @@ one another at the table.
 function happiness(adjacency_matrix::AdjacencyMatrix, p1::String, p2::String)
     p1_idx = get(adjacency_matrix.keys, p1, nothing)
     isnothing(p1_idx) && error("$p1 is not an entry!")
-    
+
     p2_idx = get(adjacency_matrix.keys, p2, nothing)
     isnothing(p2_idx) && error("$p2 is not an entry!")
-    
+
     cost1 = adjacency_matrix.values[p1_idx, p2_idx]
     isnothing(cost1) && error("There is no edge between $p1 and $p2")
 

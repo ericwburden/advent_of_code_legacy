@@ -36,10 +36,10 @@ iteratively progress through `marks`, flipping ranges of values as described
 in the puzzle input. Returns a tuple of (<modified marks>, <final position>, 
 <final skip amount>).
 """
-function knot_hash!(marks, knot_lengths, pos=1, skip=0)
+function knot_hash!(marks, knot_lengths, pos = 1, skip = 0)
     for len in knot_lengths
         range = pos:(pos+len-1)
-        pos  += len + skip
+        pos += len + skip
         skip += 1
         flip!(marks, range)
     end
@@ -53,7 +53,7 @@ Given the input as a string, perform the 'knot hash' described in the puzzle
 and return the result of multiplying the first two values in the 'twisted' list.
 """
 function part1(input)
-    knot_lengths  = parse.(Int, split(input, ","))
-    marks, _, _   = knot_hash!(collect(0:255), knot_lengths)
+    knot_lengths = parse.(Int, split(input, ","))
+    marks, _, _ = knot_hash!(collect(0:255), knot_lengths)
     return marks[1] * marks[2]
 end

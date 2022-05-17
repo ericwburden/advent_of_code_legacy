@@ -11,7 +11,7 @@ function values_in_group(input, origin)
     queue = Queue{Int}()
     enqueue!(queue, origin)
     found = Set([origin])
-    seen  = Set()
+    seen = Set()
 
     while !isempty(queue)
         current = dequeue!(queue)

@@ -6,8 +6,8 @@ using DataStructures: Queue, enqueue!, dequeue!
 Given an index into the floor map and the current code (plus path), return a 
 list of tuples in the format (<step>, <new index>).
 """
-function neighbors(idx::CartesianIndex, code::String) 
-    doors  = open_doors(FLOOR_MAP[idx], code)
+function neighbors(idx::CartesianIndex, code::String)
+    doors = open_doors(FLOOR_MAP[idx], code)
     result = Tuple{Char,CartesianIndex}[]
 
     doors & 8 != 8 && push!(result, ('U', idx + CartesianIndex(-1, 0)))

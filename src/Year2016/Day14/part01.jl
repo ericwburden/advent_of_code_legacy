@@ -10,7 +10,7 @@ to indicate what hashing strategy to use.
 """
 abstract type HashingStrategy end
 struct Short <: HashingStrategy end
-struct Long  <: HashingStrategy end
+struct Long <: HashingStrategy end
 
 """
     digest(s::AbstractString, ::Short)
@@ -31,7 +31,7 @@ sequentially, or `nothing` if no three-peating character is found.
 function find_triple(s::AbstractString)
     last_idx = length(s) - 2
 
-    for idx in 1:last_idx
+    for idx = 1:last_idx
         a, b, c = s[idx:idx+2]
         a == b == c && return a
     end
@@ -40,7 +40,7 @@ function find_triple(s::AbstractString)
 end
 
 "Check if a string contains a run of 5 characters `c`"
-contains_quintuple(s::AbstractString, c::Char) = occursin(c ^ 5, s)
+contains_quintuple(s::AbstractString, c::Char) = occursin(c^5, s)
 
 """
     generate_hash_buffer(salt::AbstractString, n::Int, strategy::HashingStrategy)
@@ -68,9 +68,9 @@ are generated in accordance with the `stratetgy` hashing strategy. Returns
 a vector of (<concatenated integer>, <qualifying hash>).
 """
 function find_keys(salt::AbstractString, search::Int, n::Int, strategy::HashingStrategy)
-    hash_buffer  = generate_hash_buffer(salt, search, strategy)
+    hash_buffer = generate_hash_buffer(salt, search, strategy)
     next_integer = search
-    found_keys   = Tuple{Int,String}[]
+    found_keys = Tuple{Int,String}[]
 
     while length(found_keys) < n
         hash = popfirst!(hash_buffer)
@@ -79,7 +79,7 @@ function find_keys(salt::AbstractString, search::Int, n::Int, strategy::HashingS
         if !isnothing(triple_char)
             for other_hash in hash_buffer
                 if contains_quintuple(other_hash, triple_char)
-                    push!(found_keys, (next_integer-search, hash))
+                    push!(found_keys, (next_integer - search, hash))
                     break
                 end
             end

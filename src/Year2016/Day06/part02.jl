@@ -8,15 +8,15 @@ function least_frequent(arr)
     counts = Dict()
 
     for item in arr
-        count        = get!(counts, item, 0)
+        count = get!(counts, item, 0)
         counts[item] = count + 1
     end
 
-    common   = nothing
+    common = nothing
     mincount = typemax(Int)
     for (item, count) in counts
         if count < mincount
-            common   = item
+            common = item
             mincount = count
         end
     end

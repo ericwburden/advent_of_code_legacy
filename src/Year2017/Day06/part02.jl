@@ -7,7 +7,7 @@ cycles between .
 """
 function part2(input)
     values = deepcopy(input)
-    seen   = Dict()
+    seen = Dict()
     cycles = 0
 
     while true
@@ -19,4 +19,4 @@ function part2(input)
         redistribute!(values)
         cycles += 1
     end
-end 
+end

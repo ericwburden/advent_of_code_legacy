@@ -18,7 +18,7 @@ Program() = Program(Registers(), 1, Debug())
 The underlying value of an `AbstractValue` can be obtained from the registers.
 """
 valueof(P::Program, R::Register)::Int = get!(P.registers, R, 0)
-valueof(::Program,  (; value)::Static)::Int  = value
+valueof(::Program, (; value)::Static)::Int = value
 
 
 """
@@ -76,6 +76,7 @@ completion and return the number of times the `Mul` instruction is called.
 """
 function part1(input)
     program = Program()
-    while execute!(program, input) end
+    while execute!(program, input)
+    end
     return program.debug[Mul]
 end

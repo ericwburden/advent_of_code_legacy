@@ -4,9 +4,9 @@ frequency, and storing the frequency in a Set. If the frequency is already
 in the Set, return it. This is the one that has repeated first.
 """
 function part2(input)
-    index      = 1
+    index = 1
     search_set = Set()
-    frequency  = 0
+    frequency = 0
     while true
         frequency += input[index]
         frequency ∈ search_set && break

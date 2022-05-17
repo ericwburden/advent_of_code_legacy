@@ -4,14 +4,14 @@ one of the cardinal directions.
 """
 abstract type AbstractHeading end
 struct North <: AbstractHeading end
-struct East  <: AbstractHeading end
+struct East <: AbstractHeading end
 struct South <: AbstractHeading end
-struct West  <: AbstractHeading end
+struct West <: AbstractHeading end
 
 """
 A `Carrier` moves about the nodes, spreading the infection.
 """
-struct Carrier{H <: AbstractHeading}
+struct Carrier{H<:AbstractHeading}
     position::Tuple{Int,Int}
     heading::Type{H}
 end
@@ -26,11 +26,11 @@ positions (only the infected nodes) and create a `Carrier` at the center of
 the map heading `North`.
 """
 function ingest(path)
-    infected_nodes   = Set{Tuple{Int,Int}}()
+    infected_nodes = Set{Tuple{Int,Int}}()
     rows, cols = (0, 0)
     for (lat, line) in enumerate(readlines(path))
         rows += 1
-        cols  = 0
+        cols = 0
         for (lon, char) in enumerate(collect(line))
             cols += 1
             char == '#' && push!(infected_nodes, (lat, lon))

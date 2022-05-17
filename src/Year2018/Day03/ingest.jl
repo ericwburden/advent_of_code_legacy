@@ -7,9 +7,9 @@ end
 
 "Parse an input line into a `Claim`"
 function Base.parse(::Type{Claim}, s::AbstractString)
-    m  = match(r"^#(?<id>\d+) @ (?<loc>\d+,\d+): (?<size>\d+x\d+)", s)
+    m = match(r"^#(?<id>\d+) @ (?<loc>\d+,\d+): (?<size>\d+x\d+)", s)
     id = parse(Int, m["id"])
-    left,  top    = parse.(Int, split(m["loc"], ",")) .+ 1
+    left, top = parse.(Int, split(m["loc"], ",")) .+ 1
     width, height = parse.(Int, split(m["size"], "x"))
     rows = top:(top+height-1)
     cols = left:(left+width-1)

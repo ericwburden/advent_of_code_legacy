@@ -6,9 +6,9 @@ straight up along the y-axis and 90.0 being along the positive x-axis,
 clockwise from 0.0.
 """
 function angle_between(a::CartesianIndex, b::CartesianIndex)
-    dy, dx  = Tuple(b - a)
+    dy, dx = Tuple(b - a)
     radians = atan(dy, dx)
-    degrees = radians * (180/π)
+    degrees = radians * (180 / π)
     rounded = round(degrees, digits = 2) + 90
     return rounded >= 0 ? rounded : 360 + rounded
 end
@@ -32,7 +32,7 @@ function best_view(asteroids::Vector{CartesianIndex{2}})
         end
 
         if length(angles) > most_detected
-            best_location = outer 
+            best_location = outer
             most_detected = length(angles)
         end
     end
@@ -52,4 +52,3 @@ function part1(input)
     _, most_detected = best_view(asteroids)
     return most_detected
 end
-

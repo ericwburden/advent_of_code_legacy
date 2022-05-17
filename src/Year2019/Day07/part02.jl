@@ -11,7 +11,7 @@ the value from the previous computer, until one of the computers halts.
 Return the last value output from the fifth computer.
 """
 function run_with_feedback(code::Vector{Int}, phases::Vector{Int})
-    input     = 0
+    input = 0
     max_value = 0
     computers = Queue{Tuple{Int,Computer}}()
     foreach(i -> enqueue!(computers, (i, (Computer ∘ deepcopy)(code))), 1:5)

@@ -8,6 +8,6 @@ the fewest possible vessels.
 """
 function part2(vessels)
     combinations = distribute(EGGNOG_VOLUME, vessels)
-    min_vessels  = minimum(length.(combinations))
+    min_vessels = minimum(length.(combinations))
     return count(v -> length(v) == min_vessels, combinations)
 end

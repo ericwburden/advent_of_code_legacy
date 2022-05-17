@@ -10,7 +10,7 @@ Given a list of `StepOrder`s, build a `DependencyGraph`, a sort of adjacency
 list indicating which steps are prerequisites for other steps.
 """
 function build_dependency_graph(step_order_pairs::Vector{StepOrder})
-    dependency_graph = DependencyGraph(c => Set() for c in 'A':'Z')
+    dependency_graph = DependencyGraph(c => Set() for c = 'A':'Z')
     for (step1, step2) in step_order_pairs
         push!(dependency_graph[step2], step1)
     end
@@ -48,6 +48,6 @@ a string.
 """
 function part1(input)
     dependency_graph = build_dependency_graph(input)
-    ordered_steps    = map_step_order(dependency_graph)
+    ordered_steps = map_step_order(dependency_graph)
     return join(ordered_steps)
 end

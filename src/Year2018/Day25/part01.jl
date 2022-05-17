@@ -27,7 +27,7 @@ Given the input as a list of `Point`s, count and return the number of
 is within a manhattan distance of 3 of some other point in the clique.
 """
 function part1(input)
-    open_set   = Set(input)
+    open_set = Set(input)
     closed_set = Set{Point}()
     constellations = 0
 

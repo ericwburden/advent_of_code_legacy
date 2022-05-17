@@ -6,17 +6,17 @@ returning the result. Skip any `Dict` node (and its children) where any of
 the dictionary values is "red". Uses function overloading to dispatch based
 on the input type.
 """
-function extract_numbers2(number::Int, numbers=[])
+function extract_numbers2(number::Int, numbers = [])
     push!(numbers, number)
     return numbers
 end
 
-function extract_numbers2(vector::Vector, numbers=[])
+function extract_numbers2(vector::Vector, numbers = [])
     foreach(x -> extract_numbers2(x, numbers), vector)
     return numbers
 end
 
-function extract_numbers2(dict::Dict, numbers=[])
+function extract_numbers2(dict::Dict, numbers = [])
     "red" in values(dict) && return numbers
     foreach(x -> extract_numbers2(x, numbers), values(dict))
     return numbers

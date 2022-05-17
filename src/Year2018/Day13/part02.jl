@@ -42,7 +42,7 @@ function part2(input)
 
         # When there is only one cart left, return a string representing
         # its location, in 0-indexed, x,y coordinates.
-        if length(carts) == 1 
+        if length(carts) == 1
             location = first(carts).location
             row, col = Tuple(location + CartesianIndex(-1, -1))
             return "$col,$row"

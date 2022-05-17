@@ -1,8 +1,8 @@
 "More handy type aliases"
-const Sand    = Union{DrySand,WetSand}
+const Sand = Union{DrySand,WetSand}
 const Surface = Union{Clay,Water}
-const Wet     = Union{Water,WetSand}
-const Offset  = Tuple{Int,Int}
+const Wet = Union{Water,WetSand}
+const Offset = Tuple{Int,Int}
 
 "Always default to a `DrySand` when fetching from the `ScanMap`"
 function Base.get(scan_map::ScanMap, position::Position)
@@ -33,8 +33,8 @@ function flow!(scan_map::ScanMap, position::Position)
     # If somehow the position is already wet, do nothing. Likewise
     # if the space below the current position is wet sand, meaning
     # water has already flowed through that way.
-    current isa Water   && return []
-    down    isa WetSand && return []
+    current isa Water && return []
+    down isa WetSand && return []
 
     # If there is dry sand below, flow down into it
     down isa DrySand && return [position .+ (0, 1)]
@@ -54,8 +54,8 @@ row is unbounded, return that position so water can continue to flow from
 that point.
 """
 function fill!(scan_map::ScanMap, position::Position)
-    bounded_left,  left_positions,  left  = scan_row(scan_map, position, (-1, 0))
-    bounded_right, right_positions, right = scan_row(scan_map, position, ( 1, 0))
+    bounded_left, left_positions, left = scan_row(scan_map, position, (-1, 0))
+    bounded_right, right_positions, right = scan_row(scan_map, position, (1, 0))
     row_positions = vcat(left_positions, right_positions)
 
     # If bounded on the left and right, fill in the bounded row with water
@@ -66,7 +66,7 @@ function fill!(scan_map::ScanMap, position::Position)
 
     # Otherwise, return the unbounded positions
     next_positions = Position[]
-    bounded_left  || push!(next_positions, left)
+    bounded_left || push!(next_positions, left)
     bounded_right || push!(next_positions, right)
     return next_positions
 end
@@ -85,7 +85,7 @@ function scan_row(scan_map::ScanMap, position::Position, offset::Offset)
     current, _, down, _ = get_environment(scan_map, position)
     while down isa Surface && current isa Sand
         scan_map[position] = WetSand()
-        push!(row_positions, position) 
+        push!(row_positions, position)
         position = position .+ offset
         current, _, down, _ = get_environment(scan_map, position)
     end
@@ -123,4 +123,3 @@ function part1(input)
     end
     return total_wet
 end
-

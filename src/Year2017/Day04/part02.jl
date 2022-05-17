@@ -17,5 +17,3 @@ end
 
 "Count valid passphrases, version 2"
 part2(input) = mapreduce(is_validv2, +, input)
-
-

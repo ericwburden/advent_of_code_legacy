@@ -5,8 +5,8 @@ Given a `Box`, calculate the square inches of paper needed to wrap the box.
 This is the surface area of the box plus the area of the smallest side.
 """
 function paperrequired((; l, w, h)::Box)
-    surface = 2*l*w + 2*l*h + 2*w*h
-    extra   = w*h
+    surface = 2 * l * w + 2 * l * h + 2 * w * h
+    extra = w * h
     return surface + extra
 end
 

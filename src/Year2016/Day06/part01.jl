@@ -5,17 +5,17 @@ Given an iterable collection, identify the most frequently appearing item and
 return it.
 """
 function most_frequent(arr)
-    counts   = Dict()
-    common   = nothing
+    counts = Dict()
+    common = nothing
     maxcount = 0
 
     for item in arr
-        count        = get!(counts, item, 0)
-        newcount     = count + 1
+        count = get!(counts, item, 0)
+        newcount = count + 1
         counts[item] = newcount
 
         if newcount > maxcount
-            common   = item
+            common = item
             maxcount = newcount
         end
     end

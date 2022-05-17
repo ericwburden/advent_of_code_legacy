@@ -1,5 +1,5 @@
 "Handy type aliases"
-const Registers   = NTuple{4,Int}
+const Registers = NTuple{4,Int}
 const Instruction = NTuple{4,Int}
 
 
@@ -32,10 +32,10 @@ function to_registers(s::AbstractString)
 end
 
 function Base.parse(::Type{SampleOperation}, s::AbstractString)
-    strings     = split(s, "\n")
-    before      = to_registers(strings[1])
+    strings = split(s, "\n")
+    before = to_registers(strings[1])
     instruction = to_instruction(strings[2])
-    after       = to_registers(strings[3])
+    after = to_registers(strings[3])
     return SampleOperation(before, after, instruction)
 end
 

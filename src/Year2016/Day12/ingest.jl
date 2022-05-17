@@ -2,15 +2,19 @@ abstract type Value end
 
 function Base.parse(::Type{Value}, s::AbstractString)
     occursin(r"^a|b|c|d$", s) && return parse(Register, s)
-    occursin(r"^-?\d+$", s)   && return parse(Literal, s)
+    occursin(r"^-?\d+$", s) && return parse(Literal, s)
     error("Cannot parse $s into a `Value`!")
 end
 
-struct Register <: Value name::Char end
+struct Register <: Value
+    name::Char
+end
 Base.parse(::Type{Register}, s::AbstractString) = Register(s[1])
 
-struct Literal  <: Value value::Int end
-Base.parse(::Type{Literal},  s::AbstractString) = Literal(parse(Int, s))
+struct Literal <: Value
+    value::Int
+end
+Base.parse(::Type{Literal}, s::AbstractString) = Literal(parse(Int, s))
 
 
 abstract type Instruction end
@@ -25,7 +29,7 @@ function Base.parse(::Type{Instruction}, s::AbstractString)
 end
 
 
-struct Cpy{T <: Value} <: Instruction
+struct Cpy{T<:Value} <: Instruction
     from::T
     to::Register
 end
@@ -57,7 +61,7 @@ function Base.parse(::Type{Dec}, s::AbstractString)
 end
 
 
-struct Jnz{T <: Value}
+struct Jnz{T<:Value}
     check::T
     offset::Literal
 end

@@ -8,13 +8,15 @@ it's the position following zero, track that value. Return the last value
 inserted after zero.
 """
 function part2(skip)
-    numbers    = 50_000_000
+    numbers = 50_000_000
     after_zero = nothing
-    position   = 0
+    position = 0
 
-    for curr_len in 1:numbers
+    for curr_len = 1:numbers
         position = 1 + (position + skip) % curr_len
-        if (position == 1) after_zero = curr_len end
+        if (position == 1)
+            after_zero = curr_len
+        end
     end
 
     return after_zero

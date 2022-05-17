@@ -37,18 +37,20 @@ a collision, it's considered stable. For my input, it takes 59 rounds for all
 collisions to occur.
 """
 function part2(input)
-    particles  = input
+    particles = input
     num_rounds = 20   # Magic Number
-    remaining  = num_rounds
+    remaining = num_rounds
 
     while remaining > 0
         particle_count = length(particles)
-        (particles 
-            =  particles
-            |> (x -> map(increment, x)) 
-            |> (x -> groupby(Particle, p -> p.position, x)) 
-            |> (x -> Iterators.filter(g -> length(g) == 1, x)) 
-            |> (x -> map(first, x)))
+        (
+            particles =
+                particles |>
+                (x -> map(increment, x)) |>
+                (x -> groupby(Particle, p -> p.position, x)) |>
+                (x -> Iterators.filter(g -> length(g) == 1, x)) |>
+                (x -> map(first, x))
+        )
         remaining -= 1
         if particle_count > length(particles)
             remaining = num_rounds

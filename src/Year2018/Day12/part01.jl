@@ -8,8 +8,8 @@ of `grow_rules`, return a `Pots` representing the next generation
 of plant growth.
 """
 function next_state((; filled, first, last)::Pots, grow_rules::GrowRules)
-    range       = (first-2):(last+2)    # The range to check for growth
-    new_plants  = Set{Int}()            # The indices of new generation plants
+    range = (first-2):(last+2)    # The range to check for growth
+    new_plants = Set{Int}()            # The indices of new generation plants
     first, last = (nothing, 0)          # The first/last of the next generation range
 
     # For each pot in the range to check for growth...
@@ -29,10 +29,12 @@ function next_state((; filled, first, last)::Pots, grow_rules::GrowRules)
         # plants and update the next generation range
         grow_rule ∈ grow_rules.inner || continue
         push!(new_plants, idx)
-        if (isnothing(first)) first = idx end
+        if (isnothing(first))
+            first = idx
+        end
         last = idx
     end
-    
+
     return Pots(new_plants, first, last)
 end
 
@@ -46,9 +48,11 @@ the sum of the indices of the planted pots.
 """
 function part1(input, steps = 21)
     pots, grow_rules = input
-    (total_plants
-        =  iterated(x -> next_state(x, grow_rules), pots) 
-        |> (x -> nth(x, steps))
-        |> (x -> sum(x.filled)))
+    (
+        total_plants =
+            iterated(x -> next_state(x, grow_rules), pots) |>
+            (x -> nth(x, steps)) |>
+            (x -> sum(x.filled))
+    )
     return total_plants
 end

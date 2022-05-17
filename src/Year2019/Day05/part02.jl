@@ -7,7 +7,7 @@ run the program to completion. Return the diagnostic code: the only
 value output.
 """
 function part2(input)
-    values   = [input...]
+    values = [input...]
     computer = Computer(values)
     add_input!(computer, 5)
     run!(computer)

@@ -7,7 +7,7 @@ cardinal directions.
 """
 function neighbors(bit_grid, idx)
     neighbor_indices = []
-    offsets = [(-1, 0), (1, 0), (0, -1), (0, 1)] 
+    offsets = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     for offset in offsets
         neighbor = idx + CartesianIndex(offset...)
         checkbounds(Bool, bit_grid, neighbor) || continue
@@ -25,7 +25,7 @@ index that contain `true`.
 """
 function get_group(bit_grid, idx)
     stack = CartesianIndex[idx]
-    seen  = Set{CartesianIndex}()
+    seen = Set{CartesianIndex}()
 
     while !isempty(stack)
         current = pop!(stack)
@@ -49,10 +49,10 @@ and return the count of groups.
 """
 function count_groups(bit_grid)
     grouped_coords = Set{CartesianIndex}()
-    found_groups   = 0
+    found_groups = 0
 
     for idx in CartesianIndices(bit_grid)
-        bit_grid[idx]        || continue
+        bit_grid[idx] || continue
         idx ∈ grouped_coords && continue
         group = get_group(bit_grid, idx)
         union!(grouped_coords, group)
@@ -70,6 +70,6 @@ of groups of 'on' bits.
 """
 function part2(input)
     bitify(n) = seq2bits(input, n)
-    bit_grid  = mapreduce(bitify, hcat, 0:127)
+    bit_grid = mapreduce(bitify, hcat, 0:127)
     return count_groups(bit_grid)
 end

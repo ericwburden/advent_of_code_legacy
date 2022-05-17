@@ -27,7 +27,8 @@ function letter_frequencies(s::AbstractString)
 end
 
 "For sorting `LetterFreq`s"
-Base.isless(a::LetterFreq, b::LetterFreq) = a.freq == b.freq ? a.letter < b.letter : b.freq < a.freq
+Base.isless(a::LetterFreq, b::LetterFreq) =
+    a.freq == b.freq ? a.letter < b.letter : b.freq < a.freq
 
 """
     check(room::RoomDesignation)
@@ -38,14 +39,16 @@ comparing it to the checksum provided. Return `true` if they match, otherwise
 """
 function check(room::RoomDesignation)
     just_letters(x) = map(lf -> lf.letter, x)
-    take_five(x)    = x[1:5]
-    (generated_checksum
-        =  room.encrypted_name
-        |> letter_frequencies
-        |> sort
-        |> just_letters
-        |> take_five
-        |> join)
+    take_five(x) = x[1:5]
+    (
+        generated_checksum =
+            room.encrypted_name |>
+            letter_frequencies |>
+            sort |>
+            just_letters |>
+            take_five |>
+            join
+    )
     return generated_checksum == room.checksum
 end
 
@@ -57,6 +60,6 @@ via the checksums and return the sum of their `sector_id`s.
 """
 function part1(input)
     valid_rooms = filter(check, input)
-    sector_ids  = map(rd -> rd.sector_id, valid_rooms)
+    sector_ids = map(rd -> rd.sector_id, valid_rooms)
     return sum(sector_ids)
 end

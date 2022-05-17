@@ -24,19 +24,31 @@ struct EQRR <: AbstractInstructionKind end
 
 "Type union of all `AbstractInstructionKind` types."
 const AnyAbstractInstructionKind = Union{
-    Type{ADDR}, Type{ADDI}, Type{MULR}, Type{MULI},
-    Type{BANR}, Type{BANI}, Type{BORR}, Type{BORI},
-    Type{SETR}, Type{SETI}, Type{GTIR}, Type{GTRI},
-    Type{GTRR}, Type{EQIR}, Type{EQRI}, Type{EQRR}
+    Type{ADDR},
+    Type{ADDI},
+    Type{MULR},
+    Type{MULI},
+    Type{BANR},
+    Type{BANI},
+    Type{BORR},
+    Type{BORI},
+    Type{SETR},
+    Type{SETI},
+    Type{GTIR},
+    Type{GTRI},
+    Type{GTRR},
+    Type{EQIR},
+    Type{EQRI},
+    Type{EQRR},
 }
 
 """
 An `Instruction` represents an instruction in the program.
 """
-struct Instruction{K <: AbstractInstructionKind}
+struct Instruction{K<:AbstractInstructionKind}
     kind::Type{K}
-    input1::Int  
-    input2::Int  
+    input1::Int
+    input2::Int
     output::Int
 end
 
@@ -64,7 +76,7 @@ function Base.parse(::Type{Instruction}, s::AbstractString)
 end
 
 "Handy type aliases"
-const Registers    = NTuple{6,Int}
+const Registers = NTuple{6,Int}
 const Instructions = Vector{Instruction}
 
 """
@@ -74,14 +86,14 @@ it is running or halted. Implemented as a type in order to sub-type
 """
 abstract type AbstractProgramState end
 struct Running <: AbstractProgramState end
-struct Halted  <: AbstractProgramState end
+struct Halted <: AbstractProgramState end
 
 """
 A `Program` encapsulates the state of the running program, including the 
 current pointer, the register the pointer is bound to, and the collected
 register values.
 """
-struct Program{S <: AbstractProgramState}
+struct Program{S<:AbstractProgramState}
     state::Type{S}
     pointer::Int
     bind::Int
@@ -95,11 +107,11 @@ Given the path to the input file, read the first line and parse the
 binding for the program pointer, then parse the rest of the lines into
 `Instructions`. Package them into a running `Program` and return it.
 """
-ingest(path) = open(path) do f
-    _, bind      = (split ∘ readline)(f)
-    bind         = parse(Int, bind)
-    registers    = (0, 0, 0, 0, 0, 0)
-    instructions = parse.(Instruction, readlines(f))
-    (Program(Running, 0, bind, registers), instructions)
-end
-
+ingest(path) =
+    open(path) do f
+        _, bind = (split ∘ readline)(f)
+        bind = parse(Int, bind)
+        registers = (0, 0, 0, 0, 0, 0)
+        instructions = parse.(Instruction, readlines(f))
+        (Program(Running, 0, bind, registers), instructions)
+    end

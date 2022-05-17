@@ -4,11 +4,11 @@ using .IntCode: Computer, Running, Halted, add_input!, get_output!, run!
 An `AbstractDirection` is used to sub-type `Robot`, indicating which
 direction it is facing.
 """
-abstract type   AbstractDirection end
-struct Up    <: AbstractDirection end
+abstract type AbstractDirection end
+struct Up <: AbstractDirection end
 struct Right <: AbstractDirection end
-struct Down  <: AbstractDirection end
-struct Left  <: AbstractDirection end
+struct Down <: AbstractDirection end
+struct Left <: AbstractDirection end
 
 function Base.convert(::Type{AbstractDirection}, d::BigInt)
     d == 0 && return Left()
@@ -21,7 +21,7 @@ end
 An `AbstractColor` represents the color of a panel, either `Black`
 or `White`.
 """
-abstract type   AbstractColor end
+abstract type AbstractColor end
 struct Black <: AbstractColor end
 struct White <: AbstractColor end
 
@@ -44,7 +44,7 @@ const Position = NTuple{2,Int}
 A `Robot` represents the 'emergency hull painting robot', keeping track
 of the robot's current position and the direction it is facing.
 """
-struct Robot{D <: AbstractDirection}
+struct Robot{D<:AbstractDirection}
     direction::Type{D}
     position::Position
 end
@@ -54,10 +54,10 @@ end
 
 Move the `robot` forward one step in the direction it is currently facing.
 """
-step((; position)::Robot{Up})    = Robot(Up,    position .+ (-1,  0))
-step((; position)::Robot{Right}) = Robot(Right, position .+ ( 0,  1))
-step((; position)::Robot{Down})  = Robot(Down,  position .+ ( 1,  0))
-step((; position)::Robot{Left})  = Robot(Left,  position .+ ( 0, -1))
+step((; position)::Robot{Up}) = Robot(Up, position .+ (-1, 0))
+step((; position)::Robot{Right}) = Robot(Right, position .+ (0, 1))
+step((; position)::Robot{Down}) = Robot(Down, position .+ (1, 0))
+step((; position)::Robot{Left}) = Robot(Left, position .+ (0, -1))
 
 
 """
@@ -67,15 +67,15 @@ step((; position)::Robot{Left})  = Robot(Left,  position .+ ( 0, -1))
 Turn the `robot` either left or right, returning a new `Robot` with the
 same position, but facing the appropriate direction.
 """
-turn((; position)::Robot{Up},    ::Left) = Robot(Left,  position)
-turn((; position)::Robot{Right}, ::Left) = Robot(Up,    position)
-turn((; position)::Robot{Down},  ::Left) = Robot(Right, position)
-turn((; position)::Robot{Left},  ::Left) = Robot(Down,  position)
+turn((; position)::Robot{Up}, ::Left) = Robot(Left, position)
+turn((; position)::Robot{Right}, ::Left) = Robot(Up, position)
+turn((; position)::Robot{Down}, ::Left) = Robot(Right, position)
+turn((; position)::Robot{Left}, ::Left) = Robot(Down, position)
 
-turn((; position)::Robot{Up},    ::Right) = Robot(Right, position)
-turn((; position)::Robot{Right}, ::Right) = Robot(Down,  position)
-turn((; position)::Robot{Down},  ::Right) = Robot(Left,  position)
-turn((; position)::Robot{Left},  ::Right) = Robot(Up,    position)
+turn((; position)::Robot{Up}, ::Right) = Robot(Right, position)
+turn((; position)::Robot{Right}, ::Right) = Robot(Down, position)
+turn((; position)::Robot{Down}, ::Right) = Robot(Left, position)
+turn((; position)::Robot{Left}, ::Right) = Robot(Up, position)
 
 
 const Panels = Dict{Position,AbstractColor}
@@ -88,8 +88,8 @@ on a panel of `start_color` color) until it halts, keeping track of and
 return the color of the panels on the outside of the ship.
 """
 function paint(program::Vector{Int}, start_color::AbstractColor = Black())
-    panels   = Dict{Position,AbstractColor}((0, 0) => start_color)
-    robot    = Robot(Up, (0, 0))
+    panels = Dict{Position,AbstractColor}((0, 0) => start_color)
+    robot = Robot(Up, (0, 0))
     computer = Computer(program)
 
     while !(computer isa Computer{Halted})

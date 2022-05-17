@@ -51,7 +51,7 @@ bitwise `and` of the two `Raw` values. Otherwise, recursively search the
 of their values.
 """
 function trace!(circuit_diagram::CircuitDiagram, (; left, right)::And)
-    leftval  = left  isa Raw ? left.value  : trace!(circuit_diagram, left)
+    leftval = left isa Raw ? left.value : trace!(circuit_diagram, left)
     rightval = right isa Raw ? right.value : trace!(circuit_diagram, right)
     return leftval & rightval
 end
@@ -65,7 +65,7 @@ bitwise `or` of the two `Raw` values. Otherwise, recursively search the
 of their values.
 """
 function trace!(circuit_diagram::CircuitDiagram, (; left, right)::Or)
-    leftval  = left  isa Raw ? left.value  : trace!(circuit_diagram, left)
+    leftval = left isa Raw ? left.value : trace!(circuit_diagram, left)
     rightval = right isa Raw ? right.value : trace!(circuit_diagram, right)
     return leftval | rightval
 end
@@ -79,8 +79,8 @@ Otherwise, recursively search the `circuit_diagram` for either (or both) the
 input and magnitude and return the left shifted result of their values.
 """
 function trace!(circuit_diagram::CircuitDiagram, (; input, magnitude)::LeftShift)
-    inputval = input     isa Raw ? input.value     : trace!(circuit_diagram, input)
-    magval   = magnitude isa Raw ? magnitude.value : trace!(circuit_diagram, magnitude)
+    inputval = input isa Raw ? input.value : trace!(circuit_diagram, input)
+    magval = magnitude isa Raw ? magnitude.value : trace!(circuit_diagram, magnitude)
     return inputval << magval
 end
 
@@ -93,8 +93,8 @@ Otherwise, recursively search the `circuit_diagram` for either (or both) the
 input and magnitude and return the right shifted result of their values.
 """
 function trace!(circuit_diagram::CircuitDiagram, (; input, magnitude)::RightShift)
-    inputval = input     isa Raw ? input.value     : trace!(circuit_diagram, input)
-    magval   = magnitude isa Raw ? magnitude.value : trace!(circuit_diagram, magnitude)
+    inputval = input isa Raw ? input.value : trace!(circuit_diagram, input)
+    magval = magnitude isa Raw ? magnitude.value : trace!(circuit_diagram, magnitude)
     return inputval >> magval
 end
 

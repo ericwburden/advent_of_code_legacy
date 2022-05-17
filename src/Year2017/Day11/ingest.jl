@@ -2,10 +2,10 @@ using Match
 
 abstract type AbstractDirection end
 
-struct North     <: AbstractDirection end
+struct North <: AbstractDirection end
 struct NorthEast <: AbstractDirection end
 struct NorthWest <: AbstractDirection end
-struct South     <: AbstractDirection end
+struct South <: AbstractDirection end
 struct SouthEast <: AbstractDirection end
 struct SouthWest <: AbstractDirection end
 
@@ -16,10 +16,10 @@ Parse a string into a struct that derives from AbstractDirection.
 """
 function Base.parse(::Type{AbstractDirection}, s::AbstractString)
     return @match s begin
-        "n"  => North()
+        "n" => North()
         "ne" => NorthEast()
         "nw" => NorthWest()
-        "s"  => South()
+        "s" => South()
         "se" => SouthEast()
         "sw" => SouthWest()
     end

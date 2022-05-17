@@ -7,8 +7,8 @@ magnitude of the box's volume. The smallest face will be the box's `w * h`,
 since the box must satisfy box.l >= box.w >= box.h.
 """
 function ribbonrequired((; l, w, h)::Box)
-    length = 2*w + 2*h
-    extra  = l * w * h
+    length = 2 * w + 2 * h
+    extra = l * w * h
     return length + extra
 end
 

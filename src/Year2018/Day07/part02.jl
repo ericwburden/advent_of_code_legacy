@@ -30,15 +30,15 @@ graph of dependencies.
 """
 function WorkQueue(n_workers::Int, dependencies::DependencyGraph)
     workers = fill(Worker(), n_workers)
-    ready   = BinaryMinHeap{Char}()
+    ready = BinaryMinHeap{Char}()
     completed = Set{Char}()
     return WorkQueue(workers, ready, completed, dependencies)
 end
 
 can_assign((; workers)::WorkQueue) = any(is_ready, workers)
-any_ready((; ready)::WorkQueue)    = !isempty(ready)
+any_ready((; ready)::WorkQueue) = !isempty(ready)
 
-function all_done((; workers, dependencies)::WorkQueue)   
+function all_done((; workers, dependencies)::WorkQueue)
     return all(is_ready, workers) && isempty(dependencies)
 end
 
@@ -63,7 +63,7 @@ For each worker in the `WorkQueue`, have the worker complete one second of
 work. If the worker completes a step, set them to be idle and add the completed
 step to the set of completed steps.
 """
-function work!(work_queue::WorkQueue) 
+function work!(work_queue::WorkQueue)
     for (idx, worker) in enumerate(work_queue.workers)
         (; working_on, turns_left) = worker
         isnothing(working_on) && continue
@@ -110,8 +110,8 @@ to build the sleigh. Once all steps are processed, return the total time
 needed to build the sleigh.
 """
 function build_sleigh!(dependencies::DependencyGraph)
-    total_time  = 0
-    work_queue  = WorkQueue(5, dependencies)
+    total_time = 0
+    work_queue = WorkQueue(5, dependencies)
     update!(work_queue)
 
     while !all_done(work_queue)

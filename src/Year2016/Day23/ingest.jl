@@ -10,7 +10,7 @@ function Base.parse(::Type{Instruction}, s::AbstractString)
 end
 
 "Represents a Toggle instruction"
-struct Tgl{T <: Value} <: Instruction
+struct Tgl{T<:Value} <: Instruction
     offset::T
 end
 

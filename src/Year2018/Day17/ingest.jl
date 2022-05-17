@@ -3,16 +3,16 @@ An `AbstractSquare` represents the material found at each coordinate
 location of the ground scan.
 """
 abstract type AbstractSquare end
-struct Clay    <: AbstractSquare end
-struct Water   <: AbstractSquare end
+struct Clay <: AbstractSquare end
+struct Water <: AbstractSquare end
 struct WetSand <: AbstractSquare end
 struct DrySand <: AbstractSquare end
 
 "Handy type aliases"
-const Position     = Tuple{Int,Int}
-const ScanMap      = Dict{Position,AbstractSquare}
+const Position = Tuple{Int,Int}
+const ScanMap = Dict{Position,AbstractSquare}
 const ScanMapEntry = Pair{Position,AbstractSquare}
-const ClayVein     = Vector{ScanMapEntry}
+const ClayVein = Vector{ScanMapEntry}
 
 """
     parse(::Type{ClayVein}, s::AbstractString)
@@ -74,9 +74,7 @@ function Base.show(scan_map::ScanMap)
     end
 end
 
-Base.show(::Clay)    = print('#')
-Base.show(::Water)   = print('~')
+Base.show(::Clay) = print('#')
+Base.show(::Water) = print('~')
 Base.show(::WetSand) = print('|')
 Base.show(::DrySand) = print('.')
-
-

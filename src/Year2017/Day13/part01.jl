@@ -6,7 +6,7 @@ across the firewall, indicates whether the sensor is active at position
 `0` in the sensor's range. 
 """
 function is_sensor_active(depth, range, start_time)
-    return (depth + start_time) % (2*range - 2) == 0
+    return (depth + start_time) % (2 * range - 2) == 0
 end
 
 """
@@ -16,7 +16,7 @@ Assuming you start across the `firewall` at time `start_time`, returns a
 value indicating the 'severity' of the trip. Each layer whose sensor catches
 you as you traverse the firewall contributes to severity its depth * range.
 """
-function severity_at_time(firewall, start_time=0)
+function severity_at_time(firewall, start_time = 0)
     total_severity = 0
 
     for (index, range) in enumerate(firewall)

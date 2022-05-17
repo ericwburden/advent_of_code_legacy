@@ -1,7 +1,7 @@
 "Friendly abstraction around writing values to the tape"
 function write!(tape::Tape, value::Int, position::Int)
-    value > 1  && error("Can only write value '0' or '1'!")
-    value < 0  && error("Can only write value '0' or '1'!")
+    value > 1 && error("Can only write value '0' or '1'!")
+    value < 0 && error("Can only write value '0' or '1'!")
     value == 1 && push!(tape, position)
     value == 0 && delete!(tape, position)
 end
@@ -90,7 +90,7 @@ through the required amount of times and returning the number of 'on' bits
 on the `tape`.
 """
 function part1()
-    tape, cursor  = Tape(), Cursor()
+    tape, cursor = Tape(), Cursor()
     foreach(_ -> cursor = step!(tape, cursor), 1:STEPS)
     return length(tape)
 end

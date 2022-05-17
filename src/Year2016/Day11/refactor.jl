@@ -30,7 +30,7 @@ This results in the following example relationships:
 - Lithium Microchip => 4⁴                   => 256
 - Lithium Generator => 4⁴ × 2               => 512
 """
-const MAX_ELEMENTS   = 9
+const MAX_ELEMENTS = 9
 const MICROCHIP_LIST = 4 .^ (0:(MAX_ELEMENTS-1))
 const GENERATOR_LIST = MICROCHIP_LIST .<< 1
 const SHIELDED_PAIRS = MICROCHIP_LIST .+ GENERATOR_LIST
@@ -40,13 +40,13 @@ const ALL_GENERATORS = sum(GENERATOR_LIST)
 const Facility = Tuple{Int,Vector{UInt}}
 
 const TEST_START = (1, [UInt(320), UInt(128), UInt(512), UInt(0)])
-const TEST_GOAL  = (4, [UInt(0),   UInt(0),   UInt(0),   UInt(960)])
+const TEST_GOAL = (4, [UInt(0), UInt(0), UInt(0), UInt(960)])
 
 const INPUT1_START = (1, [UInt(52224), UInt(143363), UInt(65536), UInt(0)])
-const INPUT1_GOAL  = (4, [UInt(0),     UInt(0),      UInt(0),     UInt(261123)])
+const INPUT1_GOAL = (4, [UInt(0), UInt(0), UInt(0), UInt(261123)])
 
 const INPUT2_START = (1, [UInt(52284), UInt(143363), UInt(65536), UInt(0)])
-const INPUT2_GOAL  = (4, [UInt(0),     UInt(0),      UInt(0),     UInt(261183)])
+const INPUT2_GOAL = (4, [UInt(0), UInt(0), UInt(0), UInt(261183)])
 
 
 """
@@ -61,7 +61,7 @@ function is_stable(repr::UInt)
     generators = repr & ALL_GENERATORS
     generators == 0 && return true
     microchips = repr & ALL_MICROCHIPS
-    unmatched  = (generators >> 1) ⊻ microchips
+    unmatched = (generators >> 1) ⊻ microchips
     return (unmatched & microchips == 0)
 end
 
@@ -73,7 +73,7 @@ Given a representation of a set of components, return an iterator yielding each
 matched pair of microchip/generator, wherein the generator protects the 
 microchip from irradiation.
 """
-function shielded_pairs(repr::UInt) 
+function shielded_pairs(repr::UInt)
     return filter(sp -> repr & sp == sp, SHIELDED_PAIRS)
 end
 
@@ -85,13 +85,13 @@ Given a representation of a set of components, return a list of the unique
 pairs of microchips.
 """
 function microchip_pairs(repr::UInt)
-    sent       = UInt(0)
+    sent = UInt(0)
     microchips = repr & ALL_MICROCHIPS
-    output     = []
+    output = []
     for chip1 in microchips .& MICROCHIP_LIST
         chip1 == 0 && continue
         for chip2 in microchips .& MICROCHIP_LIST
-            chip2 == 0     && continue
+            chip2 == 0 && continue
             chip1 == chip2 && continue
             microchips = chip1 + chip2
             sent & microchips == microchips && continue
@@ -110,13 +110,13 @@ Given a representation of a set of components, return a list of the unique
 pairs of generators.
 """
 function generator_pairs(repr::UInt)
-    sent       = UInt(0)
+    sent = UInt(0)
     generators = repr & ALL_GENERATORS
-    output     = []
+    output = []
     for gen1 in generators .& GENERATOR_LIST
         gen1 == 0 && continue
         for gen2 in generators .& GENERATOR_LIST
-            gen2 == 0    && continue
+            gen2 == 0 && continue
             gen1 == gen2 && continue
             generators = gen1 + gen2
             sent & generators == generators && continue
@@ -138,7 +138,7 @@ time.
 """
 function can_move_up(repr::UInt)
     chips = Iterators.filter(m -> m & repr == m, MICROCHIP_LIST)
-    gens  = Iterators.filter(g -> g & repr == g, GENERATOR_LIST)
+    gens = Iterators.filter(g -> g & repr == g, GENERATOR_LIST)
     return Iterators.flatten((chips, gens))
 end
 
@@ -158,7 +158,7 @@ function can_move_down(repr::UInt)
     # pairs of microchips, all unduplicated pairs of generators, and 
     # each individual component
     iter_fns = (shielded_pairs, microchip_pairs, generator_pairs, can_move_up)
-    iters    = Iterators.map(fn -> fn(repr), iter_fns)
+    iters = Iterators.map(fn -> fn(repr), iter_fns)
     return Iterators.flatten(iters)
 end
 
@@ -172,7 +172,7 @@ up or down in the elevator.
 """
 function next_states(facility::Facility)
     current, floors = facility
-    possibilities   = Facility[]
+    possibilities = Facility[]
     for (offset, fn) in ((-1, can_move_up), (1, can_move_down))
         next = current + offset
         (next < 1 || next > 4) && continue
@@ -183,9 +183,9 @@ function next_states(facility::Facility)
             new_floor = floors[next] | movable
             is_stable(new_floor) || continue
 
-            next_floors          = [floors...]
+            next_floors = [floors...]
             next_floors[current] = remaining
-            next_floors[next]    = new_floor
+            next_floors[next] = new_floor
             push!(possibilities, (next, next_floors))
         end
     end
@@ -202,7 +202,7 @@ A* search algorithm.
 """
 function heuristic(facility::Facility)
     _, floors = facility
-    total           = 0
+    total = 0
     for (idx, floor) in enumerate(floors)
         multiplier = (length(floors) - idx)
         total += count_ones(floor) * multiplier
@@ -249,7 +249,7 @@ function Base.hash(facility::Facility)
     return current_hash
 end
 
-Base.:(==)(a::Facility, b::Facility)   = hash(a) == hash(b)
+Base.:(==)(a::Facility, b::Facility) = hash(a) == hash(b)
 Base.isequal(a::Facility, b::Facility) = hash(a) == hash(b)
 
 
@@ -262,7 +262,7 @@ needed to bring all components to the fourth floor.
 """
 function shortest_path(start::Facility, goal::Facility)
     frontier = PriorityQueue{Facility,Int}(start => 0)
-    steps    = Dict{Facility,Int}(start => 0)
+    steps = Dict{Facility,Int}(start => 0)
 
     while !isempty(frontier)
         current = dequeue!(frontier)
@@ -272,8 +272,8 @@ function shortest_path(start::Facility, goal::Facility)
             next ∈ keys(steps) && continue
             new_steps = steps[current] + 1
             if get!(steps, next, typemax(Int)) > new_steps
-                priority       = new_steps + heuristic(next)
-                steps[next]    = new_steps
+                priority = new_steps + heuristic(next)
+                steps[next] = new_steps
                 frontier[next] = priority
             end
         end

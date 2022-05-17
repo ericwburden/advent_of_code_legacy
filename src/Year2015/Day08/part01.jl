@@ -10,7 +10,7 @@ string from the input file into a parsed string, such that `\"abc\\x27\"`
 becomes `"abc\x27"`.
 """
 function part1(input)
-    nrawchars    = mapreduce(length, +, input)
+    nrawchars = mapreduce(length, +, input)
     nparsedchars = mapreduce(length ∘ Meta.parse, +, input)
     return nrawchars - nparsedchars
 end

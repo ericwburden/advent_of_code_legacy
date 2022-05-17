@@ -7,7 +7,7 @@ orientations.
 """
 function all_arrangements(pixels::BitMatrix)
     arrangements = BitMatrix[]
-    for i in 0:7
+    for i = 0:7
         arrangement = rotr90(pixels, i % 4)
         i >= 4 && reverse!(arrangement, dims = 2)
         push!(arrangements, arrangement)

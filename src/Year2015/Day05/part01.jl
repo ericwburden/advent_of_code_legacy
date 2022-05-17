@@ -5,8 +5,8 @@
 | - DOUBLE_RE matches any string that contains a pair of sequential letters
 | - EXCLUDE_RE matches any string containing 'ab' or 'cd' or 'pq' or 'xy'
 ------------------------------------------------------------------------------=#
-const VOWELS_RE  = r".*([aeiou].*){3}"
-const DOUBLE_RE  = r"([a-z])\1"
+const VOWELS_RE = r".*([aeiou].*){3}"
+const DOUBLE_RE = r"([a-z])\1"
 const EXCLUDE_RE = r"ab|cd|pq|xy"
 
 """
@@ -16,9 +16,8 @@ Given a String `s`, return true if the string contains at least three vowels,
 one pair of repeated sequential letters (like 'aa'), and does not contain 'ab' 
 or 'cd' or 'pq' or 'xy'.
 """
-isnice1(s::String) = contains(s, VOWELS_RE) &&
-                     contains(s, DOUBLE_RE) &&
-                     !contains(s, EXCLUDE_RE)
+isnice1(s::String) =
+    contains(s, VOWELS_RE) && contains(s, DOUBLE_RE) && !contains(s, EXCLUDE_RE)
 
 
 """

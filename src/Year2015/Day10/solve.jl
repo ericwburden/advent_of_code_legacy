@@ -13,8 +13,8 @@ alternate between the run length and the value. For example, [1, 1, 1, 2, 2] ->
 """
 function rle(arr)
     runlength = 0
-    current   = arr[1]
-    output    = []
+    current = arr[1]
+    output = []
 
     for item in arr
         if item == current
@@ -38,7 +38,7 @@ Given the input as an integer, repeatedly run length encode the input `rounds`
 times and return the length of the final result.
 """
 function solve(input, rounds)
-    encoded(x)  = iterated(rle, x)
-    takelast(x) = nth(x, rounds+1)
+    encoded(x) = iterated(rle, x)
+    takelast(x) = nth(x, rounds + 1)
     input |> digits |> reverse |> encoded |> takelast |> length
 end

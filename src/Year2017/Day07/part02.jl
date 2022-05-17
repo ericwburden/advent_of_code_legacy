@@ -5,15 +5,15 @@ Given an iterable list of `values`, identify and return the value that appears
 most commonly in the list.
 """
 function most_common(values)
-    counts     = Dict()
-    max_found  = 0
+    counts = Dict()
+    max_found = 0
     common_val = nothing
 
     for value in values
         count = get(counts, value, 0) + 1
         counts[value] = count
         if count > max_found
-            max_found  = count
+            max_found = count
             common_val = value
         end
     end
@@ -46,7 +46,7 @@ function part2(input)
     function accumulate!(node)
         foreach(accumulate!, structure[node])
         child_weights = [cums[child] for child in structure[node]]
-        cums[node]   += foldl(+, child_weights, init = 0)
+        cums[node] += foldl(+, child_weights, init = 0)
 
         # Don't try to set the corrected weight if one has already been found
         !isnothing(corrected_weight) && return

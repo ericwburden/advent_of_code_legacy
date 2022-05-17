@@ -5,7 +5,7 @@ Assuming you start across the firewall at `start_time`, return true if
 you are able to make it all the way across without encountering a sensor. 
 Short-circuits whenever a sensor is encountered, returning false.
 """
-function can_sneak_through_at_time(firewall, start_time=0)
+function can_sneak_through_at_time(firewall, start_time = 0)
     for (index, range) in enumerate(firewall)
         isnothing(range) && continue
         depth = index - 1
@@ -24,7 +24,7 @@ and return that time.
 """
 function part2(input)
     start_time = 0
-    while !can_sneak_through_at_time(input, start_time) 
+    while !can_sneak_through_at_time(input, start_time)
         start_time += 1
     end
     return start_time

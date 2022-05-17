@@ -9,8 +9,8 @@ string representing the operator, and the numeric value. Return them as a
 tuple in the form of (<register>, <operator>, <value>).
 """
 function preprocess(s::AbstractString)
-    m   = match(r"(?<reg>\w+) (?<op>[\w><=!]+) (?<val>-?\d+)", s)
-    op  = string(m["op"])
+    m = match(r"(?<reg>\w+) (?<op>[\w><=!]+) (?<val>-?\d+)", s)
+    op = string(m["op"])
     val = parse(Int, m["val"])
     reg = string(m["reg"])
     return (reg, op, val)
@@ -49,7 +49,7 @@ function check_fn_from(s::AbstractString)
     reg, op_str, value = preprocess(s)
     op_fn = getfield(Main, Symbol(op_str))
     compare(x) = op_fn(x, value)
-    
+
     return function check(registers::Registers)
         register_value = get(registers, reg, 0)
         return compare(register_value)
@@ -66,7 +66,7 @@ to the instructions, returning the value in the register.
 """
 function execute_fn_from(s::AbstractString)
     update, check = split(s, " if ")
-    update!   = update_fn_from(update)
+    update! = update_fn_from(update)
     check = check_fn_from(check)
 
     return function execute!(registers::Registers)

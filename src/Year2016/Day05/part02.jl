@@ -6,7 +6,7 @@ Attempt to insert `c` into vector `v` at index `i`. Will not insert if
 hexadecimal digit.
 """
 function tryinsert!(v::AbstractVector, i::Int, c::Char)
-    if checkbounds(Bool, v, i) && !isxdigit(v[i]) 
+    if checkbounds(Bool, v, i) && !isxdigit(v[i])
         v[i] = c
     end
 end
@@ -27,4 +27,3 @@ function part2(input)
         all(isxdigit, password) && return join(password)
     end
 end
-

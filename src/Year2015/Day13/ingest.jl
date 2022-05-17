@@ -12,8 +12,8 @@ AdjacencyMatrix(s::Int) = AdjacencyMatrix(Dict(), fill(nothing, s, s))
 
 "Add a person-person relationship to the Adjacency Matrix"
 function add!(c::AdjacencyMatrix, v::Tuple{String,String,Int})
-    leftidx  = get!(c.keys, v[1], length(c.keys)+1)
-    rightidx = get!(c.keys, v[2], length(c.keys)+1)
+    leftidx = get!(c.keys, v[1], length(c.keys) + 1)
+    rightidx = get!(c.keys, v[2], length(c.keys) + 1)
     c.values[leftidx, rightidx] = v[3]
 end
 
@@ -33,7 +33,9 @@ function ingest(path)
             m = match(INPUT_RE, line)
             p1, p2, change = string.((m["p1"], m["p2"], m["change"]))
             happy = parse(Int, m["happy"])
-            if change == "lose" happy *= -1 end
+            if change == "lose"
+                happy *= -1
+            end
             add!(adjacency_matrix, (p1, p2, happy))
         end
     end

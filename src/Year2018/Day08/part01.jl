@@ -15,11 +15,11 @@ function Base.convert(::Type{Node}, numbers::Vector{Int})
     cursor = 1
 
     function convert_recursively()
-        header  = (numbers[cursor], numbers[cursor + 1])
+        header = (numbers[cursor], numbers[cursor+1])
         cursor += 2
 
-        children = [convert_recursively() for _ in 1:header[1]]
-        metadata = [numbers[cursor:(cursor + header[2] - 1)]...]
+        children = [convert_recursively() for _ = 1:header[1]]
+        metadata = [numbers[cursor:(cursor+header[2]-1)]...]
         cursor += header[2]
         return Node(header, children, metadata)
     end

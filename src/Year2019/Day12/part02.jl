@@ -33,4 +33,3 @@ function part2(input)
     # size of the overall cycle.
     return lcm(x_cycle, y_cycle, z_cycle)
 end
-

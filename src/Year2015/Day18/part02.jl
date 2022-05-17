@@ -27,16 +27,16 @@ Given a `FaultyLights` and an index `i`, determine whether the given index
 should be 1 or 0 in the next state of `FaultyLights`. Lights in the corner
 are stuck on.
 """
-function nextstate(f::FaultyLights, i::CartesianIndex) 
-    iscorner(f, i)         && return true
+function nextstate(f::FaultyLights, i::CartesianIndex)
+    iscorner(f, i) && return true
     neighborson(f, i) == 3 && return true
-    neighborson(f, i) == 2 && return f[i] 
+    neighborson(f, i) == 2 && return f[i]
     return false
 end
 
 # Overloads of `Base` functions to apply them to `FaultyLights`, so they can be
 # treated as a regular `BitMatrix` where it makes sense to do so.
-Base.similar((; m)::FaultyLights)         = similar(m) |> FaultyLights
+Base.similar((; m)::FaultyLights) = similar(m) |> FaultyLights
 Base.setindex!((; m)::FaultyLights, v, i) = setindex!(m, v, i) |> FaultyLights
 
 """

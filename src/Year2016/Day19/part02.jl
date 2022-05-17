@@ -25,9 +25,9 @@ first position in the second half to the last position in the first half. This
 process continues until only one elf remains.
 """
 function part2(input)
-    halfway   = input ÷ 2
-    half_one  = fill_deque(UInt32, UInt32(1):halfway)
-    half_two  = fill_deque(UInt32, (halfway+1):input)
+    halfway = input ÷ 2
+    half_one = fill_deque(UInt32, UInt32(1):halfway)
+    half_two = fill_deque(UInt32, (halfway+1):input)
     remaining = input
 
     while remaining > 1

@@ -1,5 +1,5 @@
 function part2(input)
-    pointer   = 1
+    pointer = 1
     registers = Registers('a' => 0, 'b' => 0, 'c' => 1, 'd' => 0)
 
     while checkbounds(Bool, input, pointer)

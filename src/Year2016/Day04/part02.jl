@@ -32,7 +32,7 @@ contraband is being held, then return that room's sector_id.
 """
 function part2(input)
     valid_rooms = filter(check, input)
-    decrypted   = map(decrypt, valid_rooms)
-    contraband  = filter(s -> occursin("northpole", s[1]), decrypted)
+    decrypted = map(decrypt, valid_rooms)
+    contraband = filter(s -> occursin("northpole", s[1]), decrypted)
     return first(contraband)[2].sector_id
 end

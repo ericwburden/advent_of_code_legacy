@@ -39,7 +39,7 @@ Given the input program, run it through the ASCII program to generate a
 map of the scaffolding, then count and return the number of intersections.
 """
 function part1(input)
-    scaffold      = scaffolds(input)
+    scaffold = scaffolds(input)
     intersections = find_intersections(scaffold)
     return mapreduce(prod, +, intersections)
 end

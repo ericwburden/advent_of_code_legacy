@@ -1,15 +1,15 @@
 # The compounds detected by the My First Crime Scene Analysis Machine
 const DETECTED = Dict(
-    :children    => 3,
-    :cats        => 7,
-    :samoyeds    => 2,
+    :children => 3,
+    :cats => 7,
+    :samoyeds => 2,
     :pomeranians => 3,
-    :akitas      => 0,
-    :vizslas     => 0,
-    :goldfish    => 5,
-    :trees       => 3,
-    :cars        => 2,
-    :perfumes    => 1
+    :akitas => 0,
+    :vizslas => 0,
+    :goldfish => 5,
+    :trees => 3,
+    :cars => 2,
+    :perfumes => 1,
 )
 
 # Having peeked into the future (by coming back after finishing part 2), I know
@@ -70,7 +70,7 @@ matches, return her number. Otherwise, raise an error.
 """
 function part1(input)
     strategy = Equals()
-    found    = filter(x -> match(strategy, x, DETECTED), input)
+    found = filter(x -> match(strategy, x, DETECTED), input)
     length(found) > 1 && error("Matched too many aunts!")
     length(found) < 1 && error("Could not find a match!")
 

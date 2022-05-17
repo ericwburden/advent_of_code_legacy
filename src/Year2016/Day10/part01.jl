@@ -35,9 +35,9 @@ by type and `id` only. Ignores the specific sub-type of the repository, and
 the values held. This way, an EmptyBot(1) matches a PartialBot(1, 10) matches
 a FullBot(1, 10, 35), and any can be fetched from a set by any of the others.
 """
-Base.hash(bot::AbstractBot)    = hash(AbstractBot, hash(bot.id))
+Base.hash(bot::AbstractBot) = hash(AbstractBot, hash(bot.id))
 Base.hash(out::AbstractOutput) = hash(AbstractOutput, hash(out.id))
-Base.isequal(a::AbstractBot,    b::AbstractBot)    = hash(a) == hash(b)
+Base.isequal(a::AbstractBot, b::AbstractBot) = hash(a) == hash(b)
 Base.isequal(a::AbstractOutput, b::AbstractOutput) = hash(a) == hash(b)
 
 
@@ -59,7 +59,7 @@ function Base.get!(system::TransferSystem, repo::AbstractRepository)
 end
 
 function add!(system::TransferSystem, repo::AbstractRepository, (; value)::Direct)
-    current  = get!(system, repo)
+    current = get!(system, repo)
     new_repo = update(current, value)
     push!(system, new_repo)
     return true
@@ -70,7 +70,7 @@ function add!(system::TransferSystem, repo::AbstractRepository, (; high, low)::C
     from isa FullBot || return false
 
     add!(system, high, Direct(from.high))
-    add!(system, low,  Direct(from.low))
+    add!(system, low, Direct(from.low))
     return true
 end
 
@@ -85,7 +85,7 @@ repository, such that `update(EmptyBot(1), 10)` -> `PartialBot(1, 10)` and
 `update(PartialBot(1, 10), 35)` -> `FullBot(1, 10, 35)`.
 """
 update((; id)::EmptyOutput, value::Int) = FullOutput(id, value)
-update((; id)::EmptyBot,    value::Int) = PartialBot(id, value)
+update((; id)::EmptyBot, value::Int) = PartialBot(id, value)
 function update((; id, value)::PartialBot, next_value::Int)
     if next_value > value
         return FullBot(id, value, next_value)
@@ -96,7 +96,7 @@ end
 
 
 # Type aliases for convenience
-const TransferList  = Vector{Tuple{AbstractRepository,AbstractTransfer}}
+const TransferList = Vector{Tuple{AbstractRepository,AbstractTransfer}}
 const TransferQueue = Queue{Tuple{AbstractRepository,AbstractTransfer}}
 
 
@@ -108,7 +108,7 @@ updating a `TransferSystem` until each transfer has been applied.
 """
 function analyze(input::TransferList)
     system = TransferSystem()
-    queue  = TransferQueue()
+    queue = TransferQueue()
     foreach(v -> enqueue!(queue, v), input)
 
     while !isempty(queue)

@@ -42,7 +42,7 @@ function swap_letter_fn(s::AbstractString)
 end
 
 function rotate_steps_fn(s::AbstractString)
-    m     = match(r"(?<dir>left|right) (?<steps>\d+)", s)
+    m = match(r"(?<dir>left|right) (?<steps>\d+)", s)
     steps = parse(Int, m["steps"])
 
     if m["dir"] == "left"
@@ -96,11 +96,11 @@ and return the appropriate closure to apply that transformation.
 """
 function to_function(s::AbstractString)
     contains(s, "swap position") && return swap_position_fn(s)
-    contains(s, "swap letter")   && return swap_letter_fn(s)
-    contains(s, "rotate based")  && return rotate_position_fn(s)
-    contains(s, "rotate")        && return rotate_steps_fn(s)
-    contains(s, "reverse")       && return reverse_positions_fn(s)
-    contains(s, "move")          && return move_positions_fn(s)
+    contains(s, "swap letter") && return swap_letter_fn(s)
+    contains(s, "rotate based") && return rotate_position_fn(s)
+    contains(s, "rotate") && return rotate_steps_fn(s)
+    contains(s, "reverse") && return reverse_positions_fn(s)
+    contains(s, "move") && return move_positions_fn(s)
     error("Don't know how to parse $s")
 end
 

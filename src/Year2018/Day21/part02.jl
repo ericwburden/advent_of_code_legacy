@@ -34,4 +34,3 @@ function part2(input)
 
     return last(seen_magic_values)
 end
-

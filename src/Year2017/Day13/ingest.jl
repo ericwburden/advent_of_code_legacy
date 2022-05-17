@@ -13,7 +13,7 @@ function ingest(path)::Vector{MaybeRange}
     open(path) do f
         for line in eachline(f)
             depth, range = parse.(Int, split(line, ": "))
-            layers[depth + 1] = range
+            layers[depth+1] = range
         end
     end
     return layers

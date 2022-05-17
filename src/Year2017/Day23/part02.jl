@@ -5,18 +5,18 @@ Return a list of the prime numbers in the range from `start` to `stop`.
 """
 function primes_in_range(start::Int, stop::Int)
     numbers = collect(1:stop)
-    primes  = trues(stop)
+    primes = trues(stop)
 
     # Run a prime sieve from 1 to `stop`
     for n in numbers[2:end]
         primes[n] || continue
-        for check in (n*2):n:stop
+        for check = (n*2):n:stop
             primes[check] = false
         end
     end
 
     # Use these views to return only primes in the range from `start` to `stop`
-    prime_mask   = @view primes[start:stop]
+    prime_mask = @view primes[start:stop]
     number_range = @view numbers[start:stop]
     return number_range[prime_mask]
 end
@@ -30,10 +30,10 @@ https://todd.ginsberg.com/post/advent-of-code/2017/day23/
 """
 function part2()
     start = (79 * 100) + 100_000
-    stop  = start + 17_000
+    stop = start + 17_000
     prime_set = Base.Set(primes_in_range(start, stop))
     non_primes = 0
-    for number in start:17:stop
+    for number = start:17:stop
         number ∈ prime_set && continue
         non_primes += 1
     end

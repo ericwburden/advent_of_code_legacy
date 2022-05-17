@@ -25,11 +25,13 @@ No input needed, runs both generators in tandem 40 million times and count
 how many times the lowest 16 bits match.
 """
 function part1()
-    rounds  = 40_000_000
+    rounds = 40_000_000
     matches = 0
     for (a, b) in zip(generator_a, generator_b)
         rounds <= 0 && break
-        if (match_16_low(a, b)) matches += 1 end
+        if (match_16_low(a, b))
+            matches += 1
+        end
         rounds -= 1
     end
     return matches

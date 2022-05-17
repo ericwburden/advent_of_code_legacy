@@ -1,10 +1,10 @@
 const Address = NTuple{2,Int}
 const HousesVisited = Set{Address}
 
-asoffset(::North) = ( 1,  0)
-asoffset(::South) = (-1,  0)
-asoffset(::East)  = ( 0,  1)
-asoffset(::West)  = ( 0, -1)
+asoffset(::North) = (1, 0)
+asoffset(::South) = (-1, 0)
+asoffset(::East) = (0, 1)
+asoffset(::West) = (0, -1)
 
 """
     part1(input)

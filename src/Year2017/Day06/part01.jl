@@ -6,12 +6,12 @@ there are multiple largest values, return the first index found. Returns
 (<index>, <value>).
 """
 function first_largest(values)
-    found   = nothing
+    found = nothing
     largest = first(values) |> typemin
-    
+
     for (idx, value) in enumerate(values)
         if (value > largest)
-            found   = (idx, value)
+            found = (idx, value)
             largest = value
         end
     end
@@ -27,13 +27,13 @@ value to each subsequent index (wrapping around) one at a time.
 """
 function redistribute!(values)
     next_idx(i) = (i % length(values)) + 1
-    idx, value  = first_largest(values)
+    idx, value = first_largest(values)
     values[idx] = 0
 
     while value > 0
-        idx = next_idx(idx)        
+        idx = next_idx(idx)
         values[idx] += 1
-        value       -= 1
+        value -= 1
     end
 end
 
@@ -46,7 +46,7 @@ cycles needed to repeate that state.
 """
 function part1(input)
     values = deepcopy(input)
-    seen   = Set()
+    seen = Set()
     cycles = 0
 
     while hash(values) ∉ seen
@@ -54,6 +54,6 @@ function part1(input)
         redistribute!(values)
         cycles += 1
     end
-    
+
     return cycles
 end

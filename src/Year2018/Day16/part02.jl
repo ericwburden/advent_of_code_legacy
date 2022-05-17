@@ -1,6 +1,6 @@
 "More handy type aliases"
 const InstructionKindSet = Set{AnyAbstractInstructionKind}
-const OpcodeMap          = Dict{Int,AnyAbstractInstructionKind}
+const OpcodeMap = Dict{Int,AnyAbstractInstructionKind}
 
 """
     decode_opcodes(samples::Vector{SampleOperation})
@@ -16,8 +16,8 @@ function decode_opcodes(samples::Vector{SampleOperation})
     # do not satisfy the example.
     possible_opcodes = Dict{Int,InstructionKindSet}()
     for sample_operation in samples
-        opcode            = sample_operation.instruction[1]
-        possible_kinds    = possible_instruction_kinds(sample_operation)
+        opcode = sample_operation.instruction[1]
+        possible_kinds = possible_instruction_kinds(sample_operation)
         current_possibles = get!(possible_opcodes, opcode, possible_kinds)
         possible_opcodes[opcode] = intersect!(current_possibles, possible_kinds)
     end
@@ -63,7 +63,7 @@ to a `CodedInstruction`.
 """
 function identify_instruction(opcode_map::OpcodeMap, instruction::Instruction)
     opcode = instruction[1]
-    kind   = opcode_map[opcode]
+    kind = opcode_map[opcode]
     return CodedInstruction(kind, instruction)
 end
 
@@ -80,7 +80,7 @@ function part2(input)
     sample_operations, sample_program = input
     opcode_map = decode_opcodes(sample_operations)
     instructions = [identify_instruction(opcode_map, i) for i in sample_program]
-    registers    = Registers(zeros(Int, 4))
+    registers = Registers(zeros(Int, 4))
     for instruction in instructions
         registers = execute(instruction, registers)
     end

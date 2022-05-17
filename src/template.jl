@@ -23,7 +23,7 @@ end
 
 parsed_args = parse_args(settings)
 year = parsed_args["year"]
-day  = parsed_args["day"]
+day = parsed_args["day"]
 
 
 #=------------------------------------------------------------------------------ 
@@ -31,18 +31,18 @@ day  = parsed_args["day"]
 ------------------------------------------------------------------------------=#
 
 yearname = "Year" * "$year"
-dayname  = "Day" * lpad(day, 2, "0")
-puzzlepath  = joinpath(@__DIR__, yearname, dayname)
+dayname = "Day" * lpad(day, 2, "0")
+puzzlepath = joinpath(@__DIR__, yearname, dayname)
 
 # Don't try to create the template if a puzzle directory already exists
 isdir(puzzlepath) && error("$puzzlepath already exists!")
 mkpath(puzzlepath)
 
 
-modpath    = joinpath(puzzlepath, dayname * ".jl")
+modpath = joinpath(puzzlepath, dayname * ".jl")
 ingestpath = joinpath(puzzlepath, "ingest.jl")
-part1path  = joinpath(puzzlepath, "part01.jl")
-part2path  = joinpath(puzzlepath, "part02.jl")
+part1path = joinpath(puzzlepath, "part01.jl")
+part2path = joinpath(puzzlepath, "part02.jl")
 
 # Write the module file
 println("Writing module file...")
@@ -50,23 +50,23 @@ open(modpath, create = true, write = true) do f
     contents = """
     module $dayname
     using AdventOfCode: getinput
-    
+
     include("ingest.jl")
     include("part01.jl")
     include("part02.jl")
-    
+
     export run
     function run()
         inpath  = getinput($year, $day, "input")
         input   = ingest(inpath)
         answer1 = part1(input)
         answer2 = part2(input)
-    
+
         println("\\n    Day $(lpad(day, 2, "0"))")
         println("    ├─ Part 01: \$(answer1)")
         println("    └─ Part 02: \$(answer2)")
     end
-    
+
     end # module
     """
     write(f, contents)
@@ -116,10 +116,10 @@ end
 
 # Fetch the input, if possible
 println("Downloading input...")
-cookie     = readline("$(@__DIR__)/.cookie")
+cookie = readline("$(@__DIR__)/.cookie")
 input_path = joinpath(@__DIR__, "..", "inputs", "$year", lpad(day, 2, "0"), "input.txt")
-input_url  = "https://adventofcode.com/$year/day/$day/input"
-headers    = Dict("cookie" => "session=$cookie")
+input_url = "https://adventofcode.com/$year/day/$day/input"
+headers = Dict("cookie" => "session=$cookie")
 
 try
     r = HTTP.request("GET", input_url, headers)

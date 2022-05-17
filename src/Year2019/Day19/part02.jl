@@ -9,14 +9,13 @@ coordinates.
 function part2(input)
     (x, y) = (0, 0)
     while true
-        if detect_position(input, x, y+99) == 0
+        if detect_position(input, x, y + 99) == 0
             x += 1
             continue
         end
-        if detect_position(input, x+99, y) == 1
+        if detect_position(input, x + 99, y) == 1
             return (x * 10_000) + y
         end
         y += 1
     end
 end
-

@@ -6,19 +6,23 @@ Given a vector of characters, removes all characters that fall between '<' and
 character vector with the 'garbage' removed.
 """
 function strip_garbage(stream::Vector{Char})
-    cleaned    = Char[]
+    cleaned = Char[]
     is_garbage = false
-    index      = 1
+    index = 1
 
     while index <= length(stream)
         char = stream[index]
-        if (char == '!') 
-            index += 2 
+        if (char == '!')
+            index += 2
             continue
         end
-        if (char == '<') is_garbage = true end
+        if (char == '<')
+            is_garbage = true
+        end
         is_garbage || push!(cleaned, char)
-        if (char == '>') is_garbage = false end
+        if (char == '>')
+            is_garbage = false
+        end
         index += 1
     end
 
@@ -34,9 +38,9 @@ how deeply it is nested in other groups.
 """
 function score_groups(stream::Vector{Char})
     groups = strip_garbage(stream)
-    depth  = 0
-    total  = 0
-    
+    depth = 0
+    total = 0
+
     for char in groups
         if char == '{'
             depth += 1

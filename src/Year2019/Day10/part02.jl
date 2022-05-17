@@ -1,7 +1,7 @@
 "Manhattan distance between two points"
 distance(a::CartesianIndex, b::CartesianIndex) = sum(abs.(Tuple(a - b)))
 
-const AngleGroups = Dict{Float64, Vector{CartesianIndex}}
+const AngleGroups = Dict{Float64,Vector{CartesianIndex}}
 
 """
     group_by_angle(point::CartesianIndex, others) -> AngleGroups
@@ -38,7 +38,7 @@ function part2(input)
     # Group the other asteroid locations by angle from the
     # `monitoring_station`, sorted by angle. Within each group,
     # sort locations by (reverse) distance from the origin.
-    angle_groups  = group_by_angle(monitoring_station, asteroids)
+    angle_groups = group_by_angle(monitoring_station, asteroids)
     sorted_groups = pairs(angle_groups) |> sort |> values |> collect
     distance_to_station(p) = distance(p, monitoring_station)
     foreach(g -> sort!(g, by = distance_to_station, rev = true), sorted_groups)
@@ -58,4 +58,3 @@ function part2(input)
     y, x = Tuple(destroy_order[200]) .- 1
     return (x * 100) + y
 end
-

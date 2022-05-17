@@ -25,7 +25,7 @@ end
 
 parsed_args = parse_args(settings)
 year = parsed_args["year"]
-day  = parsed_args["day"]
+day = parsed_args["day"]
 
 
 #=------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ println("\nAdvent of Code Results:")
 
 yearmodsym = Symbol("Year", year)
 if isdefined(AdventOfCode, yearmodsym)
-    yearmod    = getfield(AdventOfCode, yearmodsym)
+    yearmod = getfield(AdventOfCode, yearmodsym)
     daymodname = Symbol("Day", lpad(day, 2, "0"))
 
     if isdefined(yearmod, daymodname)
@@ -51,4 +51,3 @@ if isdefined(AdventOfCode, yearmodsym)
 else
     println("\nNo puzzles solved for the year $(year)!")
 end
-

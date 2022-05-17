@@ -8,7 +8,8 @@ struct Generatorv2
     mod::Int
     div_by::Int
 end
-Generatorv2((; seed, factor, mod)::Generator, div_by::Int) = Generatorv2(seed, factor, mod, div_by)
+Generatorv2((; seed, factor, mod)::Generator, div_by::Int) =
+    Generatorv2(seed, factor, mod, div_by)
 
 """
     Base.iterate((; factor, seed, mod, div_by)::Generatorv2)
@@ -45,11 +46,13 @@ how many times the lowest 16 bits match, for the values the generators
 actually return.
 """
 function part2()
-    rounds  = 5_000_000
+    rounds = 5_000_000
     matches = 0
     for (a, b) in zip(generator_a_v2, generator_b_v2)
         rounds <= 0 && break
-        if (match_16_low(a, b)) matches += 1 end
+        if (match_16_low(a, b))
+            matches += 1
+        end
         rounds -= 1
     end
     return matches

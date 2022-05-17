@@ -10,12 +10,12 @@ That output is converted to `Tiles`, and the final state of the Computer and
 resulting tiles are returned.
 """
 function draw_screen!(computer::Computer)
-    tiles    = Tiles()
+    tiles = Tiles()
     computer = run!(computer)
 
     while !isempty(computer.output)
-        x    = get_output!(computer)
-        y    = get_output!(computer)
+        x = get_output!(computer)
+        y = get_output!(computer)
         tile = get_output!(computer)
         tiles[(x, y)] = tile
     end

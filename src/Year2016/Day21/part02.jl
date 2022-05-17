@@ -23,7 +23,7 @@ function part2(input)
         for fn in input
             fn(result)
         end
-        result == chars && return join(permutation) 
+        result == chars && return join(permutation)
     end
     error("Could not crack password!")
 end

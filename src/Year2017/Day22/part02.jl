@@ -3,10 +3,10 @@ An `AbstractNodeState` represents one of the states of a node described
 in part 2 of the puzzle instructions.
 """
 abstract type AbstractNodeState end
-struct Clean    <: AbstractNodeState end
+struct Clean <: AbstractNodeState end
 struct Weakened <: AbstractNodeState end
 struct Infected <: AbstractNodeState end
-struct Flagged  <: AbstractNodeState end
+struct Flagged <: AbstractNodeState end
 
 const NodeStates = Dict{Tuple{Int,Int},AbstractNodeState}
 
@@ -25,9 +25,9 @@ end
 
 "Overloaded functions for reversing the heading of a `Carrier` to turn right"
 reverse((; position, heading)::Carrier{North}) = Carrier(position, South)
-reverse((; position, heading)::Carrier{East})  = Carrier(position, West)
+reverse((; position, heading)::Carrier{East}) = Carrier(position, West)
 reverse((; position, heading)::Carrier{South}) = Carrier(position, North)
-reverse((; position, heading)::Carrier{West})  = Carrier(position, East)
+reverse((; position, heading)::Carrier{West}) = Carrier(position, East)
 
 """
     burst_v2!(nodes::InfectedNodes, carrier::Carrier)
@@ -66,7 +66,7 @@ function part2(input)
     new_infections = 0
     carrier, infected_nodes = deepcopy(input)
     node_states = convert(NodeStates, infected_nodes)
-    for _ in 1:10_000_000
+    for _ = 1:10_000_000
         carrier, new_infection = burst_v2!(node_states, carrier)
         new_infections += new_infection ? 1 : 0
     end

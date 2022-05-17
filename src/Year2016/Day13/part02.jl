@@ -7,14 +7,14 @@ Count the spaces that are reachable from the `start` in at most `max_steps`
 steps. Uses a standard breadth-first search.
 """
 function reachable_spaces(start::Position, max_steps::Int)
-    queue   = Queue{Position}()
+    queue = Queue{Position}()
     enqueue!(queue, start)
-    steps   = Dict{Position,Int}(start => 0)
+    steps = Dict{Position,Int}(start => 0)
     visited = Set{Position}()
 
     while !isempty(queue)
         current = dequeue!(queue)
-        current ∈ visited   && continue
+        current ∈ visited && continue
         steps[current] > max_steps && continue
 
         for next in open_neighbors(current)

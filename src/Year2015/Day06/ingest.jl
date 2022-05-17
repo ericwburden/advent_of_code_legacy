@@ -29,7 +29,7 @@ Given two strings representing the row and column indices for a given point,
 convert the strings to integers, increase them both by 1 to account for 
 Julia being 1-indexed, and return a `CartesianIndex` indicating that point.
 """
-function toindex(row::AbstractString, col::AbstractString) 
+function toindex(row::AbstractString, col::AbstractString)
     CartesianIndex(parse.(Int, (row, col)) .+ 1)
 end
 
@@ -47,12 +47,12 @@ function ingest(path)
     open(path) do f
         for line in eachline(f)
             m = match(INSTRUCTION_RE, line)
-            topleft     = toindex(m["t"], m["l"])
+            topleft = toindex(m["t"], m["l"])
             bottomright = toindex(m["b"], m["r"])
             instruction = @match m["type"] begin
-                "turn on"  => TurnOn(topleft, bottomright)
+                "turn on" => TurnOn(topleft, bottomright)
                 "turn off" => TurnOff(topleft, bottomright)
-                "toggle"   => Toggle(topleft, bottomright)
+                "toggle" => Toggle(topleft, bottomright)
             end
             push!(instructions, instruction)
         end

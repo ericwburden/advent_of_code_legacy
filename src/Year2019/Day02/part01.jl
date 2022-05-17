@@ -10,7 +10,7 @@ puzzle description and run the program, returning the value in memory address
 """
 function part1(input)
     values = [input...]
-    program    = Computer(values)
+    program = Computer(values)
     program[1] = 12
     program[2] = 2
     run!(program)

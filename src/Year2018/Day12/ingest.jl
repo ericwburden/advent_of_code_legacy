@@ -55,7 +55,9 @@ function Base.parse(::Type{Pots}, s::AbstractString)
     for (idx, char) in enumerate(s)
         char == '#' || continue
         push!(filled, idx - 1)
-        if (isnothing(first)) first = idx - 1 end
+        if (isnothing(first))
+            first = idx - 1
+        end
         last = idx - 1
     end
     return Pots(filled, first, last)
@@ -69,7 +71,7 @@ the remaining lines into `GrowRules`, returning a tuple containing both.
 """
 function ingest(path)
     initial_state = ""
-    grow_rules    = GrowRules()
+    grow_rules = GrowRules()
 
     open(path) do f
         first_line = readuntil(f, "\n\n")

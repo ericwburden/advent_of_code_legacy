@@ -91,11 +91,11 @@ one tick and return the list of points.
 """
 function part1(input)
     last_area = typemax(Int)
-    points    = input
+    points = input
     while true
         current_area = area(points)
         current_area > last_area && break
-        last_area    = current_area
+        last_area = current_area
 
         points = map(move, points)
     end

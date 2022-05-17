@@ -34,10 +34,7 @@ function FuelBank(serial_number::Int, size::Int)
     power!(idx) = setindex!(cells, power(serial_number, idx), idx)
     foreach(power!, CartesianIndices(cells))
 
-    (area_sums
-        =  cells
-        |> (x -> cumsum(x, dims = 1))
-        |> (x -> cumsum(x, dims = 2)))
+    (area_sums = cells |> (x -> cumsum(x, dims = 1)) |> (x -> cumsum(x, dims = 2)))
 
     return FuelBank(cells, area_sums)
 end
@@ -50,11 +47,11 @@ corner is at `idx` of size `size`. For example, a size of 3 calculates the
 total power of a 3x3 group of fuel cells with the fuel cell at `idx` in the
 top left corner of that square.
 """
-function segment_power((; area_sums)::FuelBank, idx::CartesianIndex, size::Int=3)
-    lower_right = get(area_sums, idx + CartesianIndex(size-1, size-1), 0)
+function segment_power((; area_sums)::FuelBank, idx::CartesianIndex, size::Int = 3)
+    lower_right = get(area_sums, idx + CartesianIndex(size - 1, size - 1), 0)
     upper_right = get(area_sums, idx + CartesianIndex(-1, size - 1), 0)
-    lower_left  = get(area_sums, idx + CartesianIndex(size - 1, -1), 0)
-    upper_left  = get(area_sums, idx + CartesianIndex(-1, -1), 0)
+    lower_left = get(area_sums, idx + CartesianIndex(size - 1, -1), 0)
+    upper_left = get(area_sums, idx + CartesianIndex(-1, -1), 0)
 
     return lower_right + upper_left - upper_right - lower_left
 end

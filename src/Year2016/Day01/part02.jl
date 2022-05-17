@@ -1,10 +1,10 @@
 function part2(input)
-    heading  = North
+    heading = North
     location = (0, 0)
-    visited  = Set{Location}()
+    visited = Set{Location}()
     for direction in input
-        heading  = turn(heading, direction)
-        for _ in 1:direction.distance
+        heading = turn(heading, direction)
+        for _ = 1:direction.distance
             location = move(heading, 1, location)
             location ∈ visited && return distance(location)
             push!(visited, location)

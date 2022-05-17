@@ -15,7 +15,7 @@ all the output, converted from ASCII codes to characters.
 function robot_output(input)
     computer = Computer(input)
     computer = run!(computer)
-    output   = ""
+    output = ""
     while !isempty(computer.output)
         char = get_output!(computer)
         output *= Char(char)
@@ -31,7 +31,7 @@ derived from the output, representing the shape of the scaffolding.
 """
 function scaffolds(input)
     output = robot_output(input)
-    lines  = filter(l -> !isempty(l), split(output, "\n"))
+    lines = filter(l -> !isempty(l), split(output, "\n"))
     row(s) = reshape(collect(s), 1, :)
     return mapreduce(row, vcat, lines)
 end

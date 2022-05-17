@@ -18,8 +18,7 @@ difference between the "raw" version of the file contents and the "encoded"
 version.
 """
 function part2(input)
-    ncodeunits    = mapreduce(length, +, input)
+    ncodeunits = mapreduce(length, +, input)
     nencodedchars = mapreduce(length ∘ encode, +, input)
     return nencodedchars - ncodeunits
 end
-

@@ -11,7 +11,7 @@ end
 Construct a `Digits` from an integer.
 """
 function Digits(value::Int)
-    inner   = (reverse ∘ digits)(value) |> Tuple
+    inner = (reverse ∘ digits)(value) |> Tuple
     pointer = length(inner)
     return Digits(inner, pointer)
 end
@@ -43,7 +43,7 @@ function next((; inner, pointer)::Digits)
         inner = set_value(inner, inner[pointer], (pointer+1):length(inner))
         pointer = length(inner)
     end
-    
+
     return Digits(inner, pointer)
 end
 
@@ -86,7 +86,7 @@ function part_one_valid((; inner)::Digits)
     found_double = false
     for (current, next) in zip(inner, inner[2:end])
         current == next && (found_double = true)
-        current  > next && return false
+        current > next && return false
     end
     return found_double
 end

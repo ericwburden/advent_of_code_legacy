@@ -9,22 +9,21 @@ will be in after the 1,000,000,000th minute and return the resource
 value of that state.
 """
 function part2(input)
-    landscape   = convert(Landscape, input)
+    landscape = convert(Landscape, input)
     seen_states = Dict{Landscape,Int}()
-    generation  = 0
+    generation = 0
 
     while landscape ∉ keys(seen_states)
         seen_states[landscape] = generation
         generation += 1
-        landscape   = next_state(landscape)
+        landscape = next_state(landscape)
     end
 
-    cycle_len   = generation - seen_states[landscape]
-    remaining   = (1_000_000_000 - generation) % cycle_len
-    
-    last_state  = nth(iterated(next_state, landscape), remaining + 1)
-    trees       = count(a -> a isa Trees, last_state)
+    cycle_len = generation - seen_states[landscape]
+    remaining = (1_000_000_000 - generation) % cycle_len
+
+    last_state = nth(iterated(next_state, landscape), remaining + 1)
+    trees = count(a -> a isa Trees, last_state)
     lumberyards = count(a -> a isa Lumberyard, last_state)
     return trees * lumberyards
 end
-

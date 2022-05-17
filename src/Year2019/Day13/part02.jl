@@ -19,18 +19,18 @@ function part2(input)
     while count_blocks(tiles) > 0
         # Run the computer until it pauses for intake
         computer = run!(computer)
-        
+
         # Take output three values at a time, updating the
         # tiles as appropriate, and keeping track of the horizontal
         # positions of the paddle and ball.
         while !isempty(computer.output)
-            x    = get_output!(computer)
-            y    = get_output!(computer)
+            x = get_output!(computer)
+            y = get_output!(computer)
             tile = get_output!(computer)
 
-            x    == -1 && (score = tile)
-            tile ==  3 && (paddle = x)
-            tile ==  4 && (ball = x)
+            x == -1 && (score = tile)
+            tile == 3 && (paddle = x)
+            tile == 4 && (ball = x)
             tiles[(x, y)] = tile
         end
 

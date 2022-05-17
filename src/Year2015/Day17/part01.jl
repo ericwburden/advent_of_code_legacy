@@ -25,8 +25,8 @@ julia> distribute(25, [20, 15, 10, 5, 5])
  [15, 5, 5]
 ```
 """
-function distribute(total::Int, vessels::AbstractVector{Int}, found=Int[])
-    total == 0       && return [found]
+function distribute(total::Int, vessels::AbstractVector{Int}, found = Int[])
+    total == 0 && return [found]
     isempty(vessels) && return Int[]
 
     output = Vector{Int}[]

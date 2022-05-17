@@ -1,4 +1,4 @@
-const Point     = NTuple{2,Int}
+const Point = NTuple{2,Int}
 
 """
 A `WireTrace` represents the path of a wire, including the location of the
@@ -15,10 +15,10 @@ WireTrace() = WireTrace((0, 0), Dict{Point,Vector{Int}}(), 0)
 
 
 "Offsets for each type of `AbstractDirection`"
-offset(::Up)    = (-1,  0)
-offset(::Down)  = ( 1,  0)
-offset(::Left)  = ( 0, -1)
-offset(::Right) = ( 0,  1)
+offset(::Up) = (-1, 0)
+offset(::Down) = (1, 0)
+offset(::Left) = (0, -1)
+offset(::Right) = (0, 1)
 
 """
     trace(wire_trace::WireTrace, direction::AbstractDirection)
@@ -28,7 +28,7 @@ direction from the point at which the last previous direction ended.
 """
 function trace(wire_trace::WireTrace, direction::AbstractDirection)
     (; current, points, total_steps) = wire_trace
-    for _ in 1:direction.steps
+    for _ = 1:direction.steps
         current = current .+ offset(direction)
         steps_there = get!(points, current, [])
         total_steps += 1
@@ -62,9 +62,9 @@ where they intersect, and return the distace to the closest intersection from
 the origin.
 """
 function part1(input)
-    wire1, wire2  = input
-    wire1trace    = trace(wire1)
-    wire2trace    = trace(wire2)
-    distance(p)   = sum(abs.((0, 0) .- p))
+    wire1, wire2 = input
+    wire1trace = trace(wire1)
+    wire2trace = trace(wire2)
+    distance(p) = sum(abs.((0, 0) .- p))
     return minimum(distance, intersections(wire1trace, wire2trace))
 end

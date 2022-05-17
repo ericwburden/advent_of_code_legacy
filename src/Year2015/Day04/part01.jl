@@ -8,7 +8,7 @@ an MD5 has. Return the first number that produces a hash where the first five
 values are '0'.
 """
 function part1(input)
-    for i in 1:typemax(Int)
+    for i = 1:typemax(Int)
         check = input * string(i)
         hexdigest("md5", check)[1:5] == "00000" && return i
     end

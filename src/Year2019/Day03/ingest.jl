@@ -2,11 +2,19 @@
 An `AbstractDirection` represents one of the directions given in the path
 for a wire.
 """
-abstract type   AbstractDirection end
-struct Up    <: AbstractDirection steps::Int end
-struct Down  <: AbstractDirection steps::Int end
-struct Left  <: AbstractDirection steps::Int end
-struct Right <: AbstractDirection steps::Int end
+abstract type AbstractDirection end
+struct Up <: AbstractDirection
+    steps::Int
+end
+struct Down <: AbstractDirection
+    steps::Int
+end
+struct Left <: AbstractDirection
+    steps::Int
+end
+struct Right <: AbstractDirection
+    steps::Int
+end
 
 """
     parse(::Type{AbstractDirection}, s::AbstractString)
@@ -14,7 +22,7 @@ struct Right <: AbstractDirection steps::Int end
 Parse a direction specification from the input file into an `AbstractDirection`
 """
 function Base.parse(::Type{AbstractDirection}, s::AbstractString)
-    m     = match(r"(U|D|L|R)(\d+)", s)
+    m = match(r"(U|D|L|R)(\d+)", s)
     steps = parse(Int, m[2])
     m[1] == "U" && return Up(steps)
     m[1] == "D" && return Down(steps)

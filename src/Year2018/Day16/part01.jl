@@ -26,25 +26,49 @@ struct EQRR <: AbstractInstructionKind end
 
 "Type union of all `AbstractInstructionKind` types."
 const AnyAbstractInstructionKind = Union{
-    Type{ADDR}, Type{ADDI}, Type{MULR}, Type{MULI},
-    Type{BANR}, Type{BANI}, Type{BORR}, Type{BORI},
-    Type{SETR}, Type{SETI}, Type{GTIR}, Type{GTRI},
-    Type{GTRR}, Type{EQIR}, Type{EQRI}, Type{EQRR}
+    Type{ADDR},
+    Type{ADDI},
+    Type{MULR},
+    Type{MULI},
+    Type{BANR},
+    Type{BANI},
+    Type{BORR},
+    Type{BORI},
+    Type{SETR},
+    Type{SETI},
+    Type{GTIR},
+    Type{GTRI},
+    Type{GTRR},
+    Type{EQIR},
+    Type{EQRI},
+    Type{EQRR},
 }
 
 "List of all `AbstractInstructionKind` types"
 const INSTRUCTION_KINDS = NTuple{16}([
-    ADDR, ADDI, MULR, MULI,
-    BANR, BANI, BORR, BORI,
-    SETR, SETI, GTIR, GTRI,
-    GTRR, EQIR, EQRI, EQRR
+    ADDR,
+    ADDI,
+    MULR,
+    MULI,
+    BANR,
+    BANI,
+    BORR,
+    BORI,
+    SETR,
+    SETI,
+    GTIR,
+    GTRI,
+    GTRR,
+    EQIR,
+    EQRI,
+    EQRR,
 ])
 
 """
 A `CodedInstruction` is an instruction that has been identified (or
 assigned) a particular kind, such that it can be executed.
 """
-struct CodedInstruction{K <: AbstractInstructionKind}
+struct CodedInstruction{K<:AbstractInstructionKind}
     kind::Type{K}
     opcode::Int
     input1::Int
@@ -52,7 +76,7 @@ struct CodedInstruction{K <: AbstractInstructionKind}
     output::Int
 end
 
-function CodedInstruction(kind::Type{K}, i::Instruction) where K <: AbstractInstructionKind
+function CodedInstruction(kind::Type{K}, i::Instruction) where {K<:AbstractInstructionKind}
     opcode, input1, input2, output = i
     return CodedInstruction(kind, opcode, input1, input2, output)
 end
@@ -65,7 +89,7 @@ end
 
 "Get a value at an index in a `Registers`"
 function get_value(r::Registers, i::Int)
-    return r[i + 1]
+    return r[i+1]
 end
 
 

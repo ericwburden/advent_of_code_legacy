@@ -7,14 +7,14 @@ bounds of the input array. Return the number of steps taken.
 """
 function part1(input)
     jumps = deepcopy(input)
-    len   = length(input)
-    ptr   = 1
+    len = length(input)
+    ptr = 1
     steps = 0
 
     while 0 < ptr <= len
         jumps[ptr] += 1
-        ptr        += (jumps[ptr] - 1)
-        steps      += 1
+        ptr += (jumps[ptr] - 1)
+        steps += 1
     end
 
     return steps

@@ -18,10 +18,7 @@ into a `NutritionInfo` struct.
 """
 function Base.parse(::Type{NutritionInfo}, s::String)
     toints(x) = map(y -> parse(Int, y.match), x)
-    (values 
-        =  eachmatch(r"-?\d+", s) 
-        |> toints
-        |> collect)
+    (values = eachmatch(r"-?\d+", s) |> toints |> collect)
     return NutritionInfo(values...)
 end
 

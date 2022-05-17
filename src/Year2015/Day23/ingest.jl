@@ -18,12 +18,26 @@ sub-types of `AbstractInstruction`.
 """
 abstract type AbstractInstruction end
 
-struct Half       <: AbstractInstruction register::Char end
-struct Triple     <: AbstractInstruction register::Char end
-struct Increment  <: AbstractInstruction register::Char end
-struct Jump       <: AbstractInstruction offset::Int end
-struct JumpIfEven <: AbstractInstruction register::Char; offset::Int end
-struct JumpIfOne  <: AbstractInstruction register::Char; offset::Int end
+struct Half <: AbstractInstruction
+    register::Char
+end
+struct Triple <: AbstractInstruction
+    register::Char
+end
+struct Increment <: AbstractInstruction
+    register::Char
+end
+struct Jump <: AbstractInstruction
+    offset::Int
+end
+struct JumpIfEven <: AbstractInstruction
+    register::Char
+    offset::Int
+end
+struct JumpIfOne <: AbstractInstruction
+    register::Char
+    offset::Int
+end
 
 # For parsing instructions
 const INSTRUCTION_RE = r"(?<ins>^\w{3}) (?<reg>a|b)?(?>, )?(?<off>[-+]?\d+)?"

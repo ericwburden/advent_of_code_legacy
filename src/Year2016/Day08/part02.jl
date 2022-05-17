@@ -11,7 +11,11 @@ function part2(input)
     process_instructions!(screen, input)
     for row in eachrow(screen)
         for light in row
-            if (light) print("█") else print(" ") end
+            if (light)
+                print("█")
+            else
+                print(" ")
+            end
         end
         println()
     end

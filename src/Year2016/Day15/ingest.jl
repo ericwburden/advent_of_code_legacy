@@ -11,7 +11,8 @@ struct Disc
 end
 
 "Regular expression for parsing `Disc` from file"
-const DISC_RE = r"Disc #\d has (?<pos>\d+) positions; at time=0, it is at position (?<start>\d+)"
+const DISC_RE =
+    r"Disc #\d has (?<pos>\d+) positions; at time=0, it is at position (?<start>\d+)"
 
 """
     Base.parse(::Type{Disc}, s::AbstractString)

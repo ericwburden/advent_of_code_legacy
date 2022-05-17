@@ -3,7 +3,7 @@ An `IdentifiedGroup` is just like a `Group`, but with an added `id` to help keep
 track of which group it is. Each group will be stored in a dictionary referenced
 by id in the `Battlefield`.
 """
-mutable struct IdentifiedGroup{T <: AbstractTeam}
+mutable struct IdentifiedGroup{T<:AbstractTeam}
     id::Int
     team::Type{T}
     units::Int
@@ -30,7 +30,7 @@ function IdentifiedGroup(id_group::Tuple{Int,Group})
         damage,
         initiative,
         weaknesses,
-        immunities
+        immunities,
     )
 end
 
@@ -79,25 +79,25 @@ function potential_damage(attacker::IdentifiedGroup, defender::IdentifiedGroup)
 end
 
 function select_target!(group::IdentifiedGroup, battlefield::Battlefield)
-    groups     = untargeted_groups(battlefield)
-    other_team  = Iterators.filter(g -> g.team != group.team, groups)
+    groups = untargeted_groups(battlefield)
+    other_team = Iterators.filter(g -> g.team != group.team, groups)
     still_alive = Iterators.filter(g -> g.units > 0, other_team)
-    can_attack  = Iterators.filter(g -> group.damage ∉ g.immunities, still_alive)
+    can_attack = Iterators.filter(g -> group.damage ∉ g.immunities, still_alive)
 
-    targets    = Group[]
+    targets = Group[]
     max_damage = 0
     for defender in can_attack
         damage_estimate = potential_damage(group, defender)
         damage_estimate == max_damage && push!(targets, defender)
-        damage_estimate > max_damage  || continue
-        targets    = [defender]
+        damage_estimate > max_damage || continue
+        targets = [defender]
         max_damage = damage_estimate
     end
 
     # If there are no viable targets, then just move on
     isempty(targets) && return
     priority = sort!(targets, lt = effective_power_order, rev = true)
-    target   = first(priority)
+    target = first(priority)
     push!(battlefield.targeted, target.id)
     setindex!(battlefield.targets, target.id, group.id)
 end
@@ -112,7 +112,7 @@ function select_targets!(battlefield::Battlefield)
 end
 
 function attack!(attacker::IdentifiedGroup, defender::IdentifiedGroup)
-    hp_remaining   = effective_hp(defender) - potential_damage(attacker, defender)
+    hp_remaining = effective_hp(defender) - potential_damage(attacker, defender)
     defender.units = ceil(Int, hp_remaining / defender.max_hp)
 end
 
@@ -128,7 +128,7 @@ function attack_targets!(battlefield::Battlefield)
 end
 
 function reset!(battlefield::Battlefield)
-    battlefield.targets  = Dict{Int,Int}()
+    battlefield.targets = Dict{Int,Int}()
     battlefield.targeted = Set{Int}()
     for (id, group) in battlefield.groups
         group.units > 0 && continue
@@ -138,11 +138,11 @@ end
 
 function is_active((; groups)::Battlefield)
     immune_system = 0
-    infection     = 0
+    infection = 0
     for group in values(groups)
         group.units > 0 || continue
         group.team == ImmuneSystem && (immune_system += 1)
-        group.team == Infection    && (infection     += 1)
+        group.team == Infection && (infection += 1)
     end
     return immune_system > 0 && infection > 0
 end
@@ -165,6 +165,7 @@ Simulate the battle and return the number of remaining units at the end.
 """
 function part1(input)
     battlefield = Battlefield(input)
-    while fight!(battlefield) end
+    while fight!(battlefield)
+    end
     return total_units(battlefield)
 end

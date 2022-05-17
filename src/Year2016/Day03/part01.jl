@@ -7,7 +7,7 @@ than the third side.
 """
 function istriangle(sides::Tuple{Int,Int,Int})
     a, b, c = sides
-    return a+b > c && a+c > b && b+c > a
+    return a + b > c && a + c > b && b + c > a
 end
 
 "Check each `Sides` for being a triangle, then return the count of the valid ones"

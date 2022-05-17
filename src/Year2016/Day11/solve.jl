@@ -3,8 +3,10 @@ using IterTools: subsets
 
 match(microchip::Microchip, generator::Generator) = microchip.element == generator.element
 
-has_complement((; element)::Microchip, components::Components) = Generator(element) ∈ components
-has_complement((; element)::Generator, components::Components) = Microchip(element) ∈ components
+has_complement((; element)::Microchip, components::Components) =
+    Generator(element) ∈ components
+has_complement((; element)::Generator, components::Components) =
+    Microchip(element) ∈ components
 
 
 function matched(components::Components)
@@ -23,7 +25,7 @@ unmatched(components::Components) = setdiff(components, matched(components))
 function is_stable(components::Components)
     unmatched_components = unmatched(components)
     unmatched_chip = any(x -> x isa Microchip, unmatched_components)
-    any_generator  = any(x -> x isa Generator, components)
+    any_generator = any(x -> x isa Generator, components)
     return !(unmatched_chip && any_generator)
 end
 
@@ -33,16 +35,16 @@ function movable(components::Components)
 
     # Get the individual movable components
     for component in components
-        moving    = Components([component])
+        moving = Components([component])
         remaining = setdiff(components, moving)
         is_stable(remaining) && push!(movable_sets, (moving, remaining))
     end
 
     # Get the pairs of movable components
     for subset in subsets(collect(components), 2)
-        moving    = Components(subset)
+        moving = Components(subset)
         remaining = setdiff(components, moving)
-        if is_stable(moving) && is_stable(remaining) 
+        if is_stable(moving) && is_stable(remaining)
             push!(movable_sets, (moving, remaining))
         end
     end
@@ -56,7 +58,7 @@ function movable_up(components::Components)
     movable_sets = MovableSets()
 
     for component in components
-        moving    = Components([component])
+        moving = Components([component])
         remaining = setdiff(components, moving)
         is_stable(remaining) && push!(movable_sets, (moving, remaining))
     end
@@ -65,12 +67,12 @@ function movable_up(components::Components)
 end
 
 function movable_down(components::Components)
-    moved        = Components()
+    moved = Components()
     movable_sets = MovableSets()
 
     # Get the pairs of movable components
     for subset in subsets(collect(components), 2)
-        moving    = Components(subset)
+        moving = Components(subset)
         remaining = setdiff(components, moving)
         (is_stable(moving) && is_stable(remaining)) || continue
         push!(movable_sets, (moving, remaining))
@@ -81,7 +83,7 @@ function movable_down(components::Components)
     # component is not already being moved as a pair.
     for component in components
         component ∈ moved && continue
-        moving    = Components([component])
+        moving = Components([component])
         remaining = setdiff(components, moving)
         is_stable(remaining) && push!(movable_sets, (moving, remaining))
     end
@@ -102,10 +104,10 @@ function next_states((; current, floors)::Facility)
             possible_components = floors[next] ∪ movable
             is_stable(possible_components) || continue
 
-            next_floors          = deepcopy(floors)
+            next_floors = deepcopy(floors)
             next_floors[current] = remaining
-            next_floors[next]    = possible_components
-            possibility          = Facility(next, next_floors)
+            next_floors[next] = possible_components
+            possibility = Facility(next, next_floors)
 
             push!(possibilities, possibility)
         end
@@ -156,8 +158,8 @@ function shortest_path(start::Facility, goal::Facility)
             next ∈ keys(steps) && continue
             new_steps = steps[current] + 1
             if get!(steps, next, typemax(Int)) > new_steps
-                priority       = new_steps + heuristic(next)
-                steps[next]    = new_steps
+                priority = new_steps + heuristic(next)
+                steps[next] = new_steps
                 frontier[next] = priority
             end
         end

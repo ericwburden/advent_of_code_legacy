@@ -14,4 +14,3 @@ function part2(input)
     end
     return total_water
 end
-

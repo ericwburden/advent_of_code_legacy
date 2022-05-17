@@ -5,7 +5,7 @@ Returns the 'layer' of a spiral where `n` appears. For this function, a 'layer'
 is considered the number of square rings away from the center of the spiral on
 which `n` can be found. 
 """
-which_layer(n) = ceil(Int, sqrt(n)/2 - 0.5)
+which_layer(n) = ceil(Int, sqrt(n) / 2 - 0.5)
 
 """
     spiral_distance_to(n)
@@ -13,7 +13,7 @@ which_layer(n) = ceil(Int, sqrt(n)/2 - 0.5)
 Assuming `n` falls on a square spiral, calculate the distance from `n` to the
 center of the spiral. Based on the formula found here: [https://oeis.org/A214526]
 """
-function spiral_distance_to(n) 
+function spiral_distance_to(n)
     n == 1 && return 0
     l = which_layer(n)
     return l + abs(((n - 1) % 2l - l))

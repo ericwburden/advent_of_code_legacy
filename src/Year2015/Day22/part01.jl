@@ -1,8 +1,8 @@
 using DataStructures: BinaryMinHeap
 
 # Helper functions
-has_ended(battle::BattleState)   = battle.player.hp <= 0 || battle.boss.hp <= 0
-player_wins(battle::BattleState) = battle.player.hp > 0  && battle.boss.hp <= 0
+has_ended(battle::BattleState) = battle.player.hp <= 0 || battle.boss.hp <= 0
+player_wins(battle::BattleState) = battle.player.hp > 0 && battle.boss.hp <= 0
 
 """
     process_effects!(battle::BattleState)
@@ -39,7 +39,7 @@ function activate!(battle::BattleState, (; amount)::Damage)
 end
 
 function activate!(battle::BattleState, (; amount)::Siphon)
-    battle.boss.hp   -= amount
+    battle.boss.hp -= amount
     battle.player.hp += amount
 end
 
@@ -99,7 +99,7 @@ function possible_states(battle::BattleState)
     for (spell_name, spell) in SPELLBOOK
         # If the spell is too expensive to cast, or the spell effect is still
         # ongoing, skip trying to cast this one.
-        spell.cost > battle.player.mp      && continue
+        spell.cost > battle.player.mp && continue
         haskey(battle.effects, spell_name) && continue
 
         # If the player can cast this spell, we need to make and modify a copy
@@ -134,12 +134,12 @@ amount of mana.
 """
 Base.isless(a::BattleState, b::BattleState) = a.boss.hp < b.boss.hp
 function cheap_win(battle::BattleState)
-    heap  = BinaryMinHeap{Tuple{Int,BattleState}}([(0, battle)])
+    heap = BinaryMinHeap{Tuple{Int,BattleState}}([(0, battle)])
 
     while !isempty(heap)
         (mana_spent, battle_state) = pop!(heap)
         player_wins(battle_state) && return mana_spent
-        has_ended(battle_state)   && continue
+        has_ended(battle_state) && continue
 
         for (mana_cost, next_state) in possible_states(battle_state)
             total_spent = mana_spent + mana_cost

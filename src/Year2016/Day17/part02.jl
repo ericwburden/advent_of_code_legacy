@@ -12,8 +12,10 @@ function longest_path(code::String, start::CartesianIndex, goal::CartesianIndex)
 
     while !isempty(queue)
         path, current = dequeue!(queue)
-        if current == goal 
-            if (length(path) > length(longest)) longest = path end
+        if current == goal
+            if (length(path) > length(longest))
+                longest = path
+            end
             continue
         end
 

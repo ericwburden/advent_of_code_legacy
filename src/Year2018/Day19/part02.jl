@@ -34,7 +34,7 @@ function part2(input)
     program, instructions = input
     (; pointer, bind, registers) = program
     registers = set_register(registers, 0, 1)
-    program   = Program(Running, pointer, bind, registers)
+    program = Program(Running, pointer, bind, registers)
 
     while get_value(program.registers, 0) > 0
         program = execute(instructions, program)

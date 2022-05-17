@@ -12,7 +12,7 @@ function part2(input)
     # The following code was used to print a representation of the
     # message to the console by displaying the first non-transparent
     # pixel at each location.
-    image   = reshape(input, 25, 6, :)
+    image = reshape(input, 25, 6, :)
     message = reduce((a, b) -> resolve.(a, b), eachslice(image, dims = 3))
 
     # Print col by row to rotate the image

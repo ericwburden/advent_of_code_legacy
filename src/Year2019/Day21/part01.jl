@@ -8,7 +8,7 @@ const WALKSCRIPT = [
     "OR T J",  # Set J -> TRUE if either J or T are TRUE, otherwise FALSE
     "AND D J", # If there is ground four spots away and J == TRUE, set J -> TRUE
     "WALK",    # Execute the program
-    ""         # Empty final line
+    "",         # Empty final line
 ]
 
 """

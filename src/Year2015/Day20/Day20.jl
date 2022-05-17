@@ -7,7 +7,7 @@ include("part02.jl")
 
 export run
 function run()
-    input   = INPUT
+    input = INPUT
     answer1 = part1(input)
     answer2 = part2(input)
 

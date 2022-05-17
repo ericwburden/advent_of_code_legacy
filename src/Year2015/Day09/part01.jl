@@ -12,11 +12,11 @@ Return the distance between two destinations in the AdjacencyMatrix
 """
 function distance(adjacency_matrix::AdjacencyMatrix, start::String, stop::String)
     startidx = get(adjacency_matrix.keys, start, nothing)
-    stopidx  = get(adjacency_matrix.keys, stop, nothing)
-    
+    stopidx = get(adjacency_matrix.keys, stop, nothing)
+
     isnothing(startidx) && error("$start is not an entry!")
-    isnothing(stopidx)  && error("$stop is not an entry!")
-    
+    isnothing(stopidx) && error("$stop is not an entry!")
+
     cost = adjacency_matrix.values[startidx, stopidx]
     isnothing(cost) && error("There is no edge between $start and $stop")
 

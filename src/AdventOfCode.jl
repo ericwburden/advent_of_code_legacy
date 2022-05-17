@@ -2,8 +2,8 @@ module AdventOfCode
 
 # Utility function used by all puzzles to get the canonical path
 # to the input files
-inputdirpath     = normpath(joinpath(@__FILE__,"..","..","inputs"))
-getinput(y,d,fn) = joinpath(inputdirpath, "$y", lpad(d,2,"0"), "$fn.txt")
+inputdirpath = normpath(joinpath(@__FILE__, "..", "..", "inputs"))
+getinput(y, d, fn) = joinpath(inputdirpath, "$y", lpad(d, 2, "0"), "$fn.txt")
 export getinput
 
 # Bring all Year modules into scope

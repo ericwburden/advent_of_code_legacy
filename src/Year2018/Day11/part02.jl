@@ -12,7 +12,7 @@ function max_segment_power(fuel_bank::FuelBank, idx::CartesianIndex)
     for size in size_range
         value = segment_power(fuel_bank, idx, size)
         if value > max_value
-            max_size  = size
+            max_size = size
             max_value = value
         end
     end

@@ -3,17 +3,17 @@
 ------------------------------------------------------------------------------=#
 
 "Set a region of `M` to true"
-function apply!(M::BitMatrix, (; topleft, bottomright)::TurnOn) 
+function apply!(M::BitMatrix, (; topleft, bottomright)::TurnOn)
     M[topleft:bottomright] .= true
 end
 
 "Set a region of `M` to false"
-function apply!(M::BitMatrix, (; topleft, bottomright)::TurnOff) 
+function apply!(M::BitMatrix, (; topleft, bottomright)::TurnOff)
     M[topleft:bottomright] .= false
 end
 
 "Toggle a region of `M`, flipping their values"
-function apply!(M::BitMatrix, (; topleft, bottomright)::Toggle)  
+function apply!(M::BitMatrix, (; topleft, bottomright)::Toggle)
     M[topleft:bottomright] .= .!M[topleft:bottomright]
 end
 

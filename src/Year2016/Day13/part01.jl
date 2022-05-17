@@ -20,7 +20,7 @@ Calculates whether a given x/y coordinate is open (not a wall) according to
 the algorithm given in the puzzle instructions.
 """
 function is_open(x::Int, y::Int)
-    binary = (x*x + 3x + 2*x*y + y + y*y) + MAGIC_NUMBER
+    binary = (x * x + 3x + 2 * x * y + y + y * y) + MAGIC_NUMBER
     return count_ones(binary) |> iseven
 end
 
@@ -58,7 +58,7 @@ Calculate the shortest path from `start` to `goal` via an A* implementation.
 """
 function shortest_path(start::Position, goal::Position)
     frontier = PriorityQueue{Position,Int}(start => 0)
-    steps    = Dict{Position,Int}(start => 0)
+    steps = Dict{Position,Int}(start => 0)
 
     while !isempty(frontier)
         current = dequeue!(frontier)
@@ -68,8 +68,8 @@ function shortest_path(start::Position, goal::Position)
             next ∈ keys(steps) && continue
             new_steps = steps[current] + 1
             if get!(steps, next, typemax(Int)) > new_steps
-                priority       = new_steps + heuristic(next, goal)
-                steps[next]    = new_steps
+                priority = new_steps + heuristic(next, goal)
+                steps[next] = new_steps
                 frontier[next] = priority
             end
         end

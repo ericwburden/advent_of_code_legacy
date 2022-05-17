@@ -7,18 +7,18 @@
 
 abstract type AbstractDirection end
 
-abstract type VerticalDirection   <: AbstractDirection end
+abstract type VerticalDirection <: AbstractDirection end
 abstract type HorizontalDirection <: AbstractDirection end
 
 struct North <: VerticalDirection end
 struct South <: VerticalDirection end
-struct East  <: HorizontalDirection end
-struct West  <: HorizontalDirection end
+struct East <: HorizontalDirection end
+struct West <: HorizontalDirection end
 
 
 abstract type AbstractOrientation end
 
-struct VerticalOrientation   <: AbstractOrientation end
+struct VerticalOrientation <: AbstractOrientation end
 struct HorizontalOrientation <: AbstractOrientation end
 
 
@@ -26,11 +26,11 @@ abstract type AbstractRail end
 
 struct Intersection <: AbstractRail end
 
-struct StraightRail{O <: AbstractOrientation} <: AbstractRail
+struct StraightRail{O<:AbstractOrientation} <: AbstractRail
     orientation::Type{O}
 end
 
-struct CurvedRail{V <: VerticalDirection, H <: HorizontalDirection} <: AbstractRail
+struct CurvedRail{V<:VerticalDirection,H<:HorizontalDirection} <: AbstractRail
     vertical::Type{V}
     horizontal::Type{H}
 end
@@ -50,29 +50,29 @@ struct Chunk
 end
 
 function chunk_at(char_matrix::Matrix{Char}, idx::CartesianIndex{2})
-    offsets   = CartesianIndex.([(0, 0), (-1, 0), (0, 1), (1, 0), (0, -1)])
+    offsets = CartesianIndex.([(0, 0), (-1, 0), (0, 1), (1, 0), (0, -1)])
     neighbors = map(o -> get(char_matrix, o + idx, nothing), offsets)
     return Chunk(neighbors...)
 end
 
 function Base.convert(::Type{AbstractRail}, chunk::Chunk)
-    chunk.center == '-'  && return StraightRail(HorizontalOrientation)
-    chunk.center == '>'  && return StraightRail(HorizontalOrientation)
-    chunk.center == '<'  && return StraightRail(HorizontalOrientation)
-    chunk.center == '|'  && return StraightRail(VerticalOrientation)
-    chunk.center == '^'  && return StraightRail(VerticalOrientation)
-    chunk.center == 'v'  && return StraightRail(VerticalOrientation)
-    chunk.center == '+'  && return Intersection()
-    chunk.center == '/'  && return convert(CurvedRail, chunk)
+    chunk.center == '-' && return StraightRail(HorizontalOrientation)
+    chunk.center == '>' && return StraightRail(HorizontalOrientation)
+    chunk.center == '<' && return StraightRail(HorizontalOrientation)
+    chunk.center == '|' && return StraightRail(VerticalOrientation)
+    chunk.center == '^' && return StraightRail(VerticalOrientation)
+    chunk.center == 'v' && return StraightRail(VerticalOrientation)
+    chunk.center == '+' && return Intersection()
+    chunk.center == '/' && return convert(CurvedRail, chunk)
     chunk.center == '\\' && return convert(CurvedRail, chunk)
     error("Don't know how to convert $chunk to a Rail")
 end
 
 function Base.convert(::Type{CurvedRail}, chunk::Chunk)
     north_rail = chunk.north ∈ ['|', '+', '>', 'v', '<', '^']
-    east_rail  = chunk.east  ∈ ['-', '+', '>', 'v', '<', '^']
+    east_rail = chunk.east ∈ ['-', '+', '>', 'v', '<', '^']
     south_rail = chunk.south ∈ ['|', '+', '>', 'v', '<', '^']
-    west_rail  = chunk.west  ∈ ['-', '+', '>', 'v', '<', '^']
+    west_rail = chunk.west ∈ ['-', '+', '>', 'v', '<', '^']
     if chunk.center == '\\'
         (west_rail && south_rail) && return CurvedRail(South, West)
         (east_rail && north_rail) && return CurvedRail(North, East)
@@ -93,11 +93,11 @@ end
 
 abstract type AbstractTurn end
 
-struct Straight  <: AbstractTurn end
-struct TurnLeft  <: AbstractTurn end
+struct Straight <: AbstractTurn end
+struct TurnLeft <: AbstractTurn end
 struct TurnRight <: AbstractTurn end
 
-struct Cart{H <: AbstractDirection, T <: AbstractTurn}
+struct Cart{H<:AbstractDirection,T<:AbstractTurn}
     id::String
     heading::Type{H}
     location::CartesianIndex
@@ -131,13 +131,13 @@ railway map and a list of `Cart`s. Return a tuple containing both.
 """
 function ingest(path)
     char_matrix = convert(Matrix{Char}, readlines(path))
-    rail_carts  = Cart[]
+    rail_carts = Cart[]
     rail_map::Matrix{Union{Nothing,AbstractRail}} = fill(nothing, size(char_matrix))
-    
+
     cart_id = 0
 
     for idx in CartesianIndices(char_matrix)
-        char  = char_matrix[idx]
+        char = char_matrix[idx]
         char == ' ' && continue
 
         chunk = chunk_at(char_matrix, idx)
@@ -176,16 +176,15 @@ function Base.show(rail_system::RailSystem)
                 print(cart_indices[cart_idx])
                 continue
             end
-            rail isa Nothing      && print(' ')
+            rail isa Nothing && print(' ')
             rail isa StraightRail && print('.')
             rail isa Intersection && print('+')
-            rail isa CurvedRail{North, West} && print('/')
-            rail isa CurvedRail{South, East} && print('/')
-            rail isa CurvedRail{North, East} && print('\\')
-            rail isa CurvedRail{South, West} && print('\\')
+            rail isa CurvedRail{North,West} && print('/')
+            rail isa CurvedRail{South,East} && print('/')
+            rail isa CurvedRail{North,East} && print('\\')
+            rail isa CurvedRail{South,West} && print('\\')
         end
         println()
     end
     println()
 end
-

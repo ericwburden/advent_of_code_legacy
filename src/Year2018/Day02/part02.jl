@@ -7,7 +7,9 @@ is_similar(x::Tuple{AbstractString,AbstractString}) = is_similar(x...)
 function is_similar(a::AbstractString, b::AbstractString)
     diffs = 0
     for (c₁, c₂) in zip(a, b)
-        if (c₁ != c₂) diffs += 1 end
+        if (c₁ != c₂)
+            diffs += 1
+        end
         diffs > 1 && return false
     end
     return true
@@ -21,10 +23,12 @@ the two.
 """
 same_chars(x::Tuple{AbstractString,AbstractString}) = same_chars(x...)
 function same_chars(a::AbstractString, b::AbstractString)
-    (zip(a, b)
-        |> (x -> Iterators.filter(c -> c[1] == c[2], x))
-        |> (x -> map(first, x))
-        |> join)
+    (
+        zip(a, b) |>
+        (x -> Iterators.filter(c -> c[1] == c[2], x)) |>
+        (x -> map(first, x)) |>
+        join
+    )
 end
 
 """
@@ -36,10 +40,12 @@ return a string containing the matching characters between those two strings.
 """
 function part2(input)
     sort!(input)
-    (result
-        =  zip(input, input[2:end])
-        |> (x -> Iterators.filter(is_similar, x))
-        |> first
-        |> same_chars)
+    (
+        result =
+            zip(input, input[2:end]) |>
+            (x -> Iterators.filter(is_similar, x)) |>
+            first |>
+            same_chars
+    )
     return result
 end

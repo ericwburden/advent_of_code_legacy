@@ -14,20 +14,24 @@ abstract type Value end
 
 function Base.parse(::Type{Value}, s::AbstractString)
     occursin(r"^a|b|c|d$", s) && return parse(Register, s)
-    occursin(r"^-?\d+$", s)   && return parse(Literal, s)
+    occursin(r"^-?\d+$", s) && return parse(Literal, s)
     error("Cannot parse $s into a `Value`!")
 end
 
-struct Register <: Value name::Char end
+struct Register <: Value
+    name::Char
+end
 Base.parse(::Type{Register}, s::AbstractString) = Register(s[1])
 
-struct Literal  <: Value value::Int end
-Base.parse(::Type{Literal},  s::AbstractString) = Literal(parse(Int, s))
+struct Literal <: Value
+    value::Int
+end
+Base.parse(::Type{Literal}, s::AbstractString) = Literal(parse(Int, s))
 
 
 abstract type Instruction end
 
-struct Cpy{T <: Value} <: Instruction
+struct Cpy{T<:Value} <: Instruction
     from::T
     to::Register
 end
@@ -61,7 +65,7 @@ end
 
 # This one was modified to support either a `Literal` or `Register` in both
 # `check` and `offset`.
-struct Jnz{T <: Value, U <: Value} <: Instruction
+struct Jnz{T<:Value,U<:Value} <: Instruction
     check::T
     offset::U
 end
@@ -90,7 +94,7 @@ function Registers(pairs::Pair{Char,Int}...)
     return Registers(registers)
 end
 
-eval(::Registers,  lit::Literal)  = lit
+eval(::Registers, lit::Literal) = lit
 eval(r::Registers, key::Register) = eval(r, r[key])
 
 mutable struct Program
@@ -113,12 +117,12 @@ Base.:*(a::Literal, b::Literal) = Literal(a.value * b.value)
 # additionally taking and returning the pointer to the line to be run, as
 # opposed to returning a value indicating the offset to the next line.
 
-function execute!(program::Program, (; from, to)::Cpy) 
+function execute!(program::Program, (; from, to)::Cpy)
     program.registers[to] = eval(program.registers, from)
     program.pointer += 1
 end
 
-function execute!(program::Program, (; register)::Inc) 
+function execute!(program::Program, (; register)::Inc)
     program.registers[register] += 1
     program.pointer += 1
 end
@@ -128,9 +132,9 @@ function execute!(program::Program, (; register)::Dec)
     program.pointer += 1
 end
 
-function execute!(program::Program, (; check, offset)::Jnz) 
-    if eval(program.registers, check) == Literal(0) 
-        program.pointer += 1 
+function execute!(program::Program, (; check, offset)::Jnz)
+    if eval(program.registers, check) == Literal(0)
+        program.pointer += 1
     else
         program.pointer += eval(program.registers, offset)
     end

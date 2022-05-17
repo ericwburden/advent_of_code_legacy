@@ -13,13 +13,13 @@ the value is a list of the program names that depend on the key program.
 Returns a tuple of (<weights>, <structure>).
 """
 function ingest(path)
-    weights   = Dict()
+    weights = Dict()
     structure = Dict()
 
     for line in readlines(path)
-        m     = match(LINE_RE, line)
-        name  = m["name"]
-        wgt   = parse(Int, m["wgt"])
+        m = match(LINE_RE, line)
+        name = m["name"]
+        wgt = parse(Int, m["wgt"])
         holds = m["holds"]
         weights[name] = wgt
         structure[name] = isnothing(holds) ? [] : split(holds, ", ")

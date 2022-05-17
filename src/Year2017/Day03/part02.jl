@@ -24,7 +24,7 @@ end
 SpiralWalker() = SpiralWalker((0, 0), (0, 1), 2, 1)
 
 "Given a seed value, return the next index that will be a turn"
-next_turn(seed::Int)   = floor(Int, (seed*seed)/4) + 1
+next_turn(seed::Int) = floor(Int, (seed * seed) / 4) + 1
 
 "Indicates whether the walk should turn on the current step"
 will_turn(s::SpiralWalker) = s.idx == next_turn(s.seed)
@@ -36,10 +36,10 @@ Given a tuple representing a directional offset on a square grid, return the
 offset if the direction were to take a left turn.
 """
 function turn_left(dir::Tuple{Int,Int})
-    dir == ( 0,  1) && return (-1,  0)
-    dir == (-1,  0) && return ( 0, -1)
-    dir == ( 0, -1) && return ( 1,  0)
-    dir == ( 1,  0) && return ( 0,  1)
+    dir == (0, 1) && return (-1, 0)
+    dir == (-1, 0) && return (0, -1)
+    dir == (0, -1) && return (1, 0)
+    dir == (1, 0) && return (0, 1)
     error("`dir` was $dir, should be one of (0, 1), (1, 0), (0, -1), (-1, 0)!")
 end
 
@@ -50,10 +50,10 @@ Move the `SpiralWalker` forward one step.
 """
 function next!(s::SpiralWalker)
     if will_turn(s)
-        s.dir   = turn_left(s.dir)
+        s.dir = turn_left(s.dir)
         s.seed += 1
     end
-    s.pos  = s.pos .+ s.dir
+    s.pos = s.pos .+ s.dir
     s.idx += 1
 end
 
@@ -65,7 +65,7 @@ Calculate the value at a given position in a square spiral, based on the
 """
 function value_at(pos::Tuple{Int,Int}, spiral::Spiral)
     value = 0
-    for row_offset in -1:1, col_offset in -1:1
+    for row_offset = -1:1, col_offset = -1:1
         row_offset == col_offset == 0 && continue
         check_at = pos .+ (row_offset, col_offset)
         value += get(spiral, check_at, 0)
@@ -83,7 +83,7 @@ the first value that exceeds `input`.
 function part2(input)
     spiral = Spiral()
     walker = SpiralWalker()
-    value  = 1
+    value = 1
 
     while value <= input
         spiral[walker.pos] = value

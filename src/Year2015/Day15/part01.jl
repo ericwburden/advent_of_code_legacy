@@ -6,8 +6,8 @@ that can sum to 100. Used for testing the two-ingredient examples.
 """
 function ratios2()
     Channel() do channel
-        for i in 0:100
-            put!(channel, (i, 100-i))
+        for i = 0:100
+            put!(channel, (i, 100 - i))
         end
     end
 end
@@ -21,10 +21,10 @@ ingredients.
 """
 function ratios4()
     Channel() do channel
-        for i in 0:100
-            for j in 0:(100-i)
-                for k in 0:(100-i-j)
-                    put!(channel, (i, j, k, 100-i-j-k))
+        for i = 0:100
+            for j = 0:(100-i)
+                for k = 0:(100-i-j)
+                    put!(channel, (i, j, k, 100 - i - j - k))
                 end
             end
         end
@@ -39,11 +39,11 @@ Operator overloading to allow scaling a `NutritionInfo` by an integer value.
 function Base.:*(a::NutritionInfo, b::Int)
     (; capacity, durability, flavor, texture, calories) = a
     return NutritionInfo(
-        capacity*b,
-        durability*b,
-        flavor*b,
-        texture*b,
-        calories*b
+        capacity * b,
+        durability * b,
+        flavor * b,
+        texture * b,
+        calories * b,
     )
 end
 
@@ -55,11 +55,11 @@ a composite struct where each value is the sum of the values in `a` and `b`.
 """
 function Base.:+(a::NutritionInfo, b::NutritionInfo)
     return NutritionInfo(
-        a.capacity   + b.capacity,
+        a.capacity + b.capacity,
         a.durability + b.durability,
-        a.flavor     + b.flavor,
-        a.texture    + b.texture,
-        a.calories   + b.calories
+        a.flavor + b.flavor,
+        a.texture + b.texture,
+        a.calories + b.calories,
     )
 end
 
@@ -83,10 +83,7 @@ the combinations of ingredients that can sum to 100 total, identify which
 batch of ingredients will produce the highest score, and return that high score.
 """
 function part1(input, ratiogenerator = ratios4)
-    makebatches(x)  = map(ratios -> sum(input .* ratios), x)
+    makebatches(x) = map(ratios -> sum(input .* ratios), x)
     scorebatches(x) = map(score, x)
-    (ratiogenerator()
-        |> makebatches
-        |> scorebatches
-        |> maximum)
+    (ratiogenerator() |> makebatches |> scorebatches |> maximum)
 end

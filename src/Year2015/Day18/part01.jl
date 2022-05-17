@@ -20,10 +20,10 @@ Fewer values will be returned if `i` is on the 'border' or in a 'corner' of the
 function neighborhood(m::BitMatrix, i::CartesianIndex)
     (rows, cols) = size(m)
 
-    top    = i[1] > 1    ? i[1] - 1 : 1
-    left   = i[2] > 1    ? i[2] - 1 : 1
+    top = i[1] > 1 ? i[1] - 1 : 1
+    left = i[2] > 1 ? i[2] - 1 : 1
     bottom = i[1] < rows ? i[1] + 1 : rows
-    right  = i[2] < cols ? i[2] + 1 : cols
+    right = i[2] < cols ? i[2] + 1 : cols
 
     return @view m[top:bottom, left:right]
 end
@@ -37,9 +37,9 @@ neighborson((; m)::Lights, i::CartesianIndex) = sum(neighborhood(m, i)) - m[i]
 Given a `NormalLights` and an index `i`, determine whether the given index
 should be 1 or 0 in the next state of `NormalLights`.
 """
-function nextstate(l::NormalLights, i::CartesianIndex) 
+function nextstate(l::NormalLights, i::CartesianIndex)
     neighborson(l, i) == 3 && return true
-    neighborson(l, i) == 2 && return l[i] 
+    neighborson(l, i) == 2 && return l[i]
     return false
 end
 
@@ -69,12 +69,12 @@ end
 # A bunch of overloads of `Base` functions to apply them to `Lights` and
 # `NormalLights` structs, so they can be treated as a regular `BitMatrix`
 # where it makes sense to do so.
-Base.similar((; m)::NormalLights)         = similar(m) |> NormalLights
+Base.similar((; m)::NormalLights) = similar(m) |> NormalLights
 Base.setindex!((; m)::NormalLights, v, i) = setindex!(m, v, i) |> NormalLights
-Base.CartesianIndices((; m)::Lights)      = CartesianIndices(m)
-Base.getindex((; m)::Lights, i)           = getindex(m, i)
-Base.iterate((; m)::Lights)               = iterate(m)
-Base.iterate((; m)::Lights, i::Int)       = iterate(m, i)
+Base.CartesianIndices((; m)::Lights) = CartesianIndices(m)
+Base.getindex((; m)::Lights, i) = getindex(m, i)
+Base.iterate((; m)::Lights) = iterate(m)
+Base.iterate((; m)::Lights, i::Int) = iterate(m, i)
 
 """
     part1(input)

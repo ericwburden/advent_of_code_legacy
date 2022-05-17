@@ -9,12 +9,12 @@ ingest(path) = parse.(Int, split(readline(path), ","))
 const Position = NTuple{2,Int}
 
 "Used to sub-type a Tile"
-abstract type      AbstractTileKind end
-struct Hall     <: AbstractTileKind end
+abstract type AbstractTileKind end
+struct Hall <: AbstractTileKind end
 struct O₂Sensor <: AbstractTileKind end
 
 "An open space in the maze, either a hallway or the oxygen sensor"
-struct Tile{K <: AbstractTileKind}
+struct Tile{K<:AbstractTileKind}
     kind::Type{K}
     pos::Position
 end
@@ -29,7 +29,7 @@ input and return the computer and output as the result.
 function move_bot!(computer::Computer, direction::Int)
     add_input!(computer, direction)
     computer = run!(computer)
-    found    = get_output!(computer)
+    found = get_output!(computer)
     return (computer, found)
 end
 
@@ -45,7 +45,7 @@ function trace_map!(input::Vector{Int})
     ship_map = Dict{Position,Vector{Tile}}()
 
     # Up, down, left, and right
-    offsets  = Dict(1 => (-1, 0), 2 => (1, 0), 3 => (0, -1), 4 => (0, 1))
+    offsets = Dict(1 => (-1, 0), 2 => (1, 0), 3 => (0, -1), 4 => (0, 1))
 
     # This inner recursive function attempts to follow the paths
     # branching from the input position, moving the bot back to 
@@ -56,7 +56,7 @@ function trace_map!(input::Vector{Int})
             next_pos = pos .+ offsets[there]
 
             computer, found = move_bot!(computer, there)
-            current  = get!(ship_map, pos, [])
+            current = get!(ship_map, pos, [])
 
             found == 0 && continue
             found == 1 && push!(current, Tile(Hall, next_pos))

@@ -3,9 +3,17 @@ Represents a move in the dance, with instructions for completing that move.
 """
 abstract type AbstractMove end
 
-struct Spin     <: AbstractMove n::Int           end
-struct Exchange <: AbstractMove a::Int;  b::Int  end
-struct Partner  <: AbstractMove a::Char; b::Char end
+struct Spin <: AbstractMove
+    n::Int
+end
+struct Exchange <: AbstractMove
+    a::Int
+    b::Int
+end
+struct Partner <: AbstractMove
+    a::Char
+    b::Char
+end
 
 """
     Base.parse(::Type{AbstractMove}, s::AbstractString)

@@ -26,7 +26,8 @@ struct RotateCol <: Instruction
 end
 
 # Gnarly regex for parsing the input
-const RE = r"^(?<type>rect|rotate (row|column))\s?(?<rect>\d+x\d+)?(?<rot>(x|y)=\d+ by \d+)?$"
+const RE =
+    r"^(?<type>rect|rotate (row|column))\s?(?<rect>\d+x\d+)?(?<rot>(x|y)=\d+ by \d+)?$"
 
 """
     Base.parse(::Type{Instruction}, s::AbstractString)
@@ -37,8 +38,8 @@ depending on the contents of the string.
 function Base.parse(::Type{Instruction}, s::AbstractString)
     m = match(RE, s)
     return @match m["type"] begin
-        "rect"          => parse(Rectangle, m["rect"])
-        "rotate row"    => parse(RotateRow, m["rot"])
+        "rect" => parse(Rectangle, m["rect"])
+        "rotate row" => parse(RotateRow, m["rot"])
         "rotate column" => parse(RotateCol, m["rot"])
     end
 end

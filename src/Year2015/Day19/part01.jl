@@ -1,5 +1,5 @@
 # Helper functions!
-pipe_join(strings)  = join(strings, "|")
+pipe_join(strings) = join(strings, "|")
 replace_re(strings) = strings |> pipe_join |> Regex
 
 """
@@ -10,11 +10,11 @@ String, return a string where the matched characters are replaced by
 `replacement`.
 """
 function replace_match(str::String, regex_match::RegexMatch, replacement::String)
-    prefix_end   = regex_match.offset - 1
+    prefix_end = regex_match.offset - 1
     suffix_start = regex_match.offset + length(regex_match.match)
-    last_idx     = length(str)
-    prefix       = prefix_end >= 1 ? str[1:prefix_end] : ""
-    suffix       = suffix_start <= last_idx ? str[suffix_start:end] : ""
+    last_idx = length(str)
+    prefix = prefix_end >= 1 ? str[1:prefix_end] : ""
+    suffix = suffix_start <= last_idx ? str[suffix_start:end] : ""
     return prefix * replacement * suffix
 end
 

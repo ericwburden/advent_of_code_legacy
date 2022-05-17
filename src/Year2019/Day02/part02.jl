@@ -8,9 +8,9 @@ value in memory address 0 after running the program equals the 'MAGIC_VALUE'.
 Returns a number indicating which values yielded this result.
 """
 function part2(input)
-    for noun in 0:99, verb in 0:99
-        values     = deepcopy(input)
-        program    = Computer(values)
+    for noun = 0:99, verb = 0:99
+        values = deepcopy(input)
+        program = Computer(values)
         program[1] = noun
         program[2] = verb
         run!(program)

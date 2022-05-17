@@ -7,7 +7,7 @@ one. Return a tuple containing the first round the repeated configuration
 is seen and the number of rounds it takes to repeat it.
 """
 function find_cycle(dancers, moves)
-    seen   = Dict()
+    seen = Dict()
     rounds = 0
     move!(move) = execute!(dancers, move)
 
@@ -36,19 +36,19 @@ function part2(moves)
     move!(move) = execute!(dancers, move)
 
     # Need to get the dancers to the state where the cycling starts
-    for _ in 1:(cycle_start-1)
+    for _ = 1:(cycle_start-1)
         foreach(move!, moves)
     end
 
     # Determine how many rounds of dance would be left if as many 
     # full cycles were performed without passing `total_dances`.
     total_dances -= (cycle_start - 1)
-    dances_left   = total_dances % cycle_length
-    
+    dances_left = total_dances % cycle_length
+
     # Perform the remaining rounds
-    for _ in 1:dances_left
+    for _ = 1:dances_left
         foreach(move!, moves)
     end
-    
+
     return join(dancers)
 end

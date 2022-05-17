@@ -18,9 +18,9 @@ where they intersect, and return the minimum total number of steps for both
 wires to create an intersection.
 """
 function part2(input)
-    wire1, wire2  = input
-    wire1trace    = trace(wire1)
-    wire2trace    = trace(wire2)
-    min_steps(i)  = minimum_steps_to(wire1trace, wire2trace, i)
+    wire1, wire2 = input
+    wire1trace = trace(wire1)
+    wire2trace = trace(wire2)
+    min_steps(i) = minimum_steps_to(wire1trace, wire2trace, i)
     return minimum(min_steps, intersections(wire1trace, wire2trace))
 end

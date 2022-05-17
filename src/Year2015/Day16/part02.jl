@@ -27,13 +27,8 @@ the puzze instructions. If only one aunt matches, return her number. Otherwise,
 raise an error.
 """
 function part2(input)
-    strategy = PartialRange(
-        :cats => >,
-        :trees => >,
-        :pomeranians => <,
-        :goldfish => <
-    )
-    found    = filter(x -> match(strategy, x, DETECTED), input)
+    strategy = PartialRange(:cats => >, :trees => >, :pomeranians => <, :goldfish => <)
+    found = filter(x -> match(strategy, x, DETECTED), input)
     length(found) > 1 && error("Matched too many aunts!")
     length(found) < 1 && error("Could not find a match!")
 

@@ -23,7 +23,7 @@ in range of `bot`.
 function get_neighbors(bot::NanoBot, all_bots::Vector{NanoBot})
     neighbors = []
     for other_bot in all_bots
-        bot == other_bot            && continue
+        bot == other_bot && continue
         in_range_of(bot, other_bot) || continue
         in_range_of(other_bot, bot) || continue
         push!(neighbors, other_bot)
@@ -38,12 +38,12 @@ Identify the largest `clique` in the `bot_graph`, the set of `NanoBot`s that are
 mutually in range of one another.
 """
 function largest_clique(all_bots::Vector{NanoBot}, bot_graph::BotGraph)
-    bot_set   = Set(all_bots)
-    clique    = Set{NanoBot}()
+    bot_set = Set(all_bots)
+    clique = Set{NanoBot}()
 
     while !isempty(bot_set)
         next_clique = build_clique(first(bot_set), bot_graph)
-        bot_set     = setdiff!(bot_set, next_clique)
+        bot_set = setdiff!(bot_set, next_clique)
         length(next_clique) > length(clique) || continue
         clique = next_clique
     end
@@ -58,7 +58,7 @@ Given a `bot_graph`, identify and return a set of bots that are mutually in
 range of the given `bot`.
 """
 function build_clique(bot::NanoBot, bot_graph::BotGraph)
-    stack  = [bot]
+    stack = [bot]
     clique = Set{NanoBot}()
     while !isempty(stack)
         current = pop!(stack)
@@ -95,6 +95,6 @@ overlap.
 """
 function part2(input)
     bot_graph = build_bot_graph(input)
-    clique    = largest_clique(input, bot_graph)
+    clique = largest_clique(input, bot_graph)
     return maximum(distance_from_origin, clique)
 end

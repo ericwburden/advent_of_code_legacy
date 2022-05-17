@@ -12,10 +12,10 @@ HexLocation() = HexLocation(0, 0, 0)
 Given a location and a concrete struct that derives from AbstractDirection, 
 return the location that would be arrived at by moving in the given direction.
 """
-Base.:+((; x, y, z)::HexLocation, dir::North)     = HexLocation(x, y + 1, z - 1)
+Base.:+((; x, y, z)::HexLocation, dir::North) = HexLocation(x, y + 1, z - 1)
 Base.:+((; x, y, z)::HexLocation, dir::NorthEast) = HexLocation(x + 1, y, z - 1)
 Base.:+((; x, y, z)::HexLocation, dir::NorthWest) = HexLocation(x - 1, y + 1, z)
-Base.:+((; x, y, z)::HexLocation, dir::South)     = HexLocation(x, y - 1, z + 1)
+Base.:+((; x, y, z)::HexLocation, dir::South) = HexLocation(x, y - 1, z + 1)
 Base.:+((; x, y, z)::HexLocation, dir::SouthEast) = HexLocation(x + 1, y - 1, z)
 Base.:+((; x, y, z)::HexLocation, dir::SouthWest) = HexLocation(x - 1, y, z + 1)
 

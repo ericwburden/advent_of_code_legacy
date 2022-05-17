@@ -31,14 +31,16 @@ function ingest(path)
     aunts = []
     open(path) do f
         for line in eachline(f)
-            (sue, compounds) = split(line, ": ", limit=2)
+            (sue, compounds) = split(line, ": ", limit = 2)
             suenumber = parse(Int, filter(isdigit, sue))
 
-            (suecompounds
-                =  compounds
-                |> (x -> split(x, ", "))
-                |> (x -> map(compoundpair, x))
-                |> Dict)
+            (
+                suecompounds =
+                    compounds |>
+                    (x -> split(x, ", ")) |>
+                    (x -> map(compoundpair, x)) |>
+                    Dict
+            )
 
             push!(aunts, AuntSue(suenumber, suecompounds))
         end

@@ -6,7 +6,7 @@ end
 
 "Get a value at an index in a `Registers`"
 function get_value(r::Registers, i::Int)
-    return r[i + 1]
+    return r[i+1]
 end
 
 
@@ -177,10 +177,10 @@ of the instructions, return a `Halted` program.
 """
 function execute(instructions::Instructions, (; pointer, bind, registers)::Program)
     0 <= pointer < length(instructions) || return Program(Halted, pointer, bind, registers)
-    registers   = set_register(registers, bind, pointer)
-    instruction = instructions[pointer + 1]  # 1-indexing
-    registers   = execute(instruction, registers)
-    pointer     = get_value(registers, bind) + 1
+    registers = set_register(registers, bind, pointer)
+    instruction = instructions[pointer+1]  # 1-indexing
+    registers = execute(instruction, registers)
+    pointer = get_value(registers, bind) + 1
     return Program(Running, pointer, bind, registers)
 end
 

@@ -7,8 +7,8 @@ include("part01.jl")
 
 export run
 function run()
-    inpath  = getinput(2019, 25, "input")
-    input   = ingest(inpath)
+    inpath = getinput(2019, 25, "input")
+    input = ingest(inpath)
     answer1 = part1(input)
 
     println("\n    Day 25")

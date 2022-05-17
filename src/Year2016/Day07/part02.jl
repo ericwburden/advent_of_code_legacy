@@ -6,15 +6,19 @@ Given a string, determine if that string supports 'SSL' by checking for an
 'BAB' sequence inside the square brackets.
 """
 function supports_ssl(ipv7::String)
-    aba_found       = Set{Tuple{Char,Char,Char}}()
-    bab_found       = Set{Tuple{Char,Char,Char}}()
+    aba_found = Set{Tuple{Char,Char,Char}}()
+    bab_found = Set{Tuple{Char,Char,Char}}()
     in_hypernet_seq = false
 
     # Iterate through 3-character chunks of the ipv7 address
     for (c₁, c₂, c₃) in zip(ipv7, ipv7[2:end], ipv7[3:end])
         # Flag whether we're inside a hypernet sequence or not
-        if (c₁ == ']') in_hypernet_seq = false end
-        if (c₁ == '[') in_hypernet_seq = true end
+        if (c₁ == ']')
+            in_hypernet_seq = false
+        end
+        if (c₁ == '[')
+            in_hypernet_seq = true
+        end
 
         # If we didn't find an 'aba' sequence, try the next chunk
         (c₁ == c₃ && c₁ != c₂) || continue

@@ -14,10 +14,18 @@ Represents a spell effect, which is any change to the state of the game
 resulting from a spell. Effects can be applied instantaneously or over time.
 """
 abstract type AbstractEffect end
-struct Damage <: AbstractEffect amount::Int end
-struct Siphon <: AbstractEffect amount::Int end
-struct Armor  <: AbstractEffect amount::Int end
-struct Regen  <: AbstractEffect amount::Int end
+struct Damage <: AbstractEffect
+    amount::Int
+end
+struct Siphon <: AbstractEffect
+    amount::Int
+end
+struct Armor <: AbstractEffect
+    amount::Int
+end
+struct Regen <: AbstractEffect
+    amount::Int
+end
 
 
 """
@@ -86,9 +94,9 @@ NormalMode(player, boss) = NormalMode(player, boss, Dict())
 # Useful constants.
 const BOSS = Boss(58, 9)
 const SPELLBOOK = Dict{SpellName,AbstractSpell}(
-    MagicMissile => Instant( 53,    Damage(4)),
-    Drain        => Instant( 73,    Siphon(2)),
-    Shield       => Ongoing(113, 6, Armor(7)),
-    Poison       => Ongoing(173, 6, Damage(3)),
-    Recharge     => Ongoing(229, 5, Regen(101)),
+    MagicMissile => Instant(53, Damage(4)),
+    Drain => Instant(73, Siphon(2)),
+    Shield => Ongoing(113, 6, Armor(7)),
+    Poison => Ongoing(173, 6, Damage(3)),
+    Recharge => Ongoing(229, 5, Regen(101)),
 )

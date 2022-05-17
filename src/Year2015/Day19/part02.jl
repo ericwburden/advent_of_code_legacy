@@ -35,7 +35,7 @@ function contract(molecule, replacement_pairs)
     for (regex, insert) in replacement_pairs
         regex_match = match(regex, molecule)
         while !isnothing(regex_match)
-            molecule    = replace_match(molecule, regex_match, insert)
+            molecule = replace_match(molecule, regex_match, insert)
             insertions += 1
             regex_match = match(regex, molecule)
         end
@@ -53,11 +53,8 @@ starting molecule of "e".
 """
 function part2(input)
     replacement_map, molecule = input
-    replacement_pairs = sort!(
-        flip(replacement_map),
-        by = x -> length(x.first.pattern),
-        rev = true
-    )
+    replacement_pairs =
+        sort!(flip(replacement_map), by = x -> length(x.first.pattern), rev = true)
 
     total_replacements = 0
     while molecule != "e"

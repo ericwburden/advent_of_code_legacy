@@ -18,11 +18,13 @@ function ingest(path)
 
     for (row, line) in enumerate(lines)
         for (col, char) in enumerate(line)
-            if (isdigit(char)) 
+            if (isdigit(char))
                 int = parse(Int, char)
                 poi[int] = CartesianIndex(row, col)
             end
-            if (char == '#') grid_map[row, col] = false end
+            if (char == '#')
+                grid_map[row, col] = false
+            end
         end
     end
 

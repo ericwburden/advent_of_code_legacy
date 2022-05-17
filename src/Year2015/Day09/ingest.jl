@@ -12,8 +12,8 @@ AdjacencyMatrix(s::Int) = AdjacencyMatrix(Dict(), fill(nothing, s, s))
 
 "Add a start/stop pair to the Adjacency Matrix"
 function add!(c::AdjacencyMatrix, v::Tuple{String,String,Int})
-    leftidx  = get!(c.keys, v[1], length(c.keys)+1)
-    rightidx = get!(c.keys, v[2], length(c.keys)+1)
+    leftidx = get!(c.keys, v[1], length(c.keys) + 1)
+    rightidx = get!(c.keys, v[2], length(c.keys) + 1)
     c.values[leftidx, rightidx] = v[3]
 end
 
@@ -31,9 +31,9 @@ function ingest(path)
     open(path) do f
         for line in eachline(f)
             m = match(INPUT_RE, line)
-            left  = string(m["left"])
+            left = string(m["left"])
             right = string(m["right"])
-            cost  = parse(Int, m["cost"])
+            cost = parse(Int, m["cost"])
             add!(adjacency_matrix, (left, right, cost))
             add!(adjacency_matrix, (right, left, cost))
         end

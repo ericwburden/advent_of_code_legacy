@@ -15,8 +15,12 @@ end
 AsyncProgram(id::Int) = AsyncProgram(Dict(Register('p') => id), 1, 0, Queue{Int}())
 
 "New instructions for `AsyncProgram`s"
-struct Send    <: AbstractInstruction value::AbstractValue     end
-struct Receive <: AbstractInstruction register::AbstractValue  end
+struct Send <: AbstractInstruction
+    value::AbstractValue
+end
+struct Receive <: AbstractInstruction
+    register::AbstractValue
+end
 
 """
 `AbstractMessage`s represent the return values from executing an instruction, 
@@ -25,9 +29,11 @@ result of the instruction.
 """
 abstract type AbstractMessage end
 
-struct SendMsg    <: AbstractMessage value::Int end
+struct SendMsg <: AbstractMessage
+    value::Int
+end
 struct BlockedMsg <: AbstractMessage end
-struct ExitMsg    <: AbstractMessage end
+struct ExitMsg <: AbstractMessage end
 struct SuccessMsg <: AbstractMessage end
 
 
@@ -49,7 +55,7 @@ These versions are modified to return `AbstractMessage`s, in addition to the
 """
 function execute!(state::AsyncProgram, (; value)::Send)
     state.send_count += 1
-    state.pointer    += 1
+    state.pointer += 1
     return SendMsg(valueof(state, value))
 end
 
@@ -100,13 +106,13 @@ another `AsyncProgram`.
 """
 function execute!(program::AsyncProgram, instructions::Vector{AbstractInstruction})
     outgoing_messages = AbstractMessage[]
-    lines_executed    = 0
+    lines_executed = 0
 
     # Execute instructions until the program is blocked or exits normally
     while 1 <= program.pointer <= length(instructions)
         message = execute!(program, instructions[program.pointer])
         push!(outgoing_messages, message)
-        if message isa BlockedMsg 
+        if message isa BlockedMsg
             return (lines_executed, outgoing_messages)
         else
             lines_executed += 1
@@ -130,11 +136,11 @@ executed.
 """
 function execute!(prog0::AsyncProgram, prog1::AsyncProgram, instructions::Instructions)
     prog0_executed, incoming_messages = execute!(prog0, instructions)
-    value_messages    = filter(msg -> msg isa SendMsg, incoming_messages)
+    value_messages = filter(msg -> msg isa SendMsg, incoming_messages)
     foreach(msg -> enqueue!(prog1.message_queue, msg.value), value_messages)
 
     prog1_executed, incoming_messages = execute!(prog1, instructions)
-    value_messages    = filter(msg -> msg isa SendMsg, incoming_messages)
+    value_messages = filter(msg -> msg isa SendMsg, incoming_messages)
     foreach(msg -> enqueue!(prog0.message_queue, msg.value), value_messages)
 
     lines_executed = prog0_executed + prog1_executed
@@ -143,8 +149,8 @@ function execute!(prog0::AsyncProgram, prog1::AsyncProgram, instructions::Instru
 end
 
 "For updating the instructions to match the new spec"
-update((; freq)::Sound)            = Send(freq)
-update((; input)::Recover)         = Receive(input)
+update((; freq)::Sound) = Send(freq)
+update((; input)::Recover) = Receive(input)
 update(instr::AbstractInstruction) = instr
 
 
@@ -159,6 +165,7 @@ number of messages sent by the program with ID `1`.
 function part2(input)
     updated_instructions = update.(input)
     prog0, prog1 = AsyncProgram(0), AsyncProgram(1)
-    while execute!(prog0, prog1, updated_instructions) end
+    while execute!(prog0, prog1, updated_instructions)
+    end
     return prog1.send_count
 end

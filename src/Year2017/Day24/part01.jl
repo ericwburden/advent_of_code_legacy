@@ -5,10 +5,10 @@ can_attach(::UsedPort, ::OpenPort) = false
 can_attach(p1::OpenPort, p2::OpenPort) = p1.pins == p2.pins
 
 "Overloaded functions to return the open port of a `Component`"
-open_port((; p1, p2)::Component{OpenPort, OpenPort}) = error("Should be attached.")
-open_port((; p1, p2)::Component{OpenPort, UsedPort}) = p1
-open_port((; p1, p2)::Component{UsedPort, OpenPort}) = p2
-open_port((; p1, p2)::Component{UsedPort, UsedPort}) = nothing
+open_port((; p1, p2)::Component{OpenPort,OpenPort}) = error("Should be attached.")
+open_port((; p1, p2)::Component{OpenPort,UsedPort}) = p1
+open_port((; p1, p2)::Component{UsedPort,OpenPort}) = p2
+open_port((; p1, p2)::Component{UsedPort,UsedPort}) = nothing
 
 "Changes a `OpenPort` to a `UsedPort`"
 use_port((; pins)::OpenPort) = UsedPort(pins)
@@ -59,7 +59,7 @@ end
 
 "Returns the strength of a component or bridge"
 strength_of((; p1, p2)::Component) = p1.pins + p2.pins
-strength_of(bridge::Bridge)        = bridge.strength
+strength_of(bridge::Bridge) = bridge.strength
 
 """
     possible_bridges(bridge::Bridge, components::Vector{Component})
@@ -68,10 +68,12 @@ Given a `Bridge`, attempt to connect each component in `components` and return
 an iterator of all the bridges that can be made this way.
 """
 function possible_bridges(bridge::Bridge, components::Vector{Component})
-    (result
-        = components
-        |> (x -> Iterators.map(c -> try_attach(bridge, c), x))
-        |> (x -> Iterators.filter(b -> !isnothing(b), x)))
+    (
+        result =
+            components |>
+            (x -> Iterators.map(c -> try_attach(bridge, c), x)) |>
+            (x -> Iterators.filter(b -> !isnothing(b), x))
+    )
     return result
 end
 

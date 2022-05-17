@@ -4,13 +4,17 @@ to another port. An `OpenPort` is one that can be connected, a `UsedPort`
 is one that cannot be connected to any longer.
 """
 abstract type AbstractPort end
-struct OpenPort <: AbstractPort pins::Int end
-struct UsedPort <: AbstractPort pins::Int end
+struct OpenPort <: AbstractPort
+    pins::Int
+end
+struct UsedPort <: AbstractPort
+    pins::Int
+end
 
 """
 Represents one of the bridge components.
 """
-struct Component{T <: AbstractPort, V <: AbstractPort}
+struct Component{T<:AbstractPort,V<:AbstractPort}
     id::Int
     p1::T
     p2::V

@@ -1,4 +1,4 @@
-const Location  = CartesianIndex{2}
+const Location = CartesianIndex{2}
 const Locations = Vector{Location}
 
 "Manhattan distance between two cartesian indices"
@@ -13,7 +13,7 @@ are equally close, return `nothing`.
 """
 function find_closest_destination(location::Location, destinations::Locations)
     closest_destination = nothing
-    minimum_distance    = typemax(Int)
+    minimum_distance = typemax(Int)
     for destination in destinations
         distance_to_destination = distance(location, destination)
         if distance_to_destination == minimum_distance
@@ -21,7 +21,7 @@ function find_closest_destination(location::Location, destinations::Locations)
         end
         if distance_to_destination < minimum_distance
             closest_destination = destination
-            minimum_distance    = distance_to_destination
+            minimum_distance = distance_to_destination
         end
     end
     return closest_destination
@@ -36,10 +36,10 @@ to the destination each location is closest to.
 """
 function assign_areas(destinations::Locations)
     assignments::Dict{Location,Vector{Location}} = Dict()
-    for location in CartesianIndex(1, 1):maximum(destinations)
+    for location = CartesianIndex(1, 1):maximum(destinations)
         closest_destination = find_closest_destination(location, destinations)
         isnothing(closest_destination) && continue
-        assigned_locations  = get!(assignments, closest_destination, [])
+        assigned_locations = get!(assignments, closest_destination, [])
         push!(assigned_locations, location)
     end
     return assignments
@@ -57,8 +57,8 @@ function is_finite_area(locations::Locations, bounds::NTuple{4,Int})
     top_row, left_col, bottom_row, right_col = bounds
     for location in locations
         row, col = Tuple(location)
-        top_row  < row < bottom_row || return false
-        left_col < col < right_col  || return false
+        top_row < row < bottom_row || return false
+        left_col < col < right_col || return false
     end
     return true
 end
@@ -72,9 +72,11 @@ largest finite region centered on one of the destinations and return the size.
 function part1(input)
     assigned_areas = assign_areas(input)
     bounds = (1, 1, Tuple(maximum(input))...)
-    (result
-        = values(assigned_areas)
-        |> (x -> Iterators.filter(l -> is_finite_area(l, bounds), x))
-        |> (x -> mapreduce(length, max, x)))
+    (
+        result =
+            values(assigned_areas) |>
+            (x -> Iterators.filter(l -> is_finite_area(l, bounds), x)) |>
+            (x -> mapreduce(length, max, x))
+    )
     return result
 end

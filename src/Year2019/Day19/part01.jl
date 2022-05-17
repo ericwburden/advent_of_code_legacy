@@ -11,7 +11,7 @@ function detect_position(program::Vector{Int}, x::Int, y::Int)
     add_input!(computer, x)
     add_input!(computer, y)
     computer = run!(computer)
-    result   = get_output!(computer)
+    result = get_output!(computer)
     return result
 end
 
@@ -24,7 +24,7 @@ is detected.
 """
 function part1(input)
     detected = 0
-    for x in 0:49, y in 0:49
+    for x = 0:49, y = 0:49
         detected += detect_position(input, x, y)
     end
     return detected

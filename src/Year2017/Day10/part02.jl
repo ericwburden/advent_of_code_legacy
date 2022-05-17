@@ -8,10 +8,10 @@ Perform `rounds` number of `knot_hash!`es sequentially on `marks` using the
 lengths in `knot_lengths`, without resetting the position or skip amount 
 between rounds. Return the final 'twisted' result.
 """
-function knot_hash_multi!(marks, knot_lengths, rounds=64)
-    pos  = 1
+function knot_hash_multi!(marks, knot_lengths, rounds = 64)
+    pos = 1
     skip = 0
-    for _ in 1:rounds
+    for _ = 1:rounds
         marks, pos, skip = knot_hash!(marks, knot_lengths, pos, skip)
     end
     return marks
@@ -42,7 +42,7 @@ of the input, condense the result as described in the puzzle, then return the
 resulting string of hex characters.
 """
 function part2(input)
-    knot_lengths  = preprocess(input)
-    marks         = knot_hash_multi!(collect(0:255), knot_lengths)
+    knot_lengths = preprocess(input)
+    marks = knot_hash_multi!(collect(0:255), knot_lengths)
     return condense(marks)
 end

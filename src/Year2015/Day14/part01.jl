@@ -28,7 +28,7 @@ Given a list of `Reindeer` as input, determines which reindeer has traveled
 the furthest in 2503 seconds (from the puzzle description) and return the 
 maximum distance traveled.
 """
-function part1(input, time=2503)
+function part1(input, time = 2503)
     distance(r) = traveled(r, time)
     mapreduce(distance, max, input)
 end

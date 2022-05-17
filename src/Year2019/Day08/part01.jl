@@ -9,8 +9,7 @@ by the number of twos on that layer.
 function part1(input)
     image = reshape(input, 25, 6, :)
     layer = argmin(l -> count(v -> v == 0, l), eachslice(image, dims = 3))
-    ones  = count(v -> v == 1, layer)
-    twos  = count(v -> v == 2, layer)
+    ones = count(v -> v == 1, layer)
+    twos = count(v -> v == 2, layer)
     return ones * twos
 end
-

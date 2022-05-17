@@ -15,9 +15,9 @@ const FloorMap = Matrix{UInt8}
 
 const FLOOR_MAP = [
     UInt8(10) UInt8(8) UInt8(8) UInt8(9)
-    UInt8(2)  UInt8(0) UInt8(0) UInt8(1)
-    UInt8(2)  UInt8(0) UInt8(0) UInt8(1)
-    UInt8(6)  UInt8(4) UInt8(4) UInt8(5)
+    UInt8(2) UInt8(0) UInt8(0) UInt8(1)
+    UInt8(2) UInt8(0) UInt8(0) UInt8(1)
+    UInt8(6) UInt8(4) UInt8(4) UInt8(5)
 ]
 
 """
@@ -30,10 +30,12 @@ left, and right.
 """
 function open_doors(room::UInt8, code::String)
     first_four = hexdigest("md5", code)[1:4]
-    place      = 3
+    place = 3
 
     for char in first_four
-        if (char ∉ "bcdef") room |= UInt8(2^place) end
+        if (char ∉ "bcdef")
+            room |= UInt8(2^place)
+        end
         place -= 1
     end
 

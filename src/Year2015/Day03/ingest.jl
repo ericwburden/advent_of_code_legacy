@@ -1,8 +1,8 @@
 abstract type Direction end
 struct North <: Direction end
 struct South <: Direction end
-struct East  <: Direction end
-struct West  <: Direction end
+struct East <: Direction end
+struct West <: Direction end
 
 const Directions = Vector{Direction}
 

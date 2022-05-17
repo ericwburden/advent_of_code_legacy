@@ -17,8 +17,7 @@ Given a String `s`, return true if the string contains at least two instances of
 any letter pair and at least one instance of a 'split triplet'. See the comments
 for the regular expressions in this file for more details.
 """
-isnice2(s::String) = contains(s, REPEATED_PAIR_RE) &&
-                     contains(s, SPLIT_TRIPLET_RE)
+isnice2(s::String) = contains(s, REPEATED_PAIR_RE) && contains(s, SPLIT_TRIPLET_RE)
 
 """
     part2(input)

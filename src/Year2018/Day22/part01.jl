@@ -1,4 +1,4 @@
-const Position   = NTuple{2,Int}
+const Position = NTuple{2,Int}
 const CONST_A = 20183
 const CONST_B = 16807
 const CONST_C = 48271
@@ -7,17 +7,17 @@ const CONST_C = 48271
 A `AbstractRegionKind` is used for sub-typing a region of the cave,
 indicating what kind of terrain is in that region.
 """
-abstract type     AbstractRegionKind end
-struct Rocky   <: AbstractRegionKind end
-struct Wet     <: AbstractRegionKind end
-struct Narrow  <: AbstractRegionKind end
+abstract type AbstractRegionKind end
+struct Rocky <: AbstractRegionKind end
+struct Wet <: AbstractRegionKind end
+struct Narrow <: AbstractRegionKind end
 struct Unknown <: AbstractRegionKind end
 
 """
 A `Region` represents one of the regions in the cave, including its
 kind, position, and other metadata.
 """
-struct Region{K <: AbstractRegionKind}
+struct Region{K<:AbstractRegionKind}
     kind::Type{K}
     position::Position
     geologic_index::Int
@@ -31,7 +31,13 @@ Region() = Region(Unknown, (-1, -1), -1, -1, -1)
 "Useful constructor"
 function Region(position::Position, geologic_index::Int, erosion_level::Int)
     risk = erosion_level % 3
-    kind = if (risk == 0) Rocky elseif (risk == 1) Wet else Narrow end
+    kind = if (risk == 0)
+        Rocky
+    elseif (risk == 1)
+        Wet
+    else
+        Narrow
+    end
     return Region(kind, position, geologic_index, erosion_level, risk)
 end
 
@@ -47,7 +53,7 @@ end
 "Constructor for initial CaveMap state."
 function CaveMap(depth::Int, target::Position)
     # Need to include `start_region` as an anchor point
-    start_region  = Region(Rocky, (0, 0), 0, depth % CONST_A, 0)
+    start_region = Region(Rocky, (0, 0), 0, depth % CONST_A, 0)
 
     # Need to include `target_region` for special handling
     target_region = Region(Rocky, target, 0, depth % CONST_A, 0)
@@ -71,8 +77,8 @@ function region_at!(cave_map::CaveMap, position::Position)
     elseif position[1] == 0
         (position[2] * CONST_C)
     else
-        region_above   = region_at!(cave_map, position .+ (0, -1))
-        region_left    = region_at!(cave_map, position .+ (-1, 0))
+        region_above = region_at!(cave_map, position .+ (0, -1))
+        region_left = region_at!(cave_map, position .+ (-1, 0))
         region_above.erosion_level * region_left.erosion_level
     end
     erosion_level = (geologic_index + depth) % CONST_A
@@ -91,7 +97,7 @@ right, inclusive.
 function total_risk_to(cave_map::CaveMap, position::Position)
     total_risk = 0
     max_x, max_y = position
-    for xidx in 0:max_x, yidx in 0:max_y
+    for xidx = 0:max_x, yidx = 0:max_y
         region = region_at!(cave_map, (xidx, yidx))
         total_risk += region.risk
     end
@@ -114,12 +120,12 @@ end
 "Pretty printing"
 function Base.show((; regions)::CaveMap)
     max_x, max_y = maximum(keys(regions))
-    for row_idx in 0:max_y
-        for col_idx in 0:max_x
+    for row_idx = 0:max_y
+        for col_idx = 0:max_x
             region = get(regions, (col_idx, row_idx), Region())
-            region.kind isa Type{Rocky}   && print('.')
-            region.kind isa Type{Wet}     && print('~')
-            region.kind isa Type{Narrow}  && print('|')
+            region.kind isa Type{Rocky} && print('.')
+            region.kind isa Type{Wet} && print('~')
+            region.kind isa Type{Narrow} && print('|')
             region.kind isa Type{Unknown} && print('?')
         end
         println()

@@ -33,10 +33,10 @@
 ------------------------------------------------------------------------------=#
 
 function part1()
-    for n in 1:typemax(Int)
+    for n = 1:typemax(Int)
         a = d = n + (4 * 633)
         expected = 0
-        matches  = 0
+        matches = 0
 
         while true
             a, b = divrem(a, 2)
@@ -47,7 +47,9 @@ function part1()
             else
                 break
             end
-            if (a == 0) a = d end
+            if (a == 0)
+                a = d
+            end
         end
     end
 end

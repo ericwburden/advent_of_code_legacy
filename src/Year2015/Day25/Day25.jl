@@ -6,8 +6,8 @@ include("part01.jl")
 
 export run
 function run()
-    inpath  = getinput(2015, 25, "input")
-    input   = ingest(inpath)
+    inpath = getinput(2015, 25, "input")
+    input = ingest(inpath)
     answer1 = part1(input)
     answer2 = part2(input)
 

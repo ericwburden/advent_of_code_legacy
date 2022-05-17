@@ -11,14 +11,14 @@ return it, otherwise pass the packet to the computer at address `0` to kick
 the network back into action.
 """
 function part2(input)
-    computers     = map(addr -> NetworkComputer(addr, input), 0:49)
+    computers = map(addr -> NetworkComputer(addr, input), 0:49)
     resume_y_vals = Set{Int}()
 
     @label cycle
-    
+
     for (address, computer) in zip(0:49, computers)
         computer, packets = produce_packets!(computer)
-        computers[address + 1] = computer
+        computers[address+1] = computer
 
         for packet in packets
             if packet.dest == 255
@@ -29,7 +29,7 @@ function part2(input)
                 continue
             end
 
-            recipient = computers[packet.dest + 1]
+            recipient = computers[packet.dest+1]
             push!(recipient.incoming, packet)
         end
     end

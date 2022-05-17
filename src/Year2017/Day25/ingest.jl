@@ -11,7 +11,7 @@ struct D <: AbstractState end
 struct E <: AbstractState end
 struct F <: AbstractState end
 
-struct Cursor{S <: AbstractState}
+struct Cursor{S<:AbstractState}
     position::Int
     state::Type{S}
 end

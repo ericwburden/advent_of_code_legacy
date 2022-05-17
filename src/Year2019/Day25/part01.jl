@@ -30,7 +30,7 @@ It's a text-based adventure game in IntCode!!!!!!! Play by passing `play` as `tr
 You can pass the doorlock by carrying the ornament, food ration, weather machine,
 and astrolabe.
 """
-function part1(input, play=false)
+function part1(input, play = false)
     play || return 4206594
     computer = Computer(input)
     computer = run!(computer)

@@ -15,7 +15,7 @@ function ingest(path)
     open(path) do f
         for line in eachline(f)
             isempty(line) && continue
-            
+
             if contains(line, "=>")
                 left, right = split(line, " => ")
                 current = get!(replacements, left, String[])

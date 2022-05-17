@@ -7,13 +7,13 @@ and which directions are available at a junction.
 """
 abstract type AbstractHeading end
 
-abstract type VerticalHeading   <: AbstractHeading end
+abstract type VerticalHeading <: AbstractHeading end
 abstract type HorizontalHeading <: AbstractHeading end
 
-struct North <: VerticalHeading   end
-struct East  <: HorizontalHeading end
-struct South <: VerticalHeading   end
-struct West  <: HorizontalHeading end
+struct North <: VerticalHeading end
+struct East <: HorizontalHeading end
+struct South <: VerticalHeading end
+struct West <: HorizontalHeading end
 
 
 """
@@ -26,9 +26,11 @@ either to the left or the right.
 """
 abstract type AbstractPath end
 
-struct EmptySpace  <: AbstractPath end
+struct EmptySpace <: AbstractPath end
 struct ForwardPath <: AbstractPath end
-struct LetterPath  <: AbstractPath letter::Char end
+struct LetterPath <: AbstractPath
+    letter::Char
+end
 
 struct Junction{V<:VerticalHeading,H<:HorizontalHeading} <: AbstractPath
     vertical::Type{V}
@@ -72,9 +74,9 @@ end
 function Base.convert(::Type{Junction}, chunk::Chunk)
     # Indicates whether there is a path character in each cardinal direction
     north_path = chunk.north == '|' || isletter(chunk.north)
-    east_path  = chunk.east  == '-' || isletter(chunk.east)
+    east_path = chunk.east == '-' || isletter(chunk.east)
     south_path = chunk.south == '|' || isletter(chunk.south)
-    west_path  = chunk.west  == '-' || isletter(chunk.west)
+    west_path = chunk.west == '-' || isletter(chunk.west)
 
     # We trust that each junction only has two adjacent path characters
     north_path && east_path && return Junction(North, East)
@@ -114,7 +116,7 @@ that letter to the list of encountered letters.
 """
 function move_forward(
     (; heading, position, letters, steps)::NetworkPacket,
-    letter::Union{Nothing,Char}=nothing
+    letter::Union{Nothing,Char} = nothing,
 )
     new_position = if heading isa Type{North}
         position + CartesianIndex(-1, 0)
@@ -146,18 +148,18 @@ through the `NetworkMap`, based on the current space of the `NetworkPacket`.
 encountered letters, and `Junction`s change the packet's direction before
 moving it along.
 """
-step(N::NetworkMap, P::NetworkPacket)                      = step(N[P.position], P)
-step(::ForwardPath, packet::NetworkPacket)                 = move_forward(packet)
-step((; letter)::LetterPath, packet::NetworkPacket)        = move_forward(packet, letter)
+step(N::NetworkMap, P::NetworkPacket) = step(N[P.position], P)
+step(::ForwardPath, packet::NetworkPacket) = move_forward(packet)
+step((; letter)::LetterPath, packet::NetworkPacket) = move_forward(packet, letter)
 
 step(::Junction{North,East}, packet::NetworkPacket{South}) = turn_packet(East, packet)
-step(::Junction{North,East}, packet::NetworkPacket{West})  = turn_packet(North, packet)
+step(::Junction{North,East}, packet::NetworkPacket{West}) = turn_packet(North, packet)
 step(::Junction{North,West}, packet::NetworkPacket{South}) = turn_packet(West, packet)
-step(::Junction{North,West}, packet::NetworkPacket{East})  = turn_packet(North, packet)
+step(::Junction{North,West}, packet::NetworkPacket{East}) = turn_packet(North, packet)
 step(::Junction{South,East}, packet::NetworkPacket{North}) = turn_packet(East, packet)
-step(::Junction{South,East}, packet::NetworkPacket{West})  = turn_packet(South, packet)
+step(::Junction{South,East}, packet::NetworkPacket{West}) = turn_packet(South, packet)
 step(::Junction{South,West}, packet::NetworkPacket{North}) = turn_packet(West, packet)
-step(::Junction{South,West}, packet::NetworkPacket{East})  = turn_packet(South, packet)
+step(::Junction{South,West}, packet::NetworkPacket{East}) = turn_packet(South, packet)
 
 """
     travel(network_map::NetworkMap, packet::NetworkPacket)

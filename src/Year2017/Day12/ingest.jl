@@ -11,12 +11,12 @@ function ingest(path)::Dict{Int,Set{Int}}
     open(path) do f
         for line in eachline(f)
             left, right = split(line, " <-> ")
-            left_num    = parse(Int, left)
-            right_nums  = [parse(Int, n) for n in split(right, ", ")]
-            all_nums    = Set([left_num, right_nums...])
+            left_num = parse(Int, left)
+            right_nums = [parse(Int, n) for n in split(right, ", ")]
+            all_nums = Set([left_num, right_nums...])
 
             for num in all_nums
-                other_nums  = setdiff(all_nums, [num])
+                other_nums = setdiff(all_nums, [num])
                 current_set = get(adjacency_list, num, Set())
                 adjacency_list[num] = current_set ∪ other_nums
             end

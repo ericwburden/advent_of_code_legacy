@@ -1,25 +1,25 @@
 abstract type AbstractUnitKind end
 
-struct Elf    <: AbstractUnitKind end
+struct Elf <: AbstractUnitKind end
 struct Goblin <: AbstractUnitKind end
 
 const Position = Tuple{Int,Int}
 
-mutable struct Unit{K <: AbstractUnitKind}
+mutable struct Unit{K<:AbstractUnitKind}
     kind::Type{K}
     hp::Int
     attack::Int
 end
 
-function Unit(team::Type{K}) where K <: AbstractUnitKind
+function Unit(team::Type{K}) where {K<:AbstractUnitKind}
     return Unit(team, 200, 3)
 end
 
 struct Obstacle end
 
-const MapObject    = Union{Unit,Obstacle,Nothing}
-const Terrain      = Vector{Vector{MapObject}}
-const UnitMap      = Dict{Unit,Position}
+const MapObject = Union{Unit,Obstacle,Nothing}
+const Terrain = Vector{Vector{MapObject}}
+const UnitMap = Dict{Unit,Position}
 const UnitMapEntry = Pair{Unit,Position}
 
 mutable struct BattleState
@@ -58,10 +58,10 @@ end
 
 
 function ingest(path)
-    terrain  = Terrain()
+    terrain = Terrain()
     unit_map = UnitMap()
-    elves    = 0
-    goblins  = 0
+    elves = 0
+    goblins = 0
 
     for (row_idx, line) in (enumerate ∘ readlines)(path)
         map_row = MapObject[]
@@ -69,8 +69,12 @@ function ingest(path)
             object = map_object(char)
             push!(map_row, object)
             object isa Unit && setindex!(unit_map, (row_idx, col_idx), object)
-            if (object isa Unit{Elf}) elves += 1 end
-            if (object isa Unit{Goblin}) goblins += 1 end
+            if (object isa Unit{Elf})
+                elves += 1
+            end
+            if (object isa Unit{Goblin})
+                goblins += 1
+            end
         end
         push!(terrain, map_row)
     end
@@ -83,9 +87,9 @@ function Base.show((; terrain)::BattleState)
     for row in terrain
         stats = []
         for object in row
-            object isa Nothing  && print('.')
+            object isa Nothing && print('.')
             object isa Obstacle && print('#')
-            object isa Unit{Elf}    && print('E')
+            object isa Unit{Elf} && print('E')
             object isa Unit{Goblin} && print('G')
             if object isa Unit
                 stat = object.kind == Elf ? "E" : "G"
@@ -97,4 +101,3 @@ function Base.show((; terrain)::BattleState)
         println(join(stats, ", "))
     end
 end
-

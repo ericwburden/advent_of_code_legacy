@@ -9,7 +9,7 @@ function digest(s::AbstractString, ::Long)
     fn(x) = hexdigest("md5", x)
     digests = iterated(fn, s)
     # nth(xs, 1) is the original input, 2017 + 1 = 2018
-    return nth(digests, 2018) 
+    return nth(digests, 2018)
 end
 
 """

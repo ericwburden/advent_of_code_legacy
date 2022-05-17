@@ -8,8 +8,8 @@ Given a list of components, search all the possible bridges that can be made
 is as long as possible.
 """
 function part2(components)
-    start   = Bridge()
-    stack   = [start]
+    start = Bridge()
+    stack = [start]
     longest = [start]
     longest_length = length(start)
 

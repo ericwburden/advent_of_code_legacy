@@ -20,7 +20,7 @@ Modify the velocity of each `Moon` based on its pairwise interactions
 with every other moon on the list.
 """
 function apply_gravity!(moons::Vector{Moon})
-    for a in 1:length(moons), b in a:length(moons)
+    for a = 1:length(moons), b = a:length(moons)
         moons[a], moons[b] = apply_gravity(moons[a], moons[b])
     end
 end
@@ -41,7 +41,7 @@ end
 Modify the position of each `Moon` based on its velocity.
 """
 function apply_velocity!(moons::Vector{Moon})
-    for idx in 1:length(moons)
+    for idx = 1:length(moons)
         moons[idx] = apply_velocity(moons[idx])
     end
 end

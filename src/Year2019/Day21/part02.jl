@@ -14,7 +14,7 @@ const RUNSCRIPT = [
     "NOT T T", # T <- T == FALSE
     "OR T J",  # J <- T == TRUE or J == TRUE
     "RUN",     # Execute the program
-    ""         # Empty final line
+    "",         # Empty final line
 ]
 
 

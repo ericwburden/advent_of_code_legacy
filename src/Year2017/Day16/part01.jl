@@ -6,7 +6,7 @@
 Given a list of dancers and an instruction to follow, have the dancers 
 'perform' the move.
 """
-function execute!(dancers::Vector{Char}, (; n)::Spin) 
+function execute!(dancers::Vector{Char}, (; n)::Spin)
     circshift!(dancers, [dancers...], n)
 end
 

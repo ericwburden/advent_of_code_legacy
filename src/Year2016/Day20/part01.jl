@@ -21,7 +21,10 @@ function block(allowed::AllowedRange, blocked::BlockedRange)
     # If the blocked range lies entirely inside the allowed range, split
     # the allowed range around the blocked range and return the pieces.
     if allowed.low < blocked.low && allowed.high > blocked.high
-        return [AllowedRange(allowed.low, blocked.low - 1), AllowedRange(blocked.high + 1, allowed.high)]
+        return [
+            AllowedRange(allowed.low, blocked.low - 1),
+            AllowedRange(blocked.high + 1, allowed.high),
+        ]
     end
 
     # If the blocked range completely engulfs the allowed range, then return
