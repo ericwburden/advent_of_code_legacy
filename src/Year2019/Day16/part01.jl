@@ -4,12 +4,12 @@ using IterTools: iterated, nth
 const BASE_PATTERN = (0, 1, 0, -1)
 
 # I don't like typing 'Iterators' over and over...
-const imap     = Iterators.map
+const imap = Iterators.map
 const repeated = Iterators.repeated
-const flatten  = Iterators.flatten
-const cycle    = Iterators.cycle
-const drop     = Iterators.drop
-const take     = Iterators.take
+const flatten = Iterators.flatten
+const cycle = Iterators.cycle
+const drop = Iterators.drop
+const take = Iterators.take
 
 """
     pattern_iter(reps::Int) -> Iterator{Int}
@@ -18,11 +18,13 @@ Produces an iterator yielding integers in the pattern described by
 the puzzle based on the `BASE_PATTERN`. 
 """
 function pattern_iter(reps::Int)
-    (BASE_PATTERN
-        |> (x -> imap(i -> repeated(i, reps), x))
-        |> flatten
-        |> cycle
-        |> (x -> drop(x, 1)))
+    (
+        BASE_PATTERN |>
+        (x -> imap(i -> repeated(i, reps), x)) |>
+        flatten |>
+        cycle |>
+        (x -> drop(x, 1))
+    )
 end
 
 """
@@ -45,7 +47,7 @@ the 'FFT'-transformed digit at each index.
 """
 function next_phase(signal::Vector{Int})
     digits = length(signal)
-    return [fft_digit_at(signal, d) for d in 1:digits]
+    return [fft_digit_at(signal, d) for d = 1:digits]
 end
 
 """
@@ -55,7 +57,7 @@ Given the input as an integer vector, calculate and return the first eight value
 (as a String) of the signal obtained by processing the `input` `phases` number of
 times.
 """
-function part1(input, phases=100)
-    signal = nth(iterated(next_phase, input), phases+1)
+function part1(input, phases = 100)
+    signal = nth(iterated(next_phase, input), phases + 1)
     return join(signal[1:8])
 end
