@@ -22,6 +22,8 @@ I wrote to earn those stars! I can't imagine that I'll try to blog about these, 
 (a) these are old puzzles and not likely to be as interesting to others and (b) that's
 a lot of work!
 
+![pics because it happened](https://user-images.githubusercontent.com/22438085/170024255-6d74f4f2-34d7-4728-9aaf-e54b2abece1b.png)
+
 ## Project Structure
 
 For speed and ease of use, I used a variant of my 2021 Julia project structure for 
